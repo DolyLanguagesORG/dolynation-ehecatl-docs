@@ -14,21 +14,21 @@ El backend usa **PostgreSQL 15** vía **Drizzle ORM** sobre el driver `pg`.
 ## Nota sobre Drizzle
 
 Drizzle se usa **solo** para tipos TypeScript y validación en el código
-backend (`backend/src/database/drizzle/schema.ts` da las formas de las
+backend (`src/database/drizzle/schema.ts` da las formas de las
 filas a `select()`/`insert()`).
 
 Drizzle **no genera SQL** en este proyecto. Los archivos SQL en
-`infrastructure/database/` se escriben y mantienen a mano. Drizzle no
+`database/` se escriben y mantienen a mano. Drizzle no
 corre migraciones contra la BD.
 
 Si vienes de un proyecto Prisma/Drizzle-con-migrations: aquí el SQL es
-manual y vive en `infrastructure/database/`. Drizzle es únicamente para
+manual y vive en `database/`. Drizzle es únicamente para
 que el código del backend no se rompa cuando cambia el schema.
 
 ## Schema: dos archivos, dos fases
 
 ```
-infrastructure/database/postgres/
+database/postgres/
 ├── 01-init.sql               # SIEMPRE el estado final deseado
 └── updates/                  # vacío hasta el primer deploy a prod
     ├── README.md             # convención de updates
@@ -42,7 +42,7 @@ alguna vez o no.
 
 ### Fase 1 — Mientras `prod` NUNCA se ha desplegado (estamos en dev puro)
 
-- Edita directamente `infrastructure/database/postgres/01-init.sql`
+- Edita directamente `database/postgres/01-init.sql`
 - NO crear archivos en `updates/` todavía — el contenedor de Postgres
   corre solo el init al arrancar
 - El `01-init.sql` debe representar el **estado final deseado** del
@@ -54,7 +54,7 @@ alguna vez o no.
 - **`01-init.sql` se congela** en el estado que tenía al momento del
   primer deploy. NO se edita más.
 - Cada cambio va en
-  `infrastructure/database/postgres/updates/YYYY-MM-DD_<nombre>.sql`
+  `database/postgres/updates/YYYY-MM-DD_<nombre>.sql`
 - Se aplican en orden alfabético (= orden cronológico de nombre)
 - En prod, el init NO se vuelve a correr (el volumen de Postgres
   persiste, el entrypoint del contenedor ignora `initdb.d/` en
@@ -97,7 +97,7 @@ sin distinguir "primer arranque" de "siguiente arranque".
 ### Workflow concreto cuando agregas una columna
 
 1. **Crear el archivo de update** —
-   `infrastructure/database/postgres/updates/YYYY-MM-DD_<nombre>.sql`:
+   `database/postgres/updates/YYYY-MM-DD_<nombre>.sql`:
    ```sql
    -- YYYY-MM-DD: <descripción corta>
    ALTER TABLE readings ADD COLUMN IF NOT EXISTS user_response TEXT;
@@ -140,13 +140,13 @@ para el detalle de la convención.
 | Archivos TS           | `kebab-case`      | `auth-access.tokens.ts`         |
 
 El mapping snake_case ↔ camelCase se declara explícitamente en
-[`backend/src/database/drizzle/schema.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/database/drizzle/schema.ts).
+[`src/database/drizzle/schema.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/database/drizzle/schema.ts).
 
 ## Conexión
 
 - Provider global vía
-  [`backend/src/database/database.module.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/database/database.module.ts).
+  [`src/database/database.module.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/database/database.module.ts).
 - Token `DRIZZLE` exportado en
-  [`backend/src/database/database.tokens.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/database/database.tokens.ts).
+  [`src/database/database.tokens.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/database/database.tokens.ts).
 - En tests, mockear el provider con un objeto que expone `.select()`,
   `.insert()`, etc.

@@ -3,9 +3,12 @@
 Gracias por sumarte al equipo de Dolynglish. Esta guía resume el flujo de
 trabajo en cinco líneas. Para el detalle, sigue los enlaces.
 
-1. **Clona** el repo: `git clone git@github.com:DolyLanguagesORG/doly-languages.git`
-2. **Instala** dependencias: `cd backend && npm ci` (esto instala también los
-   hooks de husky que validan tus commits)
+1. **Clona** el repo donde vas a trabajar (`dolynation-atl-back`,
+   `dolynation-tonatiuh-front`, `dolynation-tlalli-infra` o
+   `dolynation-ehecatl-docs`): `git clone git@github.com:DolyLanguagesORG/<repo>.git`
+2. **Instala** dependencias si el repo las tiene: `npm ci` (en back/front
+   instala también los hooks de husky que validan tus commits; `infra` y
+   `docs` no tienen dependencias Node)
 3. **Levanta** el entorno local ([onboarding/setup.md](./onboarding/setup.md))
 4. **Crea una rama** desde `develop`: `git switch -c docs/<nombre-kebab>`
 5. **Abre un PR** contra `develop` siguiendo la
@@ -27,7 +30,7 @@ Para el panorama completo de ramas, planificación y releases, ve a
 Antes de commitear:
 
 ```bash
-cd backend
+# en dolynation-atl-back
 npm run verify    # typecheck + lint:check + format:check + test
 ```
 

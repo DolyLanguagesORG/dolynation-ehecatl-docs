@@ -43,7 +43,7 @@ interface ApiError {
 ```
 
 **Source of truth:**
-[`backend/src/common/types/api-response.type.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/types/api-response.type.ts)
+[`src/common/types/api-response.type.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/types/api-response.type.ts)
 (exporta los helpers `apiOk` y `apiFail`).
 
 ### Reglas
@@ -68,7 +68,7 @@ Stable strings, no enum numbers. Cliente nunca debe parsear el `message`
 — debe branchear sobre `code`.
 
 **Source of truth:**
-[`backend/src/common/errors/error-codes.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/errors/error-codes.ts).
+[`src/common/errors/error-codes.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/errors/error-codes.ts).
 El test [`error-codes.spec.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/errors/error-codes.spec.ts)
 verifica exhaustividad.
 
@@ -104,7 +104,7 @@ throw new AppHttpException(ErrorCode.RESOURCE_NOT_FOUND, 'Reading not found');
 ```
 
 **Source of truth:**
-[`backend/src/common/errors/app-http.exception.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/errors/app-http.exception.ts).
+[`src/common/errors/app-http.exception.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/errors/app-http.exception.ts).
 
 El helper `httpError(code, details?)` acorta aún más:
 
@@ -115,7 +115,7 @@ throw httpError(ErrorCode.VALIDATION_ERROR, { fields: [...] });
 ## Regla de seguridad: nunca leakear detalles internos
 
 El filtro
-[`backend/src/common/errors/all-exceptions.filter.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/errors/all-exceptions.filter.ts)
+[`src/common/errors/all-exceptions.filter.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/errors/all-exceptions.filter.ts)
 garantiza que cualquier `Error` genérico se mapea a `INTERNAL_ERROR` con
 mensaje genérico. **Nunca** incluir en el `message`:
 
@@ -133,7 +133,7 @@ cliente solo recibe un código estable + mensaje seguro.
 - **Scalar UI**: `http://localhost:3333/docs`
 - **OpenAPI JSON**: `http://localhost:3333/api/v1/openapi.json`
 
-Config en [`backend/src/main.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/main.ts):
+Config en [`src/main.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/main.ts):
 
 - Title: `Dolynglish API`
 - Auth: Bearer JWT (scheme `http`, format `JWT`)
@@ -164,7 +164,7 @@ async register(@Body() dto: RegisterDto): Promise<ApiResponse<AuthResponseDto>> 
 ```
 
 Los helpers envelope están en
-[`backend/src/common/types/api-envelope.decorators.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/types/api-envelope.decorators.ts):
+[`src/common/types/api-envelope.decorators.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/types/api-envelope.decorators.ts):
 
 - `ApiOkResponseOf(ModelDto)`
 - `ApiCreatedResponseOf(ModelDto)`

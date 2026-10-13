@@ -35,7 +35,7 @@ servidor hasta que vuelve la respuesta.
 ```
 
 `CommonModule` registra tres providers globales (en
-[`backend/src/common/common.module.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/common.module.ts)):
+[`src/common/common.module.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/common.module.ts)):
 
 - `APP_FILTER` → `AllExceptionsFilter` (envelope de errores)
 - `APP_INTERCEPTOR` → `LoggingInterceptor` (log de cada request exitoso)
@@ -44,7 +44,7 @@ servidor hasta que vuelve la respuesta.
 ## Estructura de directorios del backend
 
 ```
-backend/src/
+src/
 ├── main.ts                          # Bootstrap (helmet, pipes, Scalar)
 ├── app.module.ts                    # Composition root
 ├── config/                          # env.config.ts, env.validation.ts (Zod)
@@ -102,7 +102,7 @@ backend/src/
 ```
 
 **Code path** del filtro:
-[`backend/src/common/errors/all-exceptions.filter.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/errors/all-exceptions.filter.ts).
+[`src/common/errors/all-exceptions.filter.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/errors/all-exceptions.filter.ts).
 
 ## Por qué este diseño
 

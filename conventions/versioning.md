@@ -1,17 +1,29 @@
 # Versionado
 
 El proyecto usa [Semantic Versioning](https://semver.org/lang/es/) (`vX.Y.Z`)
-y **versionado automático**: el prefijo del commit de squash determina la
-release, sin que nadie tenga que editar un número a mano.
+y **versionado automático con
+[release-please](https://github.com/googleapis/release-please)**: los
+Conventional Commits determinan la próxima versión y nadie edita un número a
+mano.
 
-## Quién dispara una release
+## Cómo funciona
 
-Solo llega a `main` lo que viene de `develop` (y hotfixes). Cada merge a
-`main` dispara el workflow `release` ([`.github/workflows/release.yml`](../.github/workflows/release.yml)),
-que crea el tagannotated y el GitHub Release correspondiente.
+`release-please`
+([`.github/workflows/release.yml`](../.github/workflows/release.yml)) mantiene
+**un PR de release acumulativo** contra `develop`:
 
-Durante el desarrollo activo en `develop` **no hay releases**: las etiquetas
-solo existen en `main`.
+1. Cada PR mergeado a `develop` (squash) es un Conventional Commit y se suma
+   al PR de release abierto.
+2. El PR de release se titula `chore(release): release vX.Y.Z` y va subiendo
+   la versión propuesta según los commits acumulados.
+3. Al mergear **ese** PR, `release-please` actualiza la versión, crea el
+   **tag anotado** y publica el GitHub Release con las notas.
+4. `release-please` abre de nuevo un PR de release limpio para el ciclo
+   siguiente.
+
+Durante el desarrollo normal **no hay tags**: el tag nace al mergear el PR de
+release. El promote a `main` (producción) es un PR aparte; el detalle del
+pipeline está en [CI-CD-Y-VERSIONADO.md](../CI-CD-Y-VERSIONADO.md).
 
 ## Reglas de bump
 
@@ -34,17 +46,17 @@ título inválido nunca llega a la release.
 
 | Versión  | Significado                                                        |
 | -------- | ------------------------------------------------------------------ |
-| `v0.1.0` | Primer release. Se crea automáticamente al publicar `main`.         |
-| `v0.x.y` | Iteración durante el desarrollo. Cada milestone a `main` bumpea.   |
+| `v0.1.0` | Primer release. Se crea al mergear el primer PR de release.         |
+| `v0.x.y` | Iteración durante el desarrollo. Cada PR de release mergeado bumpea.|
 | `v1.0.0` | Release final del entregable de diciembre.                         |
 
 ## Forzar un bump
 
 Si el título no refleja el cambio real (por ejemplo, un `chore` que rompe la
-API), se puede forzar desde la pestaña **Actions → release → Run workflow**:
+API), añade un footer al commit (o al body del PR de release):
 
 ```
-bump: major | minor | patch
+Release-As: 1.0.0
 ```
 
 ## Ejemplo de flujo completo
@@ -52,7 +64,7 @@ bump: major | minor | patch
 ```bash
 # 1. Trabajo normal en una rama
 git checkout -b feat/issue-12-study-config
-cd backend && npm run verify
+npm run verify    # en el repo correspondiente (atl-back / tonatiuh-front)
 git commit -m "feat(users): persist study preferences in user_settings"
 git push -u origin feat/issue-12-study-config
 
@@ -61,21 +73,17 @@ gh pr create --base develop \
   --title "feat(users): persist study preferences in user_settings" \
   --body "Closes #12"
 
-    # 3. Cuando toca release: PR de develop hacia main.
-    #    Ojo: `main` no es la rama por defecto, asi que `Closes` se ignoraria
-    #    y los issues quedarian abiertos. Ahi va `Refs`.
-    gh pr create --base main --title "feat(users): release v0.2.0" \
-      --body "Refs #12 -- integra el trabajo de desarrollo hasta la fecha."
+# 3. Cuando toca release: mergear el PR de release-please.
+#    Ese PR acumula los commits y propone vX.Y.Z.
 ```
 
-Al mergear ese PR, el workflow calcula el bump, crea el tag y publica el
-GitHub Release con las notas de los commits incluidos.
+Al mergear el PR de release, `release-please` regenera la versión, crea el tag
+y publica el GitHub Release con las notas de los commits incluidos.
 
 ## Notas
 
-- El primer run no bumpea: publica `v0.1.0` como base.
+- El primer release publica `v0.1.0` como base.
 - Los tags son anotados (`git tag -a`), no lightweight, para que `git describe`
   y el historial conserven la fecha y el mensaje.
-- Si el cálculo de versión no cambia el número, el workflow **falla** en vez
-  de crear un tag duplicado. Eso es intencional: señala un error en el título
-  del PR.
+- Si un ciclo no tiene commits que bumpeen versión, `release-please` no abre
+  PR de release: no se crean tags vacíos.

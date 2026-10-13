@@ -697,21 +697,23 @@ El proyecto contempla un total de **33 tareas técnicas** derivadas directamente
 
 ### **13.2. Tabla de asignación de tareas y cronograma** {#13.2.-tabla-de-asignación-de-tareas-y-cronograma}
 
+> **Referencia de issues.** Al separar el monorepo en cuatro repos, cada tarea es un issue en su repositorio. El identificador `back#N`, `front#N`, `infra#N` o `docs#N` indica el repo (`dolynation-atl-back`, `dolynation-tonatiuh-front`, `dolynation-tlalli-infra`, `dolynation-ehecatl-docs`) y el número del issue.
+
 #### **Sprint 1: Infraestructura, Autenticación y Perfil** {#sprint-1:-infraestructura,-autenticación-y-perfil}
 
 **Periodo:** 05 de Octubre al 18 de Octubre de 2026
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
-| **\#6** | Configuración del repositorio: main/develop, branch protection, plantillas y CI/CD | Jesús (SM) | 05 oct 2026 | 06 oct 2026 |
-| **\#7** | Setup de arquitectura NestJS, conexión a base de datos y entidad User | Azael | 05 oct 2026 | 08 oct 2026 |
-| **\#8** | Setup de proyecto Next.js con Tailwind CSS, layout base y temas | Juan | 05 oct 2026 | 07 oct 2026 |
-| **\#9** | Servicio de hash criptográfico (bcrypt/Argon2) y estrategia JWT | Azael | 09 oct 2026 | 12 oct 2026 |
-| **\#10** | DTOs de validación de registro/login y endpoints de autenticación | Elías | 09 oct 2026 | 12 oct 2026 |
-| **\#11** | Maquetado e integración de vistas de login y registro en Next.js | Juan | 08 oct 2026 | 12 oct 2026 |
-| **\#12** | Endpoints para consultar y actualizar el perfil de usuario | Elías | 13 oct 2026 | 15 oct 2026 |
-| **\#13** | Vista del perfil de usuario e integración con estado de sesión | Juan | 13 oct 2026 | 16 oct 2026 |
-| **\#14** | Pruebas de integración del Sprint 1 y revisión de PRs hacia develop | Jesús (SM) | 16 oct 2026 | 18 oct 2026 |
+| **infra#2** | Configuración del repositorio: main/develop, branch protection, plantillas y CI/CD | Jesús (SM) | 05 oct 2026 | 06 oct 2026 |
+| **back#2** | Setup de arquitectura NestJS, conexión a base de datos y entidad User | Azael | 05 oct 2026 | 08 oct 2026 |
+| **front#2** | Setup de proyecto Next.js con Tailwind CSS, layout base y temas | Juan | 05 oct 2026 | 07 oct 2026 |
+| **back#3** | Servicio de hash criptográfico (bcrypt/Argon2) y estrategia JWT | Azael | 09 oct 2026 | 12 oct 2026 |
+| **back#4** | DTOs de validación de registro/login y endpoints de autenticación | Elías | 09 oct 2026 | 12 oct 2026 |
+| **front#3** | Maquetado e integración de vistas de login y registro en Next.js | Juan | 08 oct 2026 | 12 oct 2026 |
+| **back#5** | Endpoints para consultar y actualizar el perfil de usuario | Elías | 13 oct 2026 | 15 oct 2026 |
+| **front#4** | Vista del perfil de usuario e integración con estado de sesión | Juan | 13 oct 2026 | 16 oct 2026 |
+| **back#6** | Pruebas de integración del Sprint 1 y revisión de PRs hacia develop | Jesús (SM) | 16 oct 2026 | 18 oct 2026 |
 
 #### 
 
@@ -731,13 +733,13 @@ El proyecto contempla un total de **33 tareas técnicas** derivadas directamente
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
-| **\#15** | Módulo de servicios en NestJS para integración con API de IA y prompts | Azael | 19 oct 2026 | 23 oct 2026 |
-| **\#16** | Endpoints para selección y guardado de categorías e idiomas |  |  | 22 oct 2026 |
-| **\#17** | Formulario de selección de parámetros de estudio en Next.js | Juan | 19 oct 2026 | 23 oct 2026 |
-| **\#18** | Servicio de caché para respuestas de lectura con parámetros equivalentes | Jesús (SM) | 22 oct 2026 | 26 oct 2026 |
-| **\#19** | Visor inmersivo de lectura centrado en legibilidad en Next.js | Juan | 24 oct 2026 | 28 oct 2026 |
-| **\#20** | Endpoint de generación de lectura basada en parámetros | Azael \+ Elías | 24 oct 2026 | 28 oct 2026 |
-| **\#21** | Conexión del flujo completo: Formulario $\rightarrow$ IA $\rightarrow$ Visor | Jesús \+ Juan | 29 oct 2026 | 01 nov 2026 |
+| **back#7** | Módulo de servicios en NestJS para integración con API de IA y prompts | Azael | 19 oct 2026 | 23 oct 2026 |
+| **back#8** | Endpoints para selección y guardado de categorías e idiomas |  |  | 22 oct 2026 |
+| **front#5** | Formulario de selección de parámetros de estudio en Next.js | Juan | 19 oct 2026 | 23 oct 2026 |
+| **back#9** | Servicio de caché para respuestas de lectura con parámetros equivalentes | Jesús (SM) | 22 oct 2026 | 26 oct 2026 |
+| **front#6** | Visor inmersivo de lectura centrado en legibilidad en Next.js | Juan | 24 oct 2026 | 28 oct 2026 |
+| **back#10** | Endpoint de generación de lectura basada en parámetros | Azael \+ Elías | 24 oct 2026 | 28 oct 2026 |
+| **front#7** | Conexión del flujo completo: Formulario $\rightarrow$ IA $\rightarrow$ Visor | Jesús \+ Juan | 29 oct 2026 | 01 nov 2026 |
 
 #### **Sprint 3: Vocabulario Contextual y Evaluación por PNL** {#sprint-3:-vocabulario-contextual-y-evaluación-por-pnl}
 
@@ -745,13 +747,13 @@ El proyecto contempla un total de **33 tareas técnicas** derivadas directamente
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
-| **\#22** | Captura e interacción de selección de texto dentro del visor | Juan | 02 nov 2026 | 05 nov 2026 |
-| **\#23** | Endpoint de consulta contextual de vocabulario a la IA | Azael | 02 nov 2026 | 06 nov 2026 |
-| **\#24** | Pop-up de diccionario contextual e integración de audio corto (TTS) | Juan | 06 nov 2026 | 09 nov 2026 |
-| **\#25** | Componente de área de redacción libre de resumen y envío | Juan \+ Elías | 07 nov 2026 | 10 nov 2026 |
-| **\#26** | Servicio de evaluación y calificación por PNL en NestJS | Jesús \+ Azael | 06 nov 2026 | 11 nov 2026 |
-| **\#27** | Endpoint de procesamiento y almacenamiento de la evaluación | Elías | 10 nov 2026 | 13 nov 2026 |
-| **\#28** | Pruebas del módulo de vocabulario y evaluación por PNL | Jesús (SM) | 13 nov 2026 | 15 nov 2026 |
+| **front#8** | Captura e interacción de selección de texto dentro del visor | Juan | 02 nov 2026 | 05 nov 2026 |
+| **back#11** | Endpoint de consulta contextual de vocabulario a la IA | Azael | 02 nov 2026 | 06 nov 2026 |
+| **front#9** | Pop-up de diccionario contextual e integración de audio corto (TTS) | Juan | 06 nov 2026 | 09 nov 2026 |
+| **front#10** | Componente de área de redacción libre de resumen y envío | Juan \+ Elías | 07 nov 2026 | 10 nov 2026 |
+| **back#12** | Servicio de evaluación y calificación por PNL en NestJS | Jesús \+ Azael | 06 nov 2026 | 11 nov 2026 |
+| **back#13** | Endpoint de procesamiento y almacenamiento de la evaluación | Elías | 10 nov 2026 | 13 nov 2026 |
+| **back#14** | Pruebas del módulo de vocabulario y evaluación por PNL | Jesús (SM) | 13 nov 2026 | 15 nov 2026 |
 
 #### **Sprint 4: Historial, Rachas y Panel Administrativo** {#sprint-4:-historial,-rachas-y-panel-administrativo}
 
@@ -759,12 +761,12 @@ El proyecto contempla un total de **33 tareas técnicas** derivadas directamente
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
-| **\#29** | Lógica de cálculo de racha diaria y asignación de puntos en NestJS | Azael | 16 nov 2026 | 19 nov 2026 |
-| **\#30** | Endpoints de consulta de historial de actividades y calificaciones | Elías | 16 nov 2026 | 20 nov 2026 |
-| **\#31** | Dashboard de usuario (métricas, racha, historial y puntos) | Juan | 19 nov 2026 | 24 nov 2026 |
-| **\#32** | Endpoints para gestión administrativa de categorías globales | Elías | 21 nov 2026 | 25 nov 2026 |
-| **\#33** | Vista del panel administrativo básico en Next.js | Juan \+ Jesús | 24 nov 2026 | 27 nov 2026 |
-| **\#34** | Revisión general de código, limpieza de endpoints y merge a develop | Jesús (SM) | 27 nov 2026 | 29 nov 2026 |
+| **back#15** | Lógica de cálculo de racha diaria y asignación de puntos en NestJS | Azael | 16 nov 2026 | 19 nov 2026 |
+| **back#16** | Endpoints de consulta de historial de actividades y calificaciones | Elías | 16 nov 2026 | 20 nov 2026 |
+| **front#11** | Dashboard de usuario (métricas, racha, historial y puntos) | Juan | 19 nov 2026 | 24 nov 2026 |
+| **back#17** | Endpoints para gestión administrativa de categorías globales | Elías | 21 nov 2026 | 25 nov 2026 |
+| **front#12** | Vista del panel administrativo básico en Next.js | Juan \+ Jesús | 24 nov 2026 | 27 nov 2026 |
+| **infra#3** | Revisión general de código, limpieza de endpoints y merge a develop | Jesús (SM) | 27 nov 2026 | 29 nov 2026 |
 
 #### 
 
@@ -776,10 +778,10 @@ El proyecto contempla un total de **33 tareas técnicas** derivadas directamente
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
-| **\#35** | Pruebas de usabilidad y revisión de diseño responsivo | Juan | 30 nov 2026 | 03 dic 2026 |
-| **\#36** | Pruebas de rendimiento, manejo de errores de IA y seguridad | Azael \+ Elías | 30 nov 2026 | 04 dic 2026 |
-| **\#37** | PR final develop $\rightarrow$ main, tagging v1.0.0 y verificación CI/CD | Jesús (SM) | 04 dic 2026 | 06 dic 2026 |
-| **\#38** | Documentación final, capturas del sistema y presentación | Todo el equipo | 06 dic 2026 |  |
+| **front#13** | Pruebas de usabilidad y revisión de diseño responsivo | Juan | 30 nov 2026 | 03 dic 2026 |
+| **back#18** | Pruebas de rendimiento, manejo de errores de IA y seguridad | Azael \+ Elías | 30 nov 2026 | 04 dic 2026 |
+| **infra#4** | PR final develop $\rightarrow$ main, tagging v1.0.0 y verificación CI/CD | Jesús (SM) | 04 dic 2026 | 06 dic 2026 |
+| **docs#3** | Documentación final, capturas del sistema y presentación | Todo el equipo | 06 dic 2026 |  |
 
 ## **14\. Elección de estructura web y tecnologías.** {#14.-elección-de-estructura-web-y-tecnologías.}
 

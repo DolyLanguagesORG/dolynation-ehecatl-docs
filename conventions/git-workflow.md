@@ -7,10 +7,10 @@ verdad para PRs, merges y hotfixes.
 
 ```
                      ┌──────────────────┐
-                     │   feat/issue-12-* │
-                     │   fix/issue-45-*  │
-                     │   chore/*         │
-                     │   docs/*          │
+                     │ feat/issue-12-*  │
+                     │ fix/issue-45-*   │
+                     │ docs/issue-20-*  │
+                     │ chore/issue-6-*  │
                      └────────┬─────────┘
                               │  PR + checks en verde
                               ▼
@@ -32,28 +32,34 @@ verdad para PRs, merges y hotfixes.
 
 El prefijo de la rama coincide con el **tipo de commit** que llevará
 (ver [commits.md](./commits.md)), para evitar confusiones alinear
-`feat/issue-12-login` con `feat(auth): ...`.
+`feat/issue-12-auth-login` con `feat(auth): ...`.
 
-- `feat/issue-<n>-<kebab>` — nuevas funcionalidades
-- `fix/issue-<n>-<kebab>` — correcciones
-- `chore/<kebab>` — refactors, limpieza, tooling
-- `docs/<kebab>` — solo documentación
-- `hotfix/<kebab>` — corrección urgente sobre producción
+Formato: `tipo/issue-<n>-<módulo>-<detalle>`
 
-El número de issue es obligatorio en `feat/` y `fix/` para poder trazar la
-tarea en el tablero de Projects.
+- `feat/issue-<n>-...` — nuevas funcionalidades
+- `fix/issue-<n>-...` — correcciones
+- `refactor/issue-<n>-...` — reescritura sin cambiar comportamiento
+- `docs/issue-<n>-...` — solo documentación
+- `test/issue-<n>-...` — pruebas
+- `chore/issue-<n>-...` — tooling, dependencias, limpieza
+- `perf/`, `build/`, `ci/`, `style/` — con el mismo formato
+- `hotfix/<detalle>` — corrección urgente sobre producción (sale de `main`)
+
+`<n>` es el **número del issue en su repo** y es obligatorio: toda rama de
+trabajo nace de una tarea con issue, para poder trazarla en el tablero de
+Projects.
 
 ### También se acepta el formato de GitHub
 
-El botón **Create a branch** de un issue crea la rama con el nombre `<n>-<kebab>`,
-por ejemplo `12-login-page`. Ese formato **también lo acepta el check
+El botón **Create a branch** de un issue crea la rama con el nombre `<n>-<detalle>`,
+por ejemplo `12-auth-login`. Ese formato **también lo acepta el check
 `pr-target`**, para que usar el botón no implique un CI en rojo.
 
-| | Con prefijo | Formato de GitHub |
+| | Con prefijo (recomendado) | Formato de GitHub |
 | --- | --- | --- |
-| Ejemplo | `feat/issue-12-login-page` | `12-login-page` |
+| Ejemplo | `feat/issue-12-auth-login` | `12-auth-login` |
 | Dice el tipo de cambio | Sí, de un vistazo | No |
-| Enlaza con el tablero | Sí, si pones `issue-<n>` | Sí, por el número |
+| Enlaza con el tablero | Sí, por `issue-<n>` | Sí, por el número |
 | Sale del botón *Create a branch* | No | Sí |
 | Lo acepta `pr-target` | Sí | Sí |
 
@@ -65,10 +71,10 @@ o la otra.
 
 Ejemplos:
 
-- `feat/issue-12-login-page`
-- `fix/issue-45-header-bug`
-- `chore/remove-archived-backend`
-- `docs/git-workflow`
+- `feat/issue-12-auth-login-page`
+- `fix/issue-45-header-overflow`
+- `chore/issue-6-repo-config`
+- `docs/issue-20-git-workflow`
 
 Máximo 50 caracteres en total.
 
@@ -76,9 +82,11 @@ Máximo 50 caracteres en total.
 
 ### `develop` (integración diaria)
 
-- Recibe PRs de `feat/*`, `fix/*`, `chore/*`, `docs/*`.
-- Requiere los **7 status checks** verdes antes de mergear (CI de GitHub
-  Actions).
+- Recibe PRs de `feat/issue-*`, `fix/issue-*`, `refactor/issue-*`, `docs/issue-*`,
+  `test/issue-*`, `chore/issue-*`, `perf/issue-*`, `build/issue-*`, `ci/issue-*`,
+  `style/issue-*` o del formato `<n>-<detalle>` del botón de GitHub.
+- Requiere los **status checks de cada repositorio** en verde antes de mergear
+  (ver [los checks de CI](#los-checks-de-ci-que-bloquean-el-merge)).
 - Requiere **1 aprobación** de cualquier persona con acceso al repositorio.
   Los `CODEOWNERS` se solicitan automáticamente pero **no son obligatorios**
   (`require_code_owner_reviews: false`), ver
@@ -93,11 +101,12 @@ Máximo 50 caracteres en total.
 ### `main` (producción / release)
 
 - Recibe PRs **únicamente** desde `develop` (excepto hotfixes).
-- Requiere los mismos 7 status checks **más** 1 aprobación.
+- Requiere los mismos checks del repositorio **más** 1 aprobación.
 - **Prohibido el push directo**: siempre por PR.
 - Solo **squash-merge**.
 - No se permiten force-pushes ni deleciones.
-- Al mergear se dispara `release.yml`, que crea el tag y la GitHub Release.
+- Al mergear el PR de release, `release-please` crea el tag y la GitHub
+  Release (ver [versioning.md](./versioning.md)).
 
 `main` permanece estable entre releases. Durante el desarrollo activo solo
 recibe merge en los hitos acordados.
@@ -130,12 +139,12 @@ git pull
 # 2. Crear la rama de la tarea
 git checkout -b feat/issue-12-login-page
 
-# 3. Verificar antes de commitear
-cd backend && npm run verify
+# 3. Verificar antes de commitear (en back/front: npm run verify;
+#    en infra/docs no hay script de verificación local)
 
 # 4. Commitear (husky + commitlint validan el mensaje)
 git add -A
-git commit -m "feat(auth): register endpoint with argon2 hashing"
+git commit -m "feat(auth): endpoint de registro con hash argon2"
 
 # 5. Publicar la rama y abrir el PR hacia develop
 git push -u origin feat/issue-12-login-page
@@ -173,18 +182,45 @@ Para enlazar el PR con su issue, escribe `Closes #<n>` en el **cuerpo del PR**.
 
 ## Los checks de CI que bloquean el merge
 
-Son 7 checks repartidos en 4 archivos. Si uno falla, GitHub no habilita el
+Cada repositorio corre sus propios checks. Si uno falla, GitHub no habilita el
 botón de merge.
 
-| Check | Archivo | Qué valida |
-| --- | --- | --- |
-| `unit-and-static` | `.github/workflows/ci-backend.yml` | tipos, lint, formato y tests unitarios |
-| `e2e` | `.github/workflows/ci-backend.yml` | tests end-to-end |
-| `build` | `.github/workflows/ci-backend.yml` | que el backend compile |
-| `link-check` | `.github/workflows/docs-link-check.yml` | links de la documentación |
-| `openapi-guard` | `.github/workflows/openapi-guard.yml` | contrato de la API |
-| `pr-title` | `.github/workflows/pr-title.yml` | formato del título del PR |
-| `pr-target` | `.github/workflows/pr-title.yml` | rama base y rama origen |
+**Frontend** (`dolynation-tonatiuh-front`)
 
-`pr-title.yml` contiene **dos** jobs (`pr-title` y `pr-target`), por eso son
-7 checks y no 5 workflows.
+| Check | Qué valida |
+| --- | --- |
+| `lint` | ESLint + el test del regex de `pr-labels` |
+| `typecheck` | `next typegen && tsc --noEmit` |
+| `build` | que Next compile |
+| `pr-title` | formato del título del PR |
+| `pr-target` | rama base y rama origen |
+
+**Backend** (`dolynation-atl-back`)
+
+| Check | Qué valida |
+| --- | --- |
+| `unit-and-static` | tipos, lint, formato y tests unitarios |
+| `e2e` | tests end-to-end (contra PostgreSQL) |
+| `build` | que el backend compile |
+| `openapi-guard` | que no se rompa el contrato de la API |
+| `pr-title` | formato del título del PR |
+| `pr-target` | rama base y rama origen |
+
+**Infraestructura** (`dolynation-tlalli-infra`)
+
+| Check | Qué valida |
+| --- | --- |
+| `compose-validate` | que los `docker-compose*.yml` sean válidos |
+| `pr-title` | formato del título del PR |
+| `pr-target` | rama base y rama origen |
+
+**Documentación** (`dolynation-ehecatl-docs`)
+
+| Check | Qué valida |
+| --- | --- |
+| `link-check` | que no haya links rotos en la documentación |
+| `pr-title` | formato del título del PR |
+| `pr-target` | rama base y rama origen |
+
+`pr-title` y `pr-target` vienen del workflow `pr-title.yml` (dos jobs) y están
+en los cuatro repos.

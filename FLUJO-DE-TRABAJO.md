@@ -1,9 +1,9 @@
 # Flujo de trabajo del repositorio
 
-Este documento es el mapa completo de cómo se trabaja en
-`DolyLanguagesORG/doly-languages`: qué ramas existen, cómo viaja una tarea
-desde el cronograma hasta producción, dónde se registra el trabajo y qué
-reglas te bloquean.
+Este documento es el mapa completo de cómo se trabaja en la organización
+`DolyLanguagesORG` (repos separados de front, back, infra y docs): qué ramas
+existen, cómo viaja una tarea desde el cronograma hasta producción, dónde se
+registra el trabajo y qué reglas te bloquean.
 
 Para el paso a paso de abrir un PR, ve a
 [COMO-HACER-UN-PR.md](./COMO-HACER-UN-PR.md).
@@ -12,7 +12,7 @@ Para el paso a paso de abrir un PR, ve a
 
 ```
    CRONOGRAMA                 PLANIFICACIÓN (GitHub)
-   docs/cronograma.md    ──►  issues  +  milestones  +  Project
+   cronograma.md         ──►  issues  +  milestones  +  Project
    33 tareas, 5 sprints         │        │              │
    quién / cuándo                │        │              │
                                  │        │              │
@@ -22,13 +22,13 @@ Para el paso a paso de abrir un PR, ve a
                           └──────┬─────────────────────────────┘
                                  │
                           ┌──────▼──────────┐
-                          │  Rama de trabajo │  feat/ fix/ chore/ docs/
+                          │  Rama de trabajo │  tipo/issue-<n>-...
                           │  + commits      │  validados por husky local
                           └──────┬──────────┘
                                  │
                           ┌──────▼──────────┐
                           │  PULL REQUEST    │  ← aquí va Closes #N
-                          │  7 checks CI     │
+                          │  checks de CI    │
                           │  1 aprobación    │
                           └──────┬──────────┘
                                  │  squash
@@ -50,7 +50,7 @@ Para el paso a paso de abrir un PR, ve a
 
 | Rama | Qué es | Recibe PR de | Qué pasa al mergear |
 | --- | --- | --- | --- |
-| `develop` | **Integración diaria.** Aquí vive el trabajo del día. | `feat/*` `fix/*` `chore/*` `docs/*` | Nada. Se acumula. |
+| `develop` | **Integración diaria.** Aquí vive el trabajo del día. | `tipo/issue-*` o el formato `<n>-<detalle>` | Nada. Se acumula. |
 | `main` | **Producción.** Estable entre releases. | Solo `develop` o `hotfix/*` | **Dispara `release.yml`**: tag y GitHub Release |
 | `hotfix/*` | Corrección urgente sobre producción. | — | Sale de `main`, luego se lleva a `develop` |
 
@@ -93,7 +93,7 @@ ya no es la default, así que ahí la palabra clave se ignora. Ese PR debe usar
 
 ### 1. Sale del cronograma
 
-El plan vive en [`docs/cronograma.md`](./cronograma.md). 33 tareas, 5 sprints,
+El plan vive en [`cronograma.md`](./cronograma.md). 33 tareas, 5 sprints,
 del 5 de octubre al 10 de diciembre de 2026. Cada fila tiene: número, issue
 asociado, descripción, responsable, fecha de inicio y fecha de entrega.
 
@@ -169,20 +169,20 @@ es manual**.
 Rama nueva desde `develop`, commits, y el PR. Todo eso está detallado en
 [COMO-HACER-UN-PR.md](./COMO-HACER-UN-PR.md).
 
-    Lo que conecta el PR con la planificación es la palabra `Closes #N` en el
-    cuerpo del PR. Al mergear en `develop`, el issue se cierra solo. Ese PR
-    apunta a la rama por defecto, que es lo que hace que la palabra funcione.
+Lo que conecta el PR con la planificación es la palabra `Closes #N` en el
+cuerpo del PR. Al mergear en `develop`, el issue se cierra solo. Ese PR
+apunta a la rama por defecto, que es lo que hace que la palabra funcione.
 
 ### 5. Se revisa a fin de sprint
 
-Cada sprint cierra con una tarea de integración (issues **#14**, **#28**,
-**#34**): pruebas, corrección de bugs y merge a `develop`. Ahí es donde se
-detecta lo que se rompió antes de llegar a `main`.
+Cada sprint cierra con una tarea de integración (por ejemplo los issues
+**back#6**, **back#14** e **infra#3**): pruebas, corrección de bugs y merge a
+`develop`. Ahí es donde se detecta lo que se rompió antes de llegar a `main`.
 
 ### 6. Se libera
 
-`v1.0.0` es la entrega de cierre (issue **#37**). Consiste en un PR de
-`develop` a `main`, que dispara `release.yml`.
+`v1.0.0` es la entrega de cierre (issue **infra#4**). Consiste en mergear el PR
+de release de `release-please`, que crea el tag y publica la release.
 
 ## CODEOWNERS
 
@@ -190,13 +190,17 @@ detecta lo que se rompió antes de llegar a `main`.
 revisar qué archivos. Cuando abres un PR que toca esos archivos, GitHub pide
 su revisión automáticamente, sin que nadie lo solicite a mano.
 
-**Qué hay hoy.**
+**Qué hay hoy.** Cada repositorio tiene su **propio** `.github/CODEOWNERS`
+(ya no hay un CODEOWNERS único del monorepo). El default es el mismo en todos:
 
-| Ruta | Owner | Por qué |
+| Repo | Owner por defecto (`*`) | Rutas con owner propio |
 | --- | --- | --- |
-| `*` (todo) | `@SebastianRdzC04` `@XxjesusalbertoxX` | Default del repo |
-| `/backend/src/common/`, `/auth/`, `/readings/`, `/ia/`, `/users/`, `main.ts`, `app.module.ts`, `/database/`, `/config/` | `@SebastianRdzC04` | Código compartido y sensible |
-| `/docs/`, `/.github/`, `/infrastructure/` | `@SebastianRdzC04` | Documentación, CI e infraestructura |
+| `dolynation-atl-back` | `@XxjesusalbertoxX` `@AzaelG26` | `src/common/`, `src/modules/{auth,readings,ia,users}/`, `src/app.module.ts`, `src/main.ts`, `src/database/`, `src/config/` → `@AzaelG26` |
+| `dolynation-tonatiuh-front` | `@XxjesusalbertoxX` `@y0ADQ1` | — |
+| `dolynation-tlalli-infra` | `@XxjesusalbertoxX` `@AzaelG26` | `database/` → `@AzaelG26` |
+| `dolynation-ehecatl-docs` | `@XxjesusalbertoxX` `@SebastianRdzC04` | — |
+
+En todos los repos, `/.github/` lo revisa `@XxjesusalbertoxX`.
 
 **Lo importante: aquí CODEOWNERS es una recomendación, no una obligación.**
 
@@ -225,16 +229,16 @@ responsable del día aprueba sin fricción.
 `require_code_owner_reviews: true` y tener al menos a un owner del equipo en
 la lista. Hoy no lo es.
 
-**Placeholders pendientes.** El archivo tiene tres marcadores sin resolver
-(`@PLACEHOLDER-1`, `@PLACEHOLDER-2`, `@PLACEHOLDER-3`) para Azael, Juan y
-Elías. Hasta que se completen, esas personas no tienen revisión automática ni
-aparecen como owners.
+**Pendientes.** En los CODEOWNERS del backend y de infra, Elías (soporte de
+backend) aparece todavía como `PENDIENTE`: aún no tiene username de GitHub. En
+cuanto lo tenga, se añade a la lista.
 
 ## Dependencias entre issues
 
 A veces dos tareas tienen un orden obligatorio. El caso real del proyecto:
-**#37** (PR final a `main` y tag `v1.0.0`) está **bloqueado por #36** (pruebas
-de rendimiento y seguridad). No se puede cerrar la entrega sin las pruebas.
+**infra#4** (PR final a `main` y tag `v1.0.0`) está **bloqueado por back#18**
+(pruebas de rendimiento y seguridad). No se puede cerrar la entrega sin las
+pruebas.
 
 Eso se registra con la relación *blocked by* y aparece en la sección
 *Relationships* de ambos issues. GitHub también ofrece *relates to* para
@@ -247,7 +251,7 @@ tareas que se tocan sin depender.
 | Relación | Contiene. Jerárquica. | Orden. Horizontal. |
 | Pregunta | "¿De qué partes se compone?" | "¿Qué tiene que pasar antes?" |
 | Uso | Dividir una tarea grande | Bloquear el avance |
-| Ejemplo | `#12 Panel admin` → `#A CRUD usuarios`, `#B CRUD reportes` | `#37` espera a `#36` |
+| Ejemplo | `front#12 Panel admin` → `#A CRUD usuarios`, `#B CRUD reportes` | `infra#4` espera a `back#18` |
 
 ## Releases y versionado
 
@@ -291,7 +295,7 @@ Esto es lo que tienes que saber para no confiar de más en las herramientas.
 **Bloquean de verdad** (configuración de GitHub, no se pueden saltar salvo
 que seas admin):
 
-- 7 checks de CI en verde
+- los checks de CI del repo en verde
 - 1 aprobación de otra persona
 - Toda conversación del PR resuelta
 - Nada de force-push, nada de borrar ramas, nada de merge commits
@@ -303,7 +307,7 @@ que seas admin):
 | --- | --- |
 | **Mensajes de commit** | Solo los valida el hook local de husky. **CI no los revisa.** Si commiteas con `--no-verify` o sin `npm ci`, entra basura. |
 | **Scopes de commit** | El regex del CI no los valida contra la lista de `commits.md`. |
-| **Idioma de los mensajes** | Nadie lo comprueba. La documentación dice inglés; el historial reciente está en español. **Pendiente de decidir.** |
+| **Idioma de los mensajes** | Nadie lo comprueba. La convención es **español** (ver [commits.md](./conventions/commits.md)); no hay check. |
 | **CODEOWNERS** | Se piden, pero no son obligatorios (`require_code_owner_reviews: false`). |
 | **Que la rama esté al día** | `develop` no exige estar al día con la base. Puedes mergear con la rama atrasada. |
 | **El checklist de la plantilla** | Es un recordatorio, no un gate. |
@@ -322,8 +326,9 @@ temporalmente el requisito de aprobaciones y restaurarlo después.
 | Saber qué hacer hoy | [Project](https://github.com/orgs/DolyLanguagesORG/projects/1) → vista Kanban |
 | Ver fechas y qué se solapa | Project → vista Timeline |
 | Leer el detalle de una tarea | El issue |
-| Ver el avance del día | [Discussion #39](https://github.com/DolyLanguagesORG/doly-languages/discussions/39) (standup) |
-| Ver el plan completo | [`docs/cronograma.md`](./cronograma.md) |
+| Ver el avance del día | El standup diario del equipo (Discussions / canal del equipo) |
+| Ver el plan completo | [`cronograma.md`](./cronograma.md) |
+| Saber qué depende de qué y no perder fechas | [PLAN-Y-SEGUIMIENTO.md](./PLAN-Y-SEGUIMIENTO.md) |
 | Saber cómo abrir un PR | [COMO-HACER-UN-PR.md](./COMO-HACER-UN-PR.md) |
 | Reglas de ramas | [conventions/git-workflow.md](./conventions/git-workflow.md) |
 | Reglas de commits | [conventions/commits.md](./conventions/commits.md) |

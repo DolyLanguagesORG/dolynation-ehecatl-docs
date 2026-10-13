@@ -1,7 +1,7 @@
 # Environment variables
 
 Política de configuración por variables de entorno. La fuente de verdad es
-[`backend/.env.example`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/.env.example).
+[`.env.example`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/.env.example).
 
 ## Tabla de variables
 
@@ -44,7 +44,7 @@ Política de configuración por variables de entorno. La fuente de verdad es
 ## Validación
 
 Las variables se validan al arrancar con un schema Zod en
-[`backend/src/config/env.validation.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/config/env.validation.ts).
+[`src/config/env.validation.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/config/env.validation.ts).
 Si falta una variable requerida o tiene un valor inválido, la app **no
 arranca** y muestra el error exacto.
 

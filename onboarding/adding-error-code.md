@@ -19,7 +19,7 @@ switchear para tomar decisiones.
 
 ## Paso 1: Añadir el enum
 
-[`backend/src/common/errors/error-codes.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/errors/error-codes.ts):
+[`src/common/errors/error-codes.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/errors/error-codes.ts):
 
 ```ts
 export enum ErrorCode {
@@ -85,14 +85,14 @@ este mensaje sí viaja al cliente.
 ## Paso 5: Documentar
 
 Añade una fila a la tabla en
-[`docs/conventions/api-contracts.md`](../conventions/api-contracts.md#catálogo-de-códigos-de-error)
+[`conventions/api-contracts.md`](../conventions/api-contracts.md#catálogo-de-códigos-de-error)
 con el código, HTTP status y significado. Los códigos son parte del
 contrato público y el cliente los lee.
 
 ## Paso 6: Verificar
 
 ```bash
-cd backend
+# En el repo dolynation-atl-back
 npm run verify
 ```
 

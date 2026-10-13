@@ -5,16 +5,16 @@ Los mensajes se validan con `commitlint` vía los git hooks de husky (ver
 [code-style.md](./code-style.md)).
 
 > **⚠️ La validación de mensajes es local, no de CI.**
-> El hook `.husky/commit-msg` corre commitlint en tu máquina, pero **ningún
-> check de GitHub Actions revisa los mensajes de commit**. Solo se valida el
-> **título del PR** (check `pr-title`). Si commiteas con `--no-verify`, o sin
-> haber corrido `npm ci` en `backend/` (que es lo que instala husky), el
-> mensaje entra sin revisarse. Un detalle adicional: el hook hace
-> `cd backend` antes de ejecutarse, así que **solo funciona si commiteas desde
-> la raíz del repositorio**.
+> Los repos de **código** (`dolynation-atl-back`, `dolynation-tonatiuh-front`)
+> tienen su **propio husky** con `commitlint` (se instala al correr `npm ci`).
+> Ese hook valida el mensaje en tu máquina, pero
+> **ningún check de GitHub Actions revisa los mensajes de commit**: solo se
+> valida el **título del PR** (check `pr-title`). Si commiteas con
+> `--no-verify`, o sin haber corrido `npm ci` en el repo, el mensaje entra sin
+> revisarse. Los repos de `infra` y `docs` no tienen husky.
 >
 > El CI tampoco comprueba el **idioma** del mensaje ni que el `scope` esté en la
-> lista de más abajo: el `scope` solo lo valida commitlint en local.
+> lista de más abajo: el `scope` solo lo valida `commitlint` en local.
 
 ## Estructura del mensaje
 
@@ -43,12 +43,14 @@ Los mensajes se validan con `commitlint` vía los git hooks de husky (ver
 
 Para breaking changes, añade `!` después del tipo: `feat(api)!: remove v1 routes`.
 
-## Scopes usados en el repo
+## Scopes usados en los repos
 
-Lista cerrada — usa uno de estos o crea uno nuevo documentándolo:
+Lista cerrada — usa uno de estos o crea uno nuevo documentándolo. No todos
+aplican a todos los repos: en el frontend lo normal es `ui`, `repo` y `deps`;
+el resto son mayoritariamente del backend y de infra.
 
 `auth`, `readings`, `ia`, `users`, `errors`, `docs`, `deps`, `db`,
-`prod`, `infra`, `cleanup`, `repo`
+`prod`, `infra`, `cleanup`, `repo`, `ui`
 
 ## Reglas de formato
 
