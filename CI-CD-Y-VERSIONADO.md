@@ -12,6 +12,20 @@ DolyNation: `dolynation-atl-back` (backend), `dolynation-tonatiuh-front`
 > [conventions/versioning.md](./conventions/versioning.md). Este documento
 > describe el **pipeline completo** de extremo a extremo.
 
+## Entornos (3)
+
+DolyNation corre en **3 entornos de despliegue**:
+
+| Entorno | Se despliega con | Trigger |
+| --- | --- | --- |
+| **Desarrollo** | merge a `develop` | automático |
+| **Staging** | rama `rc-<version>` (con `versions.yml`) | automático |
+| **Producción** | merge a `main` (desde la `rc` aceptada) | automático |
+
+`rc-*` **no es un entorno**: es una rama/estado efímero y *single-flight* (solo
+una a la vez). Mientras exista una `rc`, no se puede iniciar otra release; al
+consolidarla en `main` se elimina la rama y se libera el ciclo.
+
 ---
 
 ## 0. Estado: hoy vs. objetivo
@@ -24,7 +38,7 @@ no está implementado:
 | Checks de CI | Implementados en los 4 repos (`ci-*.yml`, `pr-title`, `pr-labels`) | Igual |
 | Versionado | Script propio en `release.yml` que corre en `push` a `main` | **release-please** con PR acumulativo en `develop` |
 | Tag / Release | Se crea al llegar a `main` | Se crea al mergear el PR de release |
-| Entornos (`rc-*`, staging) | No existen todavía | Ramas `rc-*` efímeras + staging en `infra` |
+| Entornos (desarrollo, staging, producción) | No existen todavía | Deploy por SSH a 3 entornos; `rc-*` es rama efímera |
 | Manifiesto `versions.yml` | No existe | Fuente de verdad de versiones en `infra` |
 | Cascada `infra → front/back` | No existe | PRs automáticos vía PAT |
 
@@ -164,4 +178,6 @@ La tabla completa y las reglas están en
   el check `pr-title` valida el formato, no el idioma.
 - **Relación `develop` ↔ `main`:** definir cómo se refleja un release de
   `develop` en `main` sin duplicar el tag.
-- **`rc-*`:** son ramas efímeras; se eliminan al consolidar la release.
+- **`rc-*`:** son ramas efímeras y *single-flight*: solo una a la vez. Mientras
+  exista una `rc`, no se puede iniciar otra release; se elimina al consolidar la
+  release en `main` para liberar el ciclo.
