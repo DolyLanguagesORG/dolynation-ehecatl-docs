@@ -6,7 +6,7 @@ El backend usa Jest con ts-jest. Hay dos tipos de tests:
 
 - Archivos: `*.spec.ts` junto al código que prueban.
 - Corren con `npm run test` o `npm run test:watch`.
-- Configuración: [`backend/jest.config.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/jest.config.ts).
+- Configuración: [`jest.config.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/jest.config.ts).
 
 Ejemplos actuales:
 
@@ -17,10 +17,10 @@ Ejemplos actuales:
   en respuestas de error.
 - `src/modules/auth/auth.service.spec.ts`, etc.
 
-## E2E tests (en `backend/test/`)
+## E2E tests (en `test/`)
 
-- Archivos: `*.e2e-spec.ts` en [`backend/test/`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/test/).
-- Corren con `npm run test:e2e` (config: [`backend/test/jest-e2e.json`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/test/jest-e2e.json)).
+- Archivos: `*.e2e-spec.ts` en [`test/`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/test/).
+- Corren con `npm run test:e2e` (config: [`test/jest-e2e.json`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/test/jest-e2e.json)).
 - Construyen `AppModule` completo y verifican el comportamiento end-to-end
   (HTTP request → respuesta).
 

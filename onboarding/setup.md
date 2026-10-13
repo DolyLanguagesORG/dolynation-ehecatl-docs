@@ -19,15 +19,18 @@ docker --version
 
 ## Clonar el repo
 
+Este setup levanta el **backend**. Clona su repo (más abajo clonarás el de
+infraestructura):
+
 ```bash
-git clone git@github.com:DolyLanguagesORG/doly-languages.git
-cd doly-languages
+git clone git@github.com:DolyLanguagesORG/dolynation-atl-back.git
+cd dolynation-atl-back
 ```
 
 ## Instalar dependencias del backend
 
 ```bash
-cd backend
+# dentro de dolynation-atl-back
 npm ci
 ```
 
@@ -101,7 +104,7 @@ curl http://localhost:3333/api/v1/openapi.json | head -50
 ## Correr los tests
 
 ```bash
-cd backend
+# dentro de dolynation-atl-back
 npm run verify    # typecheck + lint + format + test (todo en uno)
 ```
 
@@ -129,7 +132,7 @@ lsof -ti:3333 | xargs kill -9
 Postgres no está corriendo. Levanta el contenedor:
 
 ```bash
-cd infrastructure && docker compose -f docker-compose.test.yml up -d
+cd dolynation-tlalli-infra && docker compose -f docker-compose.test.yml up -d
 ```
 
 ### Los tests fallan con errores de Drizzle
@@ -154,7 +157,8 @@ docker compose -f docker-compose.test.yml up -d
 Si tienes los hooks configurados pero no corren:
 
 ```bash
-cd backend && npx husky
+# dentro de dolynation-atl-back
+npx husky
 ```
 
 ## Próximos pasos

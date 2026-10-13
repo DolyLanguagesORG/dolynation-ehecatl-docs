@@ -179,7 +179,7 @@ export class ExampleModule {}
 ```
 
 Y añadir `ExampleModule` a los `imports` de
-[`backend/src/app.module.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/app.module.ts).
+[`src/app.module.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/app.module.ts).
 
 ## Paso 5: Tests
 
@@ -228,7 +228,7 @@ describe('POST /example', () => {
 ## Paso 6: Verificar
 
 ```bash
-cd backend
+# En el repo dolynation-atl-back
 npm run verify
 ```
 

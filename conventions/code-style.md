@@ -6,7 +6,7 @@ escriban código indistinguishable** del mismo problema.
 ## TypeScript estricto
 
 Las reglas no negociables viven en
-[`backend/TYPESCRIPT_STANDARDS.md`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/TYPESCRIPT_STANDARDS.md).
+[`TYPESCRIPT_STANDARDS.md`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/TYPESCRIPT_STANDARDS.md).
 Resumen:
 
 - `strict` activado (strictNullChecks, noImplicitAny, etc.)
@@ -20,7 +20,7 @@ Si necesitas saltarte una regla, **arregla el código**, no silencies.
 
 ## ESLint
 
-Config: [`backend/.eslintrc.cjs`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/.eslintrc.cjs).
+Config: [`.eslintrc.cjs`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/.eslintrc.cjs).
 Reglas activas (no exhaustivo):
 
 - `@typescript-eslint/no-explicit-any: error`
@@ -38,12 +38,12 @@ Reglas activas (no exhaustivo):
 - `no-var: error`, `prefer-const: error`
 
 Los archivos de test (`*.spec.ts`, `*.e2e-spec.ts`) tienen un override que
-relaja algunas reglas (no return-type explícito en mocks, допуска any en
+relaja algunas reglas (no return-type explícito en mocks, se permite `any` en
 fixtures, etc.).
 
 ## Prettier
 
-Config: [`backend/.prettierrc`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/.prettierrc).
+Config: [`.prettierrc`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/.prettierrc).
 
 ```json
 {
@@ -64,7 +64,7 @@ No discutas formato en code review — Prettier decide. Ejecuta
 Antes de commitear (o antes de pedir review), corre **siempre**:
 
 ```bash
-cd backend
+# En el repo dolynation-atl-back
 npm run verify
 ```
 

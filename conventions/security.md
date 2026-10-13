@@ -24,20 +24,20 @@ de la librería es suficiente para nuestro nivel de tráfico.
 ### Decoradores
 
 - `@Public()` — marca una ruta como pública, saltando el `JwtAuthGuard`.
-  En [`backend/src/common/decorators/public.decorator.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/decorators/public.decorator.ts).
+  En [`src/common/decorators/public.decorator.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/decorators/public.decorator.ts).
 - `@CurrentUser()` — inyecta el `User` autenticado en el controller. En
-  [`backend/src/common/decorators/current-user.decorator.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/decorators/current-user.decorator.ts).
+  [`src/common/decorators/current-user.decorator.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/decorators/current-user.decorator.ts).
 
 ### Guards
 
-- `JwtAuthGuard` global en [`backend/src/common/guards/jwt-auth.guard.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/guards/jwt-auth.guard.ts).
+- `JwtAuthGuard` global en [`src/common/guards/jwt-auth.guard.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/guards/jwt-auth.guard.ts).
 - El guard es **opt-out** (todas las rutas requieren auth salvo las que
   tengan `@Public()`).
 
 ## Validación de input
 
 `ValidationPipe` global en
-[`backend/src/main.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/main.ts) con:
+[`src/main.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/main.ts) con:
 
 - `whitelist: true` — strip propiedades no declaradas en DTOs.
 - `forbidNonWhitelisted: true` — rechaza requests con props extra.
@@ -50,7 +50,7 @@ Cada DTO usa `class-validator` (`@IsString()`, `@IsEmail()`, etc.).
 
 ### Helmet
 
-Configurado en [`backend/src/main.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/main.ts) con
+Configurado en [`src/main.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/main.ts) con
 Content Security Policy estricto. **Excepción importante**: `script-src`
 permite `https://cdn.jsdelivr.net` porque Scalar API Reference carga su
 JS bundle desde ahí.
@@ -75,7 +75,7 @@ En producción, restringir a orígenes específicos vía variable de entorno
 - `nestjs-pino` para logs estructurados JSON.
 - En dev: `pino-pretty` para human-readable.
 - Cada request pasa por `LoggingInterceptor` en
-  [`backend/src/common/interceptors/logging.interceptor.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/interceptors/logging.interceptor.ts).
+  [`src/common/interceptors/logging.interceptor.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/interceptors/logging.interceptor.ts).
 
 **No loggear** passwords, tokens, o datos personales (PII) en claro.
 

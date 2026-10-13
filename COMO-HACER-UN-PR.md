@@ -8,7 +8,7 @@ Guía práctica del repositorio. Si solo te lees una sección, léete
 ```bash
 git switch develop && git pull
 git switch -c docs/issue-6-guia-pr
-cd backend && npm run verify && cd ..
+npm run verify        # el verify del repo que estés tocando
 git add -A
 git commit -m "docs(repo): agrega la guia de pull requests"
 git push -u origin docs/issue-6-guia-pr
@@ -24,15 +24,20 @@ funciona y qué pasa si te saltas un paso.
 
 ## Requisitos (una sola vez)
 
+Clona **el repositorio en el que vas a trabajar**. El código no vive en un repo
+único, sino en cuatro repos separados (front, back, infra, docs):
+
 ```bash
-git clone git@github.com:DolyLanguagesORG/doly-languages.git
-cd doly-languages
-cd backend && npm ci && cd ..
+# elige el que toque (ejemplo: backend)
+git clone git@github.com:DolyLanguagesORG/dolynation-atl-back.git
+cd dolynation-atl-back
+npm ci    # dependencias (+ husky en back/front)
 ```
 
-`npm ci` es lo que instala **husky**, los hooks que validan tus commits
-([abajo](#qué-se-valida-en-tu-máquina-y-qué-no)). Si te lo saltas, commitear
-no te va a avisar de nada.
+`npm ci` es lo que instala **husky** en el backend y el frontend: los hooks que
+validan tus commits ([abajo](#qué-se-valida-en-tu-máquina-y-qué-no)). Si te lo
+saltas, commitear no te va a avisar de nada. `infra` y `docs` **no** tienen
+hooks de commit (no son proyectos Node).
 
 ## El flujo completo de una tarea
 
@@ -49,39 +54,46 @@ trabajabas, esto lo trae.
 ### 2. Crea la rama
 
 ```bash
-git switch -c feat/issue-12-login-page
+git switch -c feat/issue-12-auth-login-page
 ```
 
-**Prefijos permitidos** (el check `pr-target` acepta estos, y también el
-formato de GitHub que se explica abajo):
+**Formato:** `tipo/issue-<n>-<módulo>-<detalle>`
+(p. ej. `feat/issue-12-auth-login-page`), donde `<n>` es el número del issue
+en su repo.
 
-| Prefijo | Para qué |
+**Tipos permitidos** (el check `pr-target` los acepta, y también el formato de
+GitHub que se explica abajo):
+
+| Tipo | Para qué |
 | --- | --- |
 | `feat/` | funcionalidad nueva |
 | `fix/` | corrección de bug |
-| `chore/` | mantenimiento, refactors, tooling |
+| `refactor/` | reescritura sin cambiar comportamiento |
 | `docs/` | solo documentación |
+| `test/` | pruebas |
+| `chore/` | mantenimiento, dependencias, tooling |
+| `perf/`, `build/`, `ci/`, `style/` | igual que en los commits |
 | `hotfix/` | corrección urgente **desde `main`** |
 
 **Reglas de nombre:**
 
-- En `feat/` y `fix/` el **número de issue es obligatorio**: `feat/issue-12-login-page`.
+- El **número de issue es obligatorio**: `feat/issue-12-auth-login-page`.
   Sin él nadie puede trazar tu PR en el tablero.
-- En `chore/` y `docs/` es opcional.
+- `<módulo>` es el área (auth, readings, database…) y `<detalle>` lo específico.
 - Máximo 50 caracteres *(convención del equipo; el CI no lo mide)*.
-- El prefijo debe coincidir con el tipo de commit que va a llevar. Si la rama
-  es `feat/`, el commit es `feat(...)` y el título del PR es `feat(...)`.
-- Todo en kebab-case, sin espacios ni acentos: `docs/actualiza-readme`.
+- El tipo debe coincidir con el del commit y el título del PR. Si la rama es
+  `feat/...`, el commit y el título son `feat(...)`.
+- Todo en kebab-case, sin espacios ni acentos: `docs/issue-20-git-workflow`.
 
 #### ¿Prefijo o el botón *Create a branch*?
 
 Las dos formas valen. El botón **Create a branch** del issue crea la rama como
-`<n>-<kebab>` (`12-login-page`), y `pr-target` también la acepta, para que usar
-el botón no te deje el CI en rojo.
+`<n>-<detalle>` (`12-auth-login-page`), y `pr-target` también la acepta, para que
+usar el botón no te deje el CI en rojo.
 
-| | Con prefijo | Formato de GitHub |
+| | Con prefijo (recomendado) | Formato de GitHub |
 | --- | --- | --- |
-| Ejemplo | `feat/issue-12-login-page` | `12-login-page` |
+| Ejemplo | `feat/issue-12-auth-login-page` | `12-auth-login-page` |
 | Dice el tipo de cambio | Sí, de un vistazo | No |
 | La acepta `pr-target` | Sí | Sí |
 | Sale del botón *Create a branch* | No | Sí |
@@ -96,17 +108,20 @@ el botón no te deje el CI en rojo.
 ### 3. Verifica en local antes de commitear
 
 ```bash
-cd backend
-npm run verify     # typecheck + lint:check + format:check + test
-cd ..
+npm run verify     # el verify del repo que estés tocando
 ```
+
+- **Backend** → `typecheck + lint:check + format:check + test`.
+- **Frontend** → `lint + typecheck`.
+- **Infra / docs** → no hay `verify`: valida con `docker compose config` /
+  `make` (infra) o comprobando los links (docs; el CI corre `link-check`).
 
 Este comando es tu red de seguridad. Lo que falla aquí, falla igual en CI pero
 tú lo descubres en 20 segundos en vez de esperar 4 minutos. Si tienes que
-corregir algo automáticamente:
+corregir algo automáticamente (solo back/front):
 
 ```bash
-npm run verify:fix
+npm run verify:fix     # backend
 ```
 
 **Si `verify` falla, casi siempre es una de estas dos cosas** (ninguna es tu
@@ -119,12 +134,12 @@ código):
 
 #### Si estás en Windows
 
-Los scripts de `backend/package.json` usan el prefijo
+Los scripts del repo del **backend** usan el prefijo
 `ESLINT_USE_FLAT_CONFIG=false`, que es sintaxis de shell Unix. En Windows
-`npm` lo ejecuta con `cmd` y se rompe. Corre los pasos por separado:
+`npm` lo ejecuta con `cmd` y se rompe. Corre los pasos por separado (desde la
+raíz del repo del backend):
 
 ```bash
-cd backend
 npx tsc --noEmit
 ESLINT_USE_FLAT_CONFIG=false npx eslint "{src,test}/**/*.ts"   # en Git Bash
 npx prettier --check "{src,test}/**/*.ts"
@@ -163,7 +178,7 @@ revertir.
 ### 5. Sube la rama
 
 ```bash
-git push -u origin feat/issue-12-login-page
+git push -u origin feat/issue-12-auth-login-page
 ```
 
 ### 6. Abre el PR
@@ -182,14 +197,15 @@ EOF
 )"
 ```
 
-O en la web: <https://github.com/DolyLanguagesORG/doly-languages/compare/develop...tu-rama>
+O en la web: `https://github.com/DolyLanguagesORG/<repo>/compare/develop...tu-rama`
+(sustituye `<repo>` por el repositorio en el que trabajas).
 
 **Reglas que el CI impone al PR:**
 
 | Regla | Detalle |
 | --- | --- |
 | **Rama base** | `develop` para trabajo diario. `main` solo para release o hotfix |
-| **Rama origen** | `feat/`, `fix/`, `chore/`, `docs/` **o** el formato `<n>-<kebab>` de GitHub |
+| **Rama origen** | `tipo/issue-<n>-...` **o** el formato `<n>-<detalle>` de GitHub |
 | **Título** | debe ser Conventional Commits: `tipo(scope): descripción` |
 | **Merges** | solo **squash**. No hay merge commit ni rebase merge |
 
@@ -297,19 +313,20 @@ gh pr view 45 --json closingIssuesReferences \
 
 
 
-### 8. Espera los 7 checks
+### 8. Espera los checks
 
-Cuando abras el PR arranca el CI. Son **7 checks repartidos en 5 archivos**:
+Cuando abras el PR arranca el CI de **ese repositorio**. El número de checks
+depende de dónde trabajes:
 
-| Check | Qué valida |
+| Repo | Checks requeridos |
 | --- | --- |
-| `unit-and-static` | tipos, lint, formato y tests unitarios |
-| `e2e` | tests end-to-end |
-| `build` | que el backend compile |
-| `link-check` | que no haya links rotos en la documentación |
-| `openapi-guard` | que no se rompa el contrato de la API |
-| `pr-title` | el formato del **título del PR** |
-| `pr-target` | la **rama base** y la **rama origen** |
+| Front `dolynation-tonatiuh-front` | `lint`, `typecheck`, `build`, `pr-title`, `pr-target` |
+| Back `dolynation-atl-back` | `unit-and-static`, `e2e`, `build`, `openapi-guard`, `pr-title`, `pr-target` |
+| Infra `dolynation-tlalli-infra` | `compose-validate`, `pr-title`, `pr-target` |
+| Docs `dolynation-ehecatl-docs` | `link-check`, `pr-title`, `pr-target` |
+
+`pr-title` valida el formato del **título del PR** y `pr-target` la **rama
+base** y la **rama origen**; ambos están en los cuatro repos.
 
 Mientras un check esté en rojo o en cola, **GitHub no habilita el botón de
 merge**. No es un aviso: es un bloqueo.
@@ -417,15 +434,15 @@ Los hooks viven en `.husky/`:
 Se pueden saltar con `git commit --no-verify`. **No lo hagas** salvo que sepas
 exactamente qué te estás saltando.
 
-> Detalle: el hook `commit-msg` hace `cd backend` antes de correr, así que solo
-> funciona si commiteas **desde la raíz del repositorio**. Si entras a
-> `backend/` y commiteas desde ahí, el hook no se ejecuta.
+> Detalle: el hook `commit-msg` vive en la **raíz del repo del backend** (y del
+> frontend), así que solo funciona si commiteas **desde la raíz de ese repo**.
+> En `infra` y `docs`, que no tienen husky, no hay validación local de mensajes.
 
 ## Problemas frecuentes
 
 | Síntoma | Causa | Solución |
 | --- | --- | --- |
-| `pr-target` en rojo | La rama no empieza por `feat/ fix/ chore/ docs/` | Renombra la rama y haz `git push -u origin <nueva>` |
+| `pr-target` en rojo | La rama no sigue `tipo/issue-<n>-...` ni el formato del botón | Renombra la rama y haz `git push -u origin <nueva>` |
 | `pr-title` en rojo | El título no es Conventional Commits | Edita el título en el PR, no hace falta push |
 | Botón de merge gris | Falta un check, o falta aprobación | Revisa la sección *Checks* del PR |
 | `link-check` en rojo | Un link roto en un `.md` | Corrige el link; en docs, rutas relativas |
@@ -439,10 +456,10 @@ exactamente qué te estás saltando.
 ```
 ANTES
   git switch develop && git pull
-  git switch -c <tipo>/issue-<n>-<kebab>      # tipo: feat fix chore docs
+  git switch -c <tipo>/issue-<n>-<módulo>-<detalle>   # feat fix docs chore …
 
 ANTES DE COMMITEAR
-  cd backend && npm run verify && cd ..
+  npm run verify        # en el repo que estés tocando
 
 COMMIT
   git add -A && git status && git diff --cached
@@ -458,7 +475,7 @@ ANTES DE MERGEAR
   [ ] base = develop
   [ ] rama origen con prefijo permitido
   [ ] título conventional
-  [ ] 7 checks verdes
+  [ ] checks del repo en verde
   [ ] 1 aprobación de otra persona
   [ ] conversaciones resueltas
   [ ] Squash and merge
