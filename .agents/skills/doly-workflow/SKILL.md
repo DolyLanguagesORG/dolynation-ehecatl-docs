@@ -51,9 +51,9 @@ Los releases usan SemVer automático con **release-please** (PR acumulativo en
 
 ## Documentos fuente
 
-- [FLUJO-DE-TRABAJO.md](../../../FLUJO-DE-TRABAJO.md)
-- [COMO-HACER-UN-PR.md](../../../COMO-HACER-UN-PR.md)
-- [CI-CD-Y-VERSIONADO.md](../../../CI-CD-Y-VERSIONADO.md)
+- [FLUJO-DE-TRABAJO.md](../../../operations/FLUJO-DE-TRABAJO.md)
+- [COMO-HACER-UN-PR.md](../../../operations/COMO-HACER-UN-PR.md)
+- [CI-CD-Y-VERSIONADO.md](../../../operations/CI-CD-Y-VERSIONADO.md)
 - [conventions/](../../../conventions/)
 
 ## Referencias

@@ -21,8 +21,9 @@ servidor hasta que vuelve la respuesta.
         ┌───────────┬───────────┬───┴────────┬────────────┬───────────┐
         ▼           ▼           ▼            ▼            ▼           ▼
    ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐
-   │  auth   │ │  users  │ │readings │ │   ia    │ │ health  │ │(futuros)│
-   │ module  │ │ module  │ │ module  │ │ module  │ │ module  │ │         │
+   │  auth   │ │  users  │ │readings │ │   ia    │ │ health  │ │settings │
+   │ module  │ │ module  │ │ module  │ │ module  │ │ module  │ │history  │
+   │         │ │         │ │         │ │         │ │         │ │admin    │
    └────┬────┘ └────┬────┘ └────┬────┘ └────┬────┘ └────┬────┘ └─────────┘
         │           │           │           │           │
         └───────────┴───────────┴─────┬─────┴───────────┘
@@ -58,10 +59,14 @@ src/
 │   └── drizzle/                     # schema.ts, relations.ts, types.ts
 └── modules/
     ├── auth/                        # register, login, refresh, /me, logout
-    ├── users/                       # /users/streak
-    ├── readings/                    # /readings (generar, listar, evaluar)
+    ├── users/                       # /users/streak, /users/points
+    ├── readings/                    # /readings (generar, evaluar, explicar, TTS)
     │   ├── prompt-generation/       # Subdomain: catalog, prompt-builder
-    │   └── prompt-logs/             # Subdomain: audit de prompts
+    │   ├── prompt-logs/             # Subdomain: audit de prompts
+    │   └── (planificado) cache/     # S2: caché por prompt_hash
+    ├── settings/                    # (S2) /settings/language, /settings/categories
+    ├── history/                     # (S4) /history, /history/scores
+    ├── admin/                       # (S4) /admin/categories, /admin/users
     ├── ia/                          # /ia/chat (passthrough al provider activo)
     │   └── providers/               # MiniMax-M3.provider, ai-provider.factory, interfaces
     └── health/                      # /health/live, /health/ready (Terminus)
@@ -115,6 +120,17 @@ src/
   interna de la BD.
 - **Envelopes via decorador** (`ApiOkResponseOf`) — un solo lugar para
   cambiar la forma de todas las respuestas en Scalar.
+
+## Módulos actuales y planificados
+
+| Módulo | Estado | Issue |
+| --- | --- | --- |
+| `auth`, `users`, `readings`, `ia`, `health` | Implementado | — |
+| `settings` (preferencias e idioma) | Planificado S2 | `back#8` |
+| caché de lecturas | Planificado S2 | `back#9` |
+| evaluación de resumen y vocabulario/TTS | Planificado S3 (dentro de `readings`) | `back#11`, `back#13` |
+| `history` | Planificado S4 | `back#16` |
+| `admin` | Planificado S4 | `back#17` |
 
 ## Próximos pasos arquitecturales (ideas)
 

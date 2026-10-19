@@ -23,7 +23,7 @@ mano.
 
 Durante el desarrollo normal **no hay tags**: el tag nace al mergear el PR de
 release. El promote a `main` (producción) es un PR aparte; el detalle del
-pipeline está en [CI-CD-Y-VERSIONADO.md](../CI-CD-Y-VERSIONADO.md).
+pipeline está en [CI-CD-Y-VERSIONADO.md](../operations/CI-CD-Y-VERSIONADO.md).
 
 ## Reglas de bump
 
@@ -63,15 +63,15 @@ Release-As: 1.0.0
 
 ```bash
 # 1. Trabajo normal en una rama
-git checkout -b feat/issue-12-study-config
+git checkout -b feat/issue-8-settings
 npm run verify    # en el repo correspondiente (atl-back / tonatiuh-front)
-git commit -m "feat(users): persist study preferences in user_settings"
-git push -u origin feat/issue-12-study-config
+git commit -m "feat(users): persist study preferences in user_preferences"
+git push -u origin feat/issue-8-settings
 
 # 2. PR con título Conventional Commits hacia develop
 gh pr create --base develop \
-  --title "feat(users): persist study preferences in user_settings" \
-  --body "Closes #12"
+  --title "feat(users): persist study preferences in user_preferences" \
+  --body "Closes #8"
 
 # 3. Cuando toca release: mergear el PR de release-please.
 #    Ese PR acumula los commits y propone vX.Y.Z.

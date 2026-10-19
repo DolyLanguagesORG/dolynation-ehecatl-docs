@@ -662,9 +662,9 @@ Para el desarrollo del proyecto **DolyNation** se implementa el marco de trabajo
 * **Desarrollador Frontend:** Juan Antonio Deras Durón  
   * **Responsabilidades:** Maquetado responsivo en Next.js, integración de Tailwind CSS, diseño de componentes de interfaz (visor de lectura, pop-ups contextuales, dashboard de usuario).  
 * **Desarrollador Backend (Principal):** Aozmar Azael García Candela  
-  * **Responsabilidades:** Arquitectura de microservicios y módulos en NestJS, lógica de autenticación criptográfica, conector con APIs de IA (OpenAI/Gemini) y motor de evaluación de resúmenes.  
+  * **Responsabilidades:** Arquitectura de microservicios y módulos en NestJS, lógica de autenticación criptográfica, conector con APIs de IA (MiniMax-M3 adaptable) y motor de evaluación de resúmenes.  
 * **Desarrollador Backend (Soporte):** José Elías Galarza Pedroza  
-  * **Responsabilidades:** Diseño de DTOs, controladores de base de datos (PostgreSQL/MongoDB), endpoints para perfiles, historial de actividades y módulo administrativo.
+  * **Responsabilidades:** Diseño de DTOs, controladores de base de datos (PostgreSQL), endpoints para perfiles, historial de actividades y módulo administrativo.
 
 ## **12\. Separación del proyecto en tareas** {#12.-separación-del-proyecto-en-tareas}
 
@@ -708,7 +708,7 @@ El proyecto contempla un total de **33 tareas técnicas** derivadas directamente
 | **infra#2** | Configuración del repositorio: main/develop, branch protection, plantillas y CI/CD | Jesús (SM) | 05 oct 2026 | 06 oct 2026 |
 | **back#2** | Setup de arquitectura NestJS, conexión a base de datos y entidad User | Azael | 05 oct 2026 | 08 oct 2026 |
 | **front#2** | Setup de proyecto Next.js con Tailwind CSS, layout base y temas | Juan | 05 oct 2026 | 07 oct 2026 |
-| **back#3** | Servicio de hash criptográfico (bcrypt/Argon2) y estrategia JWT | Azael | 09 oct 2026 | 12 oct 2026 |
+| **back#3** | Servicio de hash criptográfico (Argon2id) y estrategia JWT | Azael | 09 oct 2026 | 12 oct 2026 |
 | **back#4** | DTOs de validación de registro/login y endpoints de autenticación | Elías | 09 oct 2026 | 12 oct 2026 |
 | **front#3** | Maquetado e integración de vistas de login y registro en Next.js | Juan | 08 oct 2026 | 12 oct 2026 |
 | **back#5** | Endpoints para consultar y actualizar el perfil de usuario | Elías | 13 oct 2026 | 15 oct 2026 |

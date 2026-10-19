@@ -21,7 +21,7 @@ tarea en los issues del repositorio.
 | Entrega final | 10/Dic/2026 |
 | Límite diario por tarea | 23:59 CST |
 | Sprints | 5 |
-| Tareas | 33 (+5 de plataforma) |
+| Tareas | 33 (+5 de plataforma + 3 migraciones de schema) |
 | Release actual | `v0.1.0` |
 | Release de cierre | `v1.0.0` |
 
@@ -61,10 +61,10 @@ Referencias de repo: `back` = `dolynation-atl-back`, `front` =
 | # | Issue | Tarea | Responsable | Inicio | Entrega |
 | --: | :---: | --- | --- | :---: | :---: |
 | 1 | [infra#2](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/2) | Configuración del repositorio: main/develop, branch protection, plantillas de PR/issue y GitHub Actions (CI) | Jesús (SM) | 05 Oct 2026 | 06 Oct 2026 |
-| 2 | [back#2](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/2) | Setup de arquitectura NestJS, conexión a base de datos (PostgreSQL/MongoDB) y entidad User | Azael | 05 Oct 2026 | 08 Oct 2026 |
+| 2 | [back#2](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/2) | Setup de arquitectura NestJS, conexión a PostgreSQL (Drizzle ORM) y entidad User | Azael | 05 Oct 2026 | 08 Oct 2026 |
 | 3 | [front#2](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/2) | Setup de proyecto Next.js con Tailwind CSS, layout base y temas de la interfaz | Juan | 05 Oct 2026 | 07 Oct 2026 |
-| 4 | [back#3](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/3) | Servicio de hash criptográfico (bcrypt/Argon2) y estrategia de autenticación JWT en NestJS | Azael | 09 Oct 2026 | 12 Oct 2026 |
-| 5 | [back#4](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/4) | DTOs de validación de registro/login y endpoints de autenticación (/auth/register, /auth/login) | Elías | 09 Oct 2026 | 12 Oct 2026 |
+| 4 | [back#3](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/3) | Servicio de hash criptográfico (Argon2id) y estrategia de autenticación JWT en NestJS | Azael | 09 Oct 2026 | 12 Oct 2026 |
+| 5 | [back#4](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/4) | DTOs y endpoints de autenticación (/auth/register, /login, /refresh, /logout, /me) | Elías | 09 Oct 2026 | 12 Oct 2026 |
 | 6 | [front#3](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/3) | Maquetado e integración de vistas de login y registro en Next.js | Juan | 08 Oct 2026 | 12 Oct 2026 |
 | 7 | [back#5](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/5) | Endpoints para consultar y actualizar el perfil de usuario (/user/profile) | Elías | 13 Oct 2026 | 15 Oct 2026 |
 | 8 | [front#4](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/4) | Vista del perfil de usuario e integración con el estado de sesión en Next.js | Juan | 13 Oct 2026 | 16 Oct 2026 |
@@ -75,18 +75,20 @@ Referencias de repo: `back` = `dolynation-atl-back`, `front` =
 ## Sprint 2 — Configuración de Estudio y Lecturas con IA
 
 **Periodo:** 19/Oct – 01/Nov/2026  
-**Objetivo:** Conectar el backend con la API de IA (OpenAI/Gemini) para generar lecturas según la configuración del estudiante.  
+**Objetivo:** Conectar el backend con la API de IA (MiniMax-M3 adaptable) para generar lecturas según la configuración del estudiante.  
 **Cierre (milestone):** Sprint 2: Configuración de Estudio y Lecturas con IA — [back](https://github.com/DolyLanguagesORG/dolynation-atl-back/milestone/2) · [front](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/milestone/2)  
 **Tareas:** 7
 
+**Prerrequisito de schema:** [infra#20](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/20) — preferencias, categorías, idioma y `prompt_hash`.
+
 | # | Issue | Tarea | Responsable | Inicio | Entrega |
 | --: | :---: | --- | --- | :---: | :---: |
-| 10 | [back#7](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/7) | Módulo de servicios en NestJS para integración con la API de IA (OpenAI/Gemini) y arquitectura de prompts | Azael | 19 Oct 2026 | 23 Oct 2026 |
+| 10 | [back#7](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/7) | Módulo de servicios en NestJS para integración con MiniMax-M3 (adaptable) y arquitectura de prompts | Azael | 19 Oct 2026 | 23 Oct 2026 |
 | 11 | [back#8](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/8) | Endpoints para selección y guardado de categorías e idiomas (/settings/categories, /settings/languages) | Elías | 19 Oct 2026 | 22 Oct 2026 |
 | 12 | [front#5](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/5) | Formulario de selección de parámetros de estudio (idioma, categoría, dificultad, longitud) en Next.js | Juan | 19 Oct 2026 | 23 Oct 2026 |
-| 13 | [back#9](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/9) | Servicio de caché para respuestas de lectura con parámetros equivalentes (RNF-05) | Jesús (SM) | 22 Oct 2026 | 26 Oct 2026 |
+| 13 | [back#9](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/9) | Servicio de caché para respuestas de lectura con parámetros equivalentes (RNF-04) | Jesús (SM) | 22 Oct 2026 | 26 Oct 2026 |
 | 14 | [front#6](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/6) | Visor inmersivo de lectura (diseño enfocado en la legibilidad) en Next.js | Juan | 24 Oct 2026 | 28 Oct 2026 |
-| 15 | [back#10](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/10) | Endpoint de generación de lectura basada en los parámetros seleccionados (/content/generate) | Azael + Elías | 24 Oct 2026 | 28 Oct 2026 |
+| 15 | [back#10](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/10) | Endpoint de generación de lectura (POST /readings) basado en parámetros | Azael + Elías | 24 Oct 2026 | 28 Oct 2026 |
 | 16 | [front#7](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/7) | Conexión del flujo completo: formulario de parámetros → generación IA → visor | Jesús (SM) + Juan | 29 Oct 2026 | 01 Nov 2026 |
 
 ---
@@ -98,14 +100,16 @@ Referencias de repo: `back` = `dolynation-atl-back`, `front` =
 **Cierre (milestone):** Sprint 3: Vocabulario Contextual y Evaluación por PNL — [back](https://github.com/DolyLanguagesORG/dolynation-atl-back/milestone/3) · [front](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/milestone/3)  
 **Tareas:** 7
 
+**Prerrequisito de schema:** [infra#21](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/21) — `evaluations` y `vocabulary_logs`.
+
 | # | Issue | Tarea | Responsable | Inicio | Entrega |
 | --: | :---: | --- | --- | :---: | :---: |
 | 17 | [front#8](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/8) | Captura e interacción de selección de texto dentro del visor de lectura en Next.js | Juan | 02 Nov 2026 | 05 Nov 2026 |
-| 18 | [back#11](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/11) | Endpoint de consulta contextual de vocabulario a la IA (significado, definición, ejemplos, oración original) | Azael | 02 Nov 2026 | 06 Nov 2026 |
+| 18 | [back#11](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/11) | Endpoint de vocabulario contextual (significado, definición, ejemplos, oración original) y TTS | Azael | 02 Nov 2026 | 06 Nov 2026 |
 | 19 | [front#9](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/9) | Componente emergente (pop-up) de diccionario contextual e integración de audio corto (TTS) | Juan | 06 Nov 2026 | 09 Nov 2026 |
 | 20 | [front#10](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/10) | Componente de área de redacción libre de resumen y envío de evaluación en Next.js | Juan + Elías | 07 Nov 2026 | 10 Nov 2026 |
 | 21 | [back#12](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/12) | Servicio de evaluación y calificación por PNL en NestJS (cobertura, precisión, coherencia) con feedback | Jesús (SM) + Azael | 06 Nov 2026 | 11 Nov 2026 |
-| 22 | [back#13](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/13) | Endpoint de procesamiento y almacenamiento del resultado de la evaluación (/evaluation/submit) | Elías | 10 Nov 2026 | 13 Nov 2026 |
+| 22 | [back#13](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/13) | Endpoint de evaluación de resumen (POST /readings/{id}/evaluate) | Elías | 10 Nov 2026 | 13 Nov 2026 |
 | 23 | [back#14](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/14) | Pruebas del módulo de vocabulario y evaluación de resúmenes por PNL | Jesús (SM) | 13 Nov 2026 | 15 Nov 2026 |
 
 ---
@@ -117,12 +121,14 @@ Referencias de repo: `back` = `dolynation-atl-back`, `front` =
 **Cierre (milestone):** Sprint 4: Historial, Rachas y Panel Administrativo — [back](https://github.com/DolyLanguagesORG/dolynation-atl-back/milestone/4) · [front](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/milestone/4)  
 **Tareas:** 6
 
+**Prerrequisito de schema:** [infra#22](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/22) — rol `STUDENT`/`ADMIN` en `users`.
+
 | # | Issue | Tarea | Responsable | Inicio | Entrega |
 | --: | :---: | --- | --- | :---: | :---: |
 | 24 | [back#15](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/15) | Lógica de cálculo de racha diaria (días consecutivos de actividad) y asignación de puntos en NestJS | Azael | 16 Nov 2026 | 19 Nov 2026 |
 | 25 | [back#16](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/16) | Endpoints de consulta de historial de actividades (lecturas, palabras consultadas, calificaciones) | Elías | 16 Nov 2026 | 20 Nov 2026 |
 | 26 | [front#11](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/11) | Dashboard de usuario en Next.js (métricas, contador de racha, historial y gráfica de puntos) | Juan | 19 Nov 2026 | 24 Nov 2026 |
-| 27 | [back#17](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/17) | Endpoints para gestión administrativa de categorías globales y supervisión de usuarios (/admin/categories) | Elías | 21 Nov 2026 | 25 Nov 2026 |
+| 27 | [back#17](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/17) | Endpoints admin de categorías globales y usuarios (/admin/categories, /admin/users) | Elías | 21 Nov 2026 | 25 Nov 2026 |
 | 28 | [front#12](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/12) | Vista del panel administrativo básico en Next.js | Juan + Jesús (SM) | 24 Nov 2026 | 27 Nov 2026 |
 | 29 | [infra#3](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/3) | Revisión general de código, limpieza de endpoints y merge a develop | Jesús (SM) | 27 Nov 2026 | 29 Nov 2026 |
 
@@ -149,32 +155,32 @@ Referencias de repo: `back` = `dolynation-atl-back`, `front` =
 | Cronograma | GitHub | Tarea | Sprint |
 | --: | :---: | --- | --: |
 | 1 | [infra#2](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/2) | Configuración del repositorio: main/develop, branch protection, plantillas de PR/issue y GitHub Actions (CI) | 1 |
-| 2 | [back#2](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/2) | Setup de arquitectura NestJS, conexión a base de datos (PostgreSQL/MongoDB) y entidad User | 1 |
+| 2 | [back#2](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/2) | Setup de arquitectura NestJS, conexión a PostgreSQL (Drizzle ORM) y entidad User | 1 |
 | 3 | [front#2](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/2) | Setup de proyecto Next.js con Tailwind CSS, layout base y temas de la interfaz | 1 |
-| 4 | [back#3](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/3) | Servicio de hash criptográfico (bcrypt/Argon2) y estrategia de autenticación JWT en NestJS | 1 |
-| 5 | [back#4](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/4) | DTOs de validación de registro/login y endpoints de autenticación (/auth/register, /auth/login) | 1 |
+| 4 | [back#3](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/3) | Servicio de hash criptográfico (Argon2id) y estrategia de autenticación JWT en NestJS | 1 |
+| 5 | [back#4](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/4) | DTOs y endpoints de autenticación (/auth/register, /login, /refresh, /logout, /me) | 1 |
 | 6 | [front#3](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/3) | Maquetado e integración de vistas de login y registro en Next.js | 1 |
 | 7 | [back#5](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/5) | Endpoints para consultar y actualizar el perfil de usuario (/user/profile) | 1 |
 | 8 | [front#4](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/4) | Vista del perfil de usuario e integración con el estado de sesión en Next.js | 1 |
 | 9 | [back#6](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/6) | Pruebas de integración del Sprint 1, corrección de bugs y revisión de PRs hacia develop | 1 |
-| 10 | [back#7](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/7) | Módulo de servicios en NestJS para integración con la API de IA (OpenAI/Gemini) y arquitectura de prompts | 2 |
+| 10 | [back#7](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/7) | Módulo de servicios en NestJS para integración con MiniMax-M3 (adaptable) y arquitectura de prompts | 2 |
 | 11 | [back#8](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/8) | Endpoints para selección y guardado de categorías e idiomas (/settings/categories, /settings/languages) | 2 |
 | 12 | [front#5](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/5) | Formulario de selección de parámetros de estudio (idioma, categoría, dificultad, longitud) en Next.js | 2 |
-| 13 | [back#9](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/9) | Servicio de caché para respuestas de lectura con parámetros equivalentes (RNF-05) | 2 |
+| 13 | [back#9](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/9) | Servicio de caché para respuestas de lectura con parámetros equivalentes (RNF-04) | 2 |
 | 14 | [front#6](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/6) | Visor inmersivo de lectura (diseño enfocado en la legibilidad) en Next.js | 2 |
-| 15 | [back#10](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/10) | Endpoint de generación de lectura basada en los parámetros seleccionados (/content/generate) | 2 |
+| 15 | [back#10](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/10) | Endpoint de generación de lectura (POST /readings) basado en parámetros | 2 |
 | 16 | [front#7](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/7) | Conexión del flujo completo: formulario de parámetros → generación IA → visor | 2 |
 | 17 | [front#8](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/8) | Captura e interacción de selección de texto dentro del visor de lectura en Next.js | 3 |
-| 18 | [back#11](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/11) | Endpoint de consulta contextual de vocabulario a la IA (significado, definición, ejemplos, oración original) | 3 |
+| 18 | [back#11](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/11) | Endpoint de vocabulario contextual (significado, definición, ejemplos, oración original) y TTS | 3 |
 | 19 | [front#9](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/9) | Componente emergente (pop-up) de diccionario contextual e integración de audio corto (TTS) | 3 |
 | 20 | [front#10](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/10) | Componente de área de redacción libre de resumen y envío de evaluación en Next.js | 3 |
 | 21 | [back#12](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/12) | Servicio de evaluación y calificación por PNL en NestJS (cobertura, precisión, coherencia) con feedback | 3 |
-| 22 | [back#13](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/13) | Endpoint de procesamiento y almacenamiento del resultado de la evaluación (/evaluation/submit) | 3 |
+| 22 | [back#13](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/13) | Endpoint de evaluación de resumen (POST /readings/{id}/evaluate) | 3 |
 | 23 | [back#14](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/14) | Pruebas del módulo de vocabulario y evaluación de resúmenes por PNL | 3 |
 | 24 | [back#15](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/15) | Lógica de cálculo de racha diaria (días consecutivos de actividad) y asignación de puntos en NestJS | 4 |
 | 25 | [back#16](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/16) | Endpoints de consulta de historial de actividades (lecturas, palabras consultadas, calificaciones) | 4 |
 | 26 | [front#11](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/11) | Dashboard de usuario en Next.js (métricas, contador de racha, historial y gráfica de puntos) | 4 |
-| 27 | [back#17](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/17) | Endpoints para gestión administrativa de categorías globales y supervisión de usuarios (/admin/categories) | 4 |
+| 27 | [back#17](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/17) | Endpoints admin de categorías globales y usuarios (/admin/categories, /admin/users) | 4 |
 | 28 | [front#12](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/12) | Vista del panel administrativo básico en Next.js | 4 |
 | 29 | [infra#3](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/3) | Revisión general de código, limpieza de endpoints y merge a develop | 4 |
 | 30 | [front#13](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/13) | Pruebas de usabilidad y revisión de diseño responsivo (móvil/desktop) | 5 |
@@ -187,15 +193,29 @@ Referencias de repo: `back` = `dolynation-atl-back`, `front` =
 Además de las 33 tareas del producto, el equipo de infraestructura mantiene
 cinco tareas de habilitación (todas en `dolynation-tlalli-infra`, con label
 `area:infra`) que cierran el pipeline descrito en
-[CI-CD-Y-VERSIONADO.md](./CI-CD-Y-VERSIONADO.md):
+[CI-CD-Y-VERSIONADO.md](../operations/CI-CD-Y-VERSIONADO.md)
 
 | # | Issue | Tarea | Sprint |
 | --: | :---: | --- | --: |
 | P1 | [infra#5](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/5) | Repositorio `.github` de la organización (plantillas y workflows reutilizables) | 1 |
-| P2 | [infra#6](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/6) | Entornos (dev/staging/rc/prod) y gestión de secretos | 1 |
-| P3 | [infra#7](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/7) | Versionado con release-please y `versions.yml` (validación anti-degradación) | 5 |
-| P4 | [infra#8](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/8) | Cascada de releases infra → back/front con PAT | 5 |
+| P2 | [infra#6](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/6) | Entornos (dev/staging/prod), secretos y acceso SSH | 1 |
+| P3 | [infra#7](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/7) | Versionado con release-please, `versions.yml` y guard single-flight de `rc` | 5 |
+| P4 | [infra#8](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/8) | Cascada de releases y deploy a staging desde `rc` con PAT | 5 |
 | P5 | [infra#9](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/9) | Auditoría de seguridad: dependencias, secretos y protección de ramas | 5 |
+
+El árbol `infra#10-#17` se fusionó en P2-P5 e `infra#4`; los issues quedaron cerrados como duplicados.
+
+## Prerrequisitos de schema
+
+Estas tareas no suman a las 33 del producto, pero bloquean backend y se rastrean en el mismo Project:
+
+| Issue | Qué habilita | Bloquea |
+| :---: | --- | --- |
+| [infra#20](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/20) | `user_preferences`, `user_selected_categories`, `categories`, `readings.language`, `length_type` y `prompt_hash` | `back#8`, `back#9`, `back#10` |
+| [infra#21](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/21) | `evaluations` y `vocabulary_logs` | `back#11`, `back#13`, `back#16` |
+| [infra#22](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/22) | `users.role` (`STUDENT`/`ADMIN`) | `back#17` |
+
+Cada migración sigue la regla de dos fases: actualizar `01-init.sql` y agregar un script en `database/postgres/updates/`.
 
 ## Reglas de trabajo
 
@@ -210,13 +230,13 @@ Cada tarea del cronograma se entrega con un pull request:
 3. El título del PR es un Conventional Commit **en español**; el check
    `pr-title` lo valida.
 4. Se requieren los checks del repo en verde (ver
-   [FLUJO-DE-TRABAJO.md](./FLUJO-DE-TRABAJO.md)) y una aprobación antes de
+   [FLUJO-DE-TRABAJO.md](../operations/FLUJO-DE-TRABAJO.md)) y una aprobación antes de
    fusionar.
 5. Al mergear el PR de release, `release-please` crea el tag y la release
    automáticamente.
 
-El detalle completo está en [git-workflow.md](./conventions/git-workflow.md)
-y [versioning.md](./conventions/versioning.md).
+El detalle completo está en [git-workflow.md](../conventions/git-workflow.md)
+y [versioning.md](../conventions/versioning.md).
 
 ## Reporte diario
 

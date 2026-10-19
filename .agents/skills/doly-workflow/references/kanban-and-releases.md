@@ -14,7 +14,7 @@ La planificación vive en el
 - **Dependencias**: se registran con *blocked by* (p. ej. `infra#4` bloqueado por
   `back#18`).
 
-Cronograma completo en [`cronograma.md`](../../../../cronograma.md).
+Cronograma completo en [`cronograma.md`](../../../../plan/cronograma.md).
 
 ## Versionado (release-please)
 
@@ -34,8 +34,8 @@ SemVer (`vX.Y.Z`) automático a partir de los Conventional Commits:
 
 > El pipeline completo (fases, `rc-*`, staging, `versions.yml` en `infra`,
 > cascada con PAT) está en
-> [`CI-CD-Y-VERSIONADO.md`](../../../../CI-CD-Y-VERSIONADO.md). Parte todavía es
+> [`CI-CD-Y-VERSIONADO.md`](../../../../operations/CI-CD-Y-VERSIONADO.md). Parte todavía es
 > **objetivo pendiente**, no implementado.
 
 Fuentes: [`conventions/versioning.md`](../../../../conventions/versioning.md),
-[`FLUJO-DE-TRABAJO.md`](../../../../FLUJO-DE-TRABAJO.md).
+[`FLUJO-DE-TRABAJO.md`](../../../../operations/FLUJO-DE-TRABAJO.md).
