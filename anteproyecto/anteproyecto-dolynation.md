@@ -573,11 +573,11 @@ La columna «Asignaciones» cuenta una vez por persona cada issue que tiene asig
 
 ### **13.1. Hitos del proyecto** {#13.1.-hitos-del-proyecto}
 
-* **Sprint 1 (19/Oct – 31/Oct/2026):** Infraestructura Base, Autenticación y Perfil.  
-* **Sprint 2 (01/Nov – 14/Nov/2026):** Configuración de Estudio y Lecturas con IA.  
-* **Sprint 3 (15/Nov – 28/Nov/2026):** Vocabulario Contextual e Integración de PNL.  
-* **Sprint 4 (29/Nov – 05/Dic/2026):** Historial, Rachas y Panel Administrativo.  
-* **Sprint 5 (06/Dic – 10/Dic/2026):** Pruebas, Tagging v1.0.0 y Release de Cierre.
+* **Sprint 1 (05/Oct – 18/Oct/2026):** Configuración del repositorio y cimientos. *Cerrado con retraso: se completó el 19/Oct/2026.*  
+* **Sprint 2 (19/Oct – 01/Nov/2026):** Fundamentos: autenticación, perfil y base del frontend.  
+* **Sprint 3 (02/Nov – 15/Nov/2026):** Lecturas con IA.  
+* **Sprint 4 (16/Nov – 29/Nov/2026):** Vocabulario, TTS, evaluación y progreso.  
+* **Sprint 5 (30/Nov – 06/Dic/2026):** Calidad, integración y release v1.0.0. Del **07 al 10/Dic/2026**: entrega del *release*, capturas y presentación del proyecto.
 
 ### **13.2. Tabla de asignación de tareas y cronograma** {#13.2.-tabla-de-asignación-de-tareas-y-cronograma}
 
@@ -585,116 +585,112 @@ La columna «Asignaciones» cuenta una vez por persona cada issue que tiene asig
 
 > **Referencia de issues.** Al separar el monorepo en cuatro repositorios, cada tarea es un issue en su repositorio. El identificador `back#N`, `front#N`, `infra#N` o `docs#N` indica el repo (`dolynation-atl-back`, `dolynation-tonatiuh-front`, `dolynation-tlalli-infra`, `dolynation-ehecatl-docs`) y el número del issue. El tablero con el estado, las fechas y los responsables en vivo está en [el Project de la organización](https://github.com/orgs/DolyLanguagesORG/projects/1/views/3).
 
-#### **Sprint 1: Infraestructura, Autenticación y Perfil**
+> **Referencia de issues.** Al separar el monorepo en cuatro repositorios, cada tarea es un issue en su repositorio. El identificador `back#N`, `front#N`, `infra#N` o `docs#N` indica el repo (`dolynation-atl-back`, `dolynation-tonatiuh-front`, `dolynation-tlalli-infra`, `dolynation-ehecatl-docs`) y el número del issue. El tablero con el estado, las fechas y los responsables en vivo está en [el Project de la organización](https://github.com/orgs/DolyLanguagesORG/projects/1/views/3).
 
-**Periodo:** 19 de Octubre al 31 de Octubre de 2026
+> **Alcance de la entrega.** El desarrollo termina el **06 de diciembre de 2026**; del **07 al 10 de diciembre** se reserva para el *release* `v1.0.0`, las capturas y la presentación.
 
-| Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
-| :---- | :---- | :---- | :---- | :---- |
-| **back#2** | Setup de arquitectura NestJS, conexión a PostgreSQL (Drizzle ORM) y entidad User | Azael | 5 oct 2026 | 8 oct 2026 |
-| **front#2** | Setup de proyecto Next.js con Tailwind CSS, layout base y temas de la interfaz | Juan | 5 oct 2026 | 7 oct 2026 |
-| **front#3** | Maquetado e integración de vistas de login y registro en Next.js | Juan | 8 oct 2026 | 12 oct 2026 |
-| **back#3** | Servicio de hash criptográfico (Argon2id) y estrategia de autenticación JWT en NestJS | Azael | 9 oct 2026 | 12 oct 2026 |
-| **back#4** | DTOs de validación y endpoints de autenticación (/auth/register, /auth/login, /auth/refresh, /auth/logout, /auth/me) | Elías | 9 oct 2026 | 12 oct 2026 |
-| **back#5** | Endpoints para consultar y actualizar el perfil de usuario (/user/profile) | Elías | 13 oct 2026 | 15 oct 2026 |
-| **front#4** | Vista del perfil de usuario e integración con el estado de sesión en Next.js | Juan | 13 oct 2026 | 16 oct 2026 |
-| **back#6** | Pruebas de integración del Sprint 1, corrección de bugs y revisión de PRs hacia develop | Jesús | 16 oct 2026 | 18 oct 2026 |
-| **back#41** | Verificar y completar la documentación OpenAPI/Scalar del Sprint 1 | Azael | 16 oct 2026 | 18 oct 2026 |
-| **docs#11** | Sanear el anteproyecto: contradicciones con el código y secciones académicas faltantes | Jesús | 19 oct 2026 | 24 oct 2026 |
-| **docs#15** | Saneamiento de la configuración de GitHub: milestones, tablero, rulesets e higiene de los repos | Jesús | 19 oct 2026 | 20 oct 2026 |
-| **front#22** | Base de i18n con next-intl y diccionarios en inglés, francés, español e italiano | Juan | 19 oct 2026 | 22 oct 2026 |
-| **infra#6** | Definir entornos (dev/staging/prod), secretos y acceso SSH | Jesús | 19 oct 2026 | 21 oct 2026 |
-| **back#47** | Separar test:unit de test:e2e para que npm run verify no exija base de datos | Jesús | 21 oct 2026 | 22 oct 2026 |
-| **back#46** | /health/ready debe validar la conexión real con PostgreSQL | Elías | 22 oct 2026 | 23 oct 2026 |
-| **docs#12** | Rehacer los diagramas en Mermaid y agregar los diagramas faltantes | Jesús | 22 oct 2026 | 27 oct 2026 |
-| **front#24** | Sistema de diseño: tokens de marca, componentes base y Flowbite | Juan | 22 oct 2026 | 26 oct 2026 |
-| **docs#14** | Unificar el contrato API y alinear las convenciones al código real | Jesús | 26 oct 2026 | 30 oct 2026 |
-| **front#23** | Base de pruebas del frontend: Vitest, Playwright y jobs de CI | Juan | 26 oct 2026 | 28 oct 2026 |
-| **infra#24** | Runner de migraciones con tabla schema_migrations | Jesús | 26 oct 2026 | 28 oct 2026 |
-| **docs#13** | Crear los ADR con Contexto, Decisión, Alternativas y Consecuencias | Jesús | 27 oct 2026 | 30 oct 2026 |
+#### **Sprint 1: Configuración del repositorio y cimientos**
 
-#### **Sprint 2: Configuración de Estudio y Lecturas con IA**
-
-**Periodo:** 01 de Noviembre al 14 de Noviembre de 2026
+**Periodo:** 05 al 18 de octubre de 2026 (cerrado con retraso el 19 de octubre)
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
-| **back#7** | Módulo de servicios en NestJS para integración con la API de IA (MiniMax-M3) y arquitectura de prompts | Azael | 19 oct 2026 | 23 oct 2026 |
-| **back#8** | Endpoints para selección y guardado de categorías e idiomas (/settings/categories, /settings/languages) | Elías | 19 oct 2026 | 22 oct 2026 |
-| **back#19** | Cliente IA: adaptador MiniMax-M3 configurable (interfaz para otros proveedores) | Azael | 19 oct 2026 | 21 oct 2026 |
-| **back#20** | Arquitectura de prompts versionados por idioma, categoría, dificultad y longitud | Elías | 19 oct 2026 | 22 oct 2026 |
-| **front#5** | Formulario de selección de parámetros de estudio (idioma, categoría, dificultad, longitud) en Next.js | Juan | 19 oct 2026 | 23 oct 2026 |
-| **infra#20** | Migración S2: preferencias, categorías, idioma y caché de lecturas | Azael | 19 oct 2026 | 23 oct 2026 |
-| **back#9** | Servicio de caché para respuestas de lectura con parámetros equivalentes (RNF-04) | Jesús | 22 oct 2026 | 26 oct 2026 |
-| **back#21** | Manejo de errores, timeouts y modo degradado del proveedor IA (implementación) | Azael | 22 oct 2026 | 23 oct 2026 |
-| **back#10** | Endpoint de generación de lectura (POST /readings) basado en parámetros | Elías + Azael | 24 oct 2026 | 28 oct 2026 |
-| **front#6** | Visor inmersivo de lectura (diseño enfocado en la legibilidad) en Next.js | Juan | 24 oct 2026 | 28 oct 2026 |
-| **front#7** | Conexión del flujo completo: formulario de parámetros → generación IA → visor | Jesús + Juan | 29 oct 2026 | 1 nov 2026 |
-| **back#43** | Adaptador de TTS con MiniMax y sus variables de entorno | Azael | 9 nov 2026 | 11 nov 2026 |
-| **back#45** | Protección contra prompt injection en generación y evaluación | Elías | 10 nov 2026 | 12 nov 2026 |
-| **infra#25** | Test de paridad entre el schema de Drizzle y el SQL de PostgreSQL | Azael | 11 nov 2026 | 12 nov 2026 |
+| **back#2** | Setup de arquitectura NestJS, conexión a PostgreSQL (Drizzle ORM) y entidad User | Azael | 5 Oct 2026 2026 | 8 Oct 2026 2026 |
+| **back#3** | Servicio de hash criptográfico (Argon2id) y estrategia de autenticación JWT en NestJS | Azael | 9 Oct 2026 2026 | 12 Oct 2026 2026 |
+| **docs#6** | docs(repo): onboarding de Elías, CODEOWNERS y reglas de revisión | Sebastián | 12 Oct 2026 2026 | 15 Oct 2026 2026 |
+| **docs#11** | Sanear el anteproyecto: corregir contradicciones con el código y desajustes de formato | Jesús | 19 Oct 2026 2026 | 19 Oct 2026 2026 |
+| **docs#12** | Revisar los diagramas y corregir los que contradicen el código | Jesús | 19 Oct 2026 2026 | 20 Oct 2026 2026 |
+| **docs#13** | Completar el registro de decisiones (ADR) y documentar las decisiones pendientes | Jesús | 20 Oct 2026 2026 | 20 Oct 2026 2026 |
+| **docs#14** | Unificar el contrato API y alinear las convenciones al código real | Jesús | 20 Oct 2026 2026 | 20 Oct 2026 2026 |
+| **docs#15** | Saneamiento de la configuración de GitHub: milestones, tablero, rulesets e higiene de los repos | Jesús | 20 Oct 2026 2026 | 20 Oct 2026 2026 |
 
-#### **Sprint 3: Vocabulario Contextual e Integración de PNL**
+#### **Sprint 2: Fundamentos: autenticación, perfil y base del frontend**
 
-**Periodo:** 15 de Noviembre al 28 de Noviembre de 2026
+**Periodo:** 19 de octubre al 01 de noviembre de 2026
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
-| **back#11** | Endpoint de vocabulario contextual (significado, definición, ejemplos, oración original) y TTS | Azael | 2 nov 2026 | 6 nov 2026 |
-| **front#8** | Captura e interacción de selección de texto dentro del visor de lectura en Next.js | Juan | 2 nov 2026 | 5 nov 2026 |
-| **infra#21** | Migración S3: evaluaciones y vocabulario contextual | Azael | 2 nov 2026 | 5 nov 2026 |
-| **back#12** | Servicio de evaluación y calificación por PNL en NestJS (cobertura, precisión, coherencia) con feedback | Jesús + Azael | 6 nov 2026 | 11 nov 2026 |
-| **back#22** | Motor de puntuación por cobertura y precisión semántica | Azael | 6 nov 2026 | 8 nov 2026 |
-| **front#9** | Componente emergente (pop-up) de diccionario contextual e integración de audio corto (TTS) | Juan | 6 nov 2026 | 9 nov 2026 |
-| **front#10** | Componente de área de redacción libre de resumen y envío de evaluación en Next.js | Elías + Juan | 7 nov 2026 | 10 nov 2026 |
-| **back#23** | Cálculo de coherencia y construcción del feedback | Elías | 8 nov 2026 | 10 nov 2026 |
-| **back#13** | Endpoint de evaluación de resumen (POST /readings/{id}/evaluate) | Elías | 10 nov 2026 | 13 nov 2026 |
-| **back#24** | Pruebas unitarias del motor de evaluación PNL | Jesús | 10 nov 2026 | 11 nov 2026 |
-| **back#14** | Pruebas del módulo de vocabulario y evaluación de resúmenes por PNL | Jesús | 13 nov 2026 | 15 nov 2026 |
-| **back#44** | Endpoint de TTS: audio corto de palabra o frase seleccionada | Elías | 19 nov 2026 | 23 nov 2026 |
+| **back#4** | DTOs de validación y endpoints de autenticación (/auth/register, /auth/login, /auth/refresh, /auth/logout, /auth/me) | Azael | 19 Oct 2026 2026 | 21 Oct 2026 2026 |
+| **front#2** | Setup de proyecto Next.js con Tailwind CSS, layout base y temas de la interfaz | Juan | 19 Oct 2026 2026 | 24 Oct 2026 2026 |
+| **infra#24** | Runner de migraciones con tabla schema_migrations | Jesús | 19 Oct 2026 2026 | 21 Oct 2026 2026 |
+| **back#19** | Cliente IA: adaptador MiniMax-M3 configurable (interfaz para otros proveedores) | Elías | 21 Oct 2026 2026 | 22 Oct 2026 2026 |
+| **back#7** | Módulo de servicios en NestJS para integración con la API de IA (MiniMax-M3) y arquitectura de prompts | Azael | 22 Oct 2026 2026 | 24 Oct 2026 2026 |
+| **infra#20** | Migración S2: preferencias, categorías, idioma y caché de lecturas | Jesús | 22 Oct 2026 2026 | 24 Oct 2026 2026 |
+| **back#5** | Endpoints para consultar y actualizar el perfil de usuario (/user/profile) | Elías | 23 Oct 2026 2026 | 25 Oct 2026 2026 |
+| **back#20** | Arquitectura de prompts versionados por idioma, categoría, dificultad y longitud | Azael | 25 Oct 2026 2026 | 27 Oct 2026 2026 |
+| **front#22** | Base de i18n con next-intl y diccionarios en inglés, francés, español e italiano | Juan | 25 Oct 2026 2026 | 26 Oct 2026 2026 |
+| **infra#6** | Definir entornos (dev/staging/prod), secretos y acceso SSH | Jesús | 25 Oct 2026 2026 | 26 Oct 2026 2026 |
+| **back#6** | Pruebas de integración del Sprint 1, corrección de bugs y revisión de PRs hacia develop | Elías + Sebastián | 26 Oct 2026 2026 | 28 Oct 2026 2026 |
+| **front#24** | Sistema de diseño: tokens de marca, componentes base y Flowbite | Juan | 27 Oct 2026 2026 | 29 Oct 2026 2026 |
+| **back#8** | Endpoints para selección y guardado de categorías e idiomas (/settings/categories, /settings/languages) | Azael | 28 Oct 2026 2026 | 30 Oct 2026 2026 |
+| **back#46** | /health/ready debe validar la conexión real con PostgreSQL | Elías | 29 Oct 2026 2026 | 29 Oct 2026 2026 |
+| **back#47** | Separar test:unit de test:e2e para que npm run verify no exija base de datos | Elías | 30 Oct 2026 2026 | 30 Oct 2026 2026 |
+| **front#3** | Maquetado e integración de vistas de login y registro en Next.js | Juan | 30 Oct 2026 2026 | 1 Nov 2026 2026 |
+| **back#41** | Verificar y completar la documentación OpenAPI/Scalar del Sprint 1 | Azael | 31 Oct 2026 2026 | 31 Oct 2026 2026 |
 
-#### **Sprint 4: Historial, Rachas y Panel Administrativo**
+#### **Sprint 3: Lecturas con IA**
 
-**Periodo:** 29 de Noviembre al 05 de Diciembre de 2026
-
-| Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
-| :---- | :---- | :---- | :---- | :---- |
-| **back#15** | Lógica de cálculo de racha diaria (días consecutivos de actividad) y asignación de puntos en NestJS | Azael | 16 nov 2026 | 19 nov 2026 |
-| **back#16** | Endpoints de consulta de historial de actividades (lecturas, palabras consultadas, calificaciones) | Elías | 16 nov 2026 | 20 nov 2026 |
-| **infra#22** | Migración S4: rol de administrador en users | Azael | 16 nov 2026 | 18 nov 2026 |
-| **front#11** | Dashboard de usuario en Next.js (métricas, contador de racha, historial y gráfica de puntos) | Juan | 19 nov 2026 | 24 nov 2026 |
-| **front#14** | Tarjetas de métricas y contador de racha en el dashboard | Elías + Juan | 19 nov 2026 | — |
-| **back#17** | Endpoints administrativos de categorías globales y supervisión de usuarios (/admin/categories, /admin/users) | Elías | 21 nov 2026 | 25 nov 2026 |
-| **front#12** | Vista del panel administrativo básico en Next.js | Jesús + Juan | 24 nov 2026 | 27 nov 2026 |
-| **infra#3** | Revisión general de código, limpieza de endpoints y merge a develop | Jesús | 27 nov 2026 | 29 nov 2026 |
-| **infra#26** | Endurecer docker-compose.prod.yml: red interna, healthchecks, proxy TLS y límites | Jesús | 29 nov 2026 | 2 dic 2026 |
-| **infra#27** | Pipeline de build de imágenes y despliegue por SHA con rollback | Jesús | 1 dic 2026 | 4 dic 2026 |
-| **front#15** | Gráfica de puntos por día | Elías + Juan | 2 dic 2026 | 3 dic 2026 |
-| **front#16** | Tabla de historial de actividad con paginación | Elías + Juan | 2 dic 2026 | 4 dic 2026 |
-
-#### **Sprint 5: Pruebas, Tagging v1.0.0 y Cierre del proyecto**
-
-**Periodo:** 06 al 10 de Diciembre de 2026
+**Periodo:** 02 al 15 de noviembre de 2026
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
-| **back#18** | Pruebas de rendimiento, manejo de errores de la API de IA (modo degradado) y validación de seguridad | Elías + Azael | 30 nov 2026 | 4 dic 2026 |
-| **front#13** | Pruebas de usabilidad y revisión de diseño responsivo (móvil/desktop) | Juan | 30 nov 2026 | 3 dic 2026 |
-| **infra#4** | Creación del pull request final de develop hacia main, tagging v1.0.0 y verificación de CI/CD | Jesús | 4 dic 2026 | 6 dic 2026 |
-| **docs#3** | Preparación de la documentación final del repositorio, capturas del sistema y presentación del proyecto | Sebastián + Jesús + Juan + Azael | 6 dic 2026 | 10 dic 2026 |
-| **infra#9** | Auditoría de seguridad: dependencias, secretos y protección de ramas | Jesús + Azael | 6 dic 2026 | 9 dic 2026 |
-| **back#25** | Pruebas de carga y latencia de endpoints críticos | Jesús | 8 dic 2026 | 9 dic 2026 |
-| **back#26** | Verificación E2E del modo degradado ante fallos de la API de IA | Jesús + Azael | 8 dic 2026 | 9 dic 2026 |
-| **back#27** | Validación de seguridad (auth, validación de entrada, rate limiting) | Elías + Jesús | 8 dic 2026 | 10 dic 2026 |
+| **back#9** | Servicio de caché para respuestas de lectura con parámetros equivalentes (RNF-04) | Elías | 2 Nov 2026 2026 | 4 Nov 2026 2026 |
+| **front#4** | Vista del perfil de usuario e integración con el estado de sesión en Next.js | Juan | 2 Nov 2026 2026 | 3 Nov 2026 2026 |
+| **front#5** | Formulario de selección de parámetros de estudio (idioma, categoría, dificultad, longitud) en Next.js | Juan | 4 Nov 2026 2026 | 6 Nov 2026 2026 |
+| **back#21** | Manejo de errores, timeouts y modo degradado del proveedor IA (implementación) | Azael | 5 Nov 2026 2026 | 6 Nov 2026 2026 |
+| **back#43** | Adaptador de TTS con MiniMax y sus variables de entorno | Azael | 7 Nov 2026 2026 | 8 Nov 2026 2026 |
+| **front#6** | Visor inmersivo de lectura (diseño enfocado en la legibilidad) en Next.js | Juan | 7 Nov 2026 2026 | 10 Nov 2026 2026 |
+| **back#10** | Endpoint de generación de lectura (POST /readings) basado en parámetros | Elías + Azael | 9 Nov 2026 2026 | 11 Nov 2026 2026 |
+| **back#45** | Protección contra prompt injection en generación y evaluación | Azael | 12 Nov 2026 2026 | 13 Nov 2026 2026 |
+| **front#7** | Conexión del flujo completo: formulario de parámetros → generación IA → visor | Elías + Sebastián + Juan | 12 Nov 2026 2026 | 14 Nov 2026 2026 |
+| **front#23** | Base de pruebas del frontend: Vitest, Playwright y jobs de CI | Juan | 15 Nov 2026 2026 | 15 Nov 2026 2026 |
 
-#### **Fuera de alcance (post-entrega)**
+#### **Sprint 4: Vocabulario, TTS, evaluación y progreso**
 
-**Periodo:** Después del 10 de diciembre de 2026
+**Periodo:** 16 al 29 de noviembre de 2026
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
-| **infra#7** | Automatizar versionado con release-please, versions.yml y guard single-flight de rc | Jesús | 11 ene 2026 | 31 ene 2026 |
-| **infra#8** | Cascada de releases y deploy a staging desde rc con PAT | Jesús | 11 ene 2026 | 31 ene 2026 |
+| **back#11** | Endpoint de vocabulario contextual (significado, definición, ejemplos, oración original) y TTS | Azael | 16 Nov 2026 2026 | 17 Nov 2026 2026 |
+| **front#8** | Captura e interacción de selección de texto dentro del visor de lectura en Next.js | Juan | 16 Nov 2026 2026 | 18 Nov 2026 2026 |
+| **infra#21** | Migración S3: evaluaciones y vocabulario contextual | Jesús | 16 Nov 2026 2026 | 18 Nov 2026 2026 |
+| **back#12** | Servicio de evaluación y calificación por PNL en NestJS (cobertura, precisión, coherencia) con feedback | Azael | 18 Nov 2026 2026 | 20 Nov 2026 2026 |
+| **infra#22** | Migración S4: rol de administrador en users | Jesús | 19 Nov 2026 2026 | 20 Nov 2026 2026 |
+| **back#13** | Endpoint de evaluación de resumen (POST /readings/{id}/evaluate) | Azael | 21 Nov 2026 2026 | 22 Nov 2026 2026 |
+| **infra#26** | Endurecer docker-compose.prod.yml: red interna, healthchecks, proxy TLS y límites | Jesús | 21 Nov 2026 2026 | 23 Nov 2026 2026 |
+| **back#17** | Endpoints administrativos de categorías globales y supervisión de usuarios (/admin/categories, /admin/users) | Elías | 23 Nov 2026 2026 | 24 Nov 2026 2026 |
+| **back#22** | Motor de puntuación por cobertura y precisión semántica | Azael | 23 Nov 2026 2026 | 24 Nov 2026 2026 |
+| **front#10** | Componente de área de redacción libre de resumen y envío de evaluación en Next.js | Elías + Sebastián + Juan | 23 Nov 2026 2026 | 25 Nov 2026 2026 |
+| **infra#27** | Pipeline de build de imágenes y despliegue por SHA con rollback | Jesús | 24 Nov 2026 2026 | 26 Nov 2026 2026 |
+| **back#15** | Lógica de cálculo de racha diaria (días consecutivos de actividad) y asignación de puntos en NestJS | Elías | 25 Nov 2026 2026 | 26 Nov 2026 2026 |
+| **back#23** | Cálculo de coherencia y construcción del feedback | Elías | 25 Nov 2026 2026 | 25 Nov 2026 2026 |
+| **back#44** | Endpoint de TTS: audio corto de palabra o frase seleccionada | Azael | 26 Nov 2026 2026 | 27 Nov 2026 2026 |
+| **front#12** | Vista del panel administrativo básico en Next.js | Elías + Sebastián + Juan | 26 Nov 2026 2026 | 27 Nov 2026 2026 |
+| **back#16** | Endpoints de consulta de historial de actividades (lecturas, palabras consultadas, calificaciones) | Elías | 27 Nov 2026 2026 | 28 Nov 2026 2026 |
+| **front#9** | Componente emergente (pop-up) de diccionario contextual e integración de audio corto (TTS) | Juan | 28 Nov 2026 2026 | 29 Nov 2026 2026 |
+
+#### **Sprint 5: Calidad, integración y release v1.0.0**
+
+**Periodo:** 30 de noviembre al 06 de diciembre de 2026 (desarrollo) y del 07 al 10 de diciembre de 2026 (entrega)
+
+| Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
+| :---- | :---- | :---- | :---- | :---- |
+| **back#14** | Pruebas del módulo de vocabulario y evaluación de resúmenes por PNL | Elías + Sebastián | 30 Nov 2026 2026 | 1 Dic 2026 2026 |
+| **infra#9** | Auditoría de seguridad: dependencias, secretos y protección de ramas | Sebastián + Jesús | 30 Nov 2026 2026 | 1 Dic 2026 2026 |
+| **back#18** | Pruebas de rendimiento, manejo de errores de la API de IA (modo degradado) y validación de seguridad | Elías + Sebastián | 2 Dic 2026 2026 | 3 Dic 2026 2026 |
+| **back#24** | Pruebas unitarias del motor de evaluación PNL | Elías + Sebastián | 2 Dic 2026 2026 | 2 Dic 2026 2026 |
+| **front#11** | Dashboard de usuario en Next.js (métricas, contador de racha, historial y gráfica de puntos) | Juan | 2 Dic 2026 2026 | 3 Dic 2026 2026 |
+| **infra#25** | Test de paridad entre el schema de Drizzle y el SQL de PostgreSQL | Jesús | 2 Dic 2026 2026 | 2 Dic 2026 2026 |
+| **back#27** | Validación de seguridad (auth, validación de entrada, rate limiting) | Elías + Sebastián | 4 Dic 2026 2026 | 5 Dic 2026 2026 |
+| **front#13** | Pruebas de usabilidad y revisión de diseño responsivo (móvil/desktop) | Sebastián + Juan | 4 Dic 2026 2026 | 4 Dic 2026 2026 |
+| **front#14** | Tarjetas de métricas y contador de racha en el dashboard | Juan | 4 Dic 2026 2026 | 4 Dic 2026 2026 |
+| **infra#3** | Revisión general de código, limpieza de endpoints y merge a develop | Sebastián + Jesús | 4 Dic 2026 2026 | 5 Dic 2026 2026 |
+| **front#15** | Gráfica de puntos por día | Juan | 5 Dic 2026 2026 | 5 Dic 2026 2026 |
+| **back#25** | Pruebas de carga y latencia de endpoints críticos | Elías + Jesús | 6 Dic 2026 2026 | 6 Dic 2026 2026 |
+| **back#26** | Verificación E2E del modo degradado ante fallos de la API de IA | Elías + Azael | 6 Dic 2026 2026 | 6 Dic 2026 2026 |
+| **front#16** | Tabla de historial de actividad con paginación | Juan | 6 Dic 2026 2026 | 6 Dic 2026 2026 |
+| **infra#4** | Creación del pull request final de develop hacia main, tagging v1.0.0 y verificación de CI/CD | Sebastián + Jesús | 7 Dic 2026 2026 | 7 Dic 2026 2026 |
+| **docs#3** | Preparación de la documentación final del repositorio, capturas del sistema y presentación del proyecto | Sebastián | 8 Dic 2026 2026 | 10 Dic 2026 2026 |
 
 # **14\. Elección de estructura web y tecnologías.** {#14.-elección-de-estructura-web-y-tecnologías.}
 
