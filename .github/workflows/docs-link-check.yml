@@ -8,6 +8,9 @@ on:
   push:
     branches: [develop, main]
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -27,3 +30,8 @@ jobs:
           # by removing --offline once the docs surface is stable.
           args: --offline --no-progress --exclude-loopback '**/*.md'
           fail: true
+
+      # El regex de palabras clave de pr-labels.yml se copia una vez; este
+      # test lo ejercita para que no se desincronice del workflow.
+      - name: Test del regex de pr-labels
+        run: node .github/workflows/pr-labels.regex.test.cjs
