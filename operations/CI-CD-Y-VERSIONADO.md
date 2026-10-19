@@ -7,9 +7,9 @@ DolyNation: `dolynation-atl-back` (backend), `dolynation-tonatiuh-front`
 `dolynation-ehecatl-docs` (docs).
 
 > Para las reglas de ramas y commits del día a día, ver
-> [conventions/git-workflow.md](./conventions/git-workflow.md),
-> [conventions/commits.md](./conventions/commits.md) y
-> [conventions/versioning.md](./conventions/versioning.md). Este documento
+> [conventions/git-workflow.md](../conventions/git-workflow.md),
+> [conventions/commits.md](../conventions/commits.md) y
+> [conventions/versioning.md](../conventions/versioning.md). Este documento
 > describe el **pipeline completo** de extremo a extremo.
 
 ## Entornos (3)
@@ -38,9 +38,9 @@ no está implementado:
 | Checks de CI | Implementados en los 4 repos (`ci-*.yml`, `pr-title`, `pr-labels`) | Igual |
 | Versionado | Script propio en `release.yml` que corre en `push` a `main` | **release-please** con PR acumulativo en `develop` |
 | Tag / Release | Se crea al llegar a `main` | Se crea al mergear el PR de release |
-| Entornos (desarrollo, staging, producción) | No existen todavía | Deploy por SSH a 3 entornos; `rc-*` es rama efímera |
-| Manifiesto `versions.yml` | No existe | Fuente de verdad de versiones en `infra` |
-| Cascada `infra → front/back` | No existe | PRs automáticos vía PAT |
+| Entornos (desarrollo, staging, producción) | Planificado; issues `infra#6`-`infra#9` | Deploy por SSH a 3 entornos; `rc-*` es rama efímera |
+| Manifiesto `versions.yml` | Planificado (`infra#7`) | Fuente de verdad de versiones en `infra` |
+| Cascada `infra → front/back` | Planificado (`infra#8`) | PRs automáticos vía PAT |
 
 ---
 
@@ -78,7 +78,7 @@ manuales por SSH.
    registro con versiones estables prematuras.
 
 Detalle de las reglas de bump en
-[conventions/versioning.md](./conventions/versioning.md).
+[conventions/versioning.md](../conventions/versioning.md).
 
 ---
 
@@ -168,7 +168,7 @@ Trust (nadie hace push directo a las ramas protegidas):
 | `feat(scope)!: ...` o `BREAKING CHANGE:` | major | `v0.1.0` → `v1.0.0` |
 
 La tabla completa y las reglas están en
-[conventions/versioning.md](./conventions/versioning.md).
+[conventions/versioning.md](../conventions/versioning.md).
 
 ---
 

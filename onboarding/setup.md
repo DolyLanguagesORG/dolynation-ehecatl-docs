@@ -143,7 +143,7 @@ Verifica que `01-init.sql` se aplicó:
 docker exec -it dolynglish-postgres-test psql -U postgres -d dolynglish_test -c "\dt"
 ```
 
-Deberías ver 4 tablas: `users`, `auth_access_tokens`, `readings`, `prompt_logs`.
+Deberías ver las 4 tablas base: `users`, `auth_access_tokens`, `readings` y `prompt_logs`. Al aplicar las migraciones `02`, `03` y `04` se agregan `categories`, `user_preferences`, `user_selected_categories`, `evaluations`, `vocabulary_logs` y `users.role`.
 
 Si faltan, recrea el contenedor:
 

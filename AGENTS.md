@@ -20,6 +20,8 @@ Están en `.agents/skills/` y se cargan bajo demanda:
   (problema, objetivos, requerimientos, metodología, roles, cronograma).
 - **`docs-style`** — cómo escribir y mantener esta documentación (estructura,
   tono, links relativos, tablas).
+- **`issue-alignment`** — cómo auditar issues, entregables, criterios,
+  dependencias, sub-issues y Project; útil al crear o revisar tareas.
 
 ## Reglas rápidas
 

@@ -128,7 +128,32 @@ mensaje genérico. **Nunca** incluir en el `message`:
 El log server-side tiene el contexto completo (vía `nestjs-pino`); el
 cliente solo recibe un código estable + mensaje seguro.
 
+## Endpoints canónicos
+
+| Método y ruta | Estado | Issue |
+| --- | --- | --- |
+| `POST /api/v1/auth/register`, `/login`, `/refresh`, `/logout`; `GET /auth/me` | Implementado | `back#4` |
+| `GET/PATCH /api/v1/user/profile` | En PR S1 | `back#5` |
+| `GET /api/v1/user/streak` | Implementado (stub inicial) | `back#15` |
+| `GET /api/v1/user/points` | Planificado S4 | `back#15` |
+| `GET /api/v1/readings/options` | Implementado | `back#8` |
+| `POST /api/v1/readings` | Implementado; se amplía en S2 | `back#10` |
+| `GET /api/v1/readings/pending`, `/completed`, `/{id}`; `DELETE /{id}` | Implementado | `back#10` |
+| `POST /api/v1/readings/{id}/evaluate` | Implementado | `back#13` |
+| `POST /api/v1/readings/{id}/explanations` | Implementado | `back#11` |
+| `GET /api/v1/readings/{id}/tts` | Planificado S3 | `back#11` |
+| `GET/PUT /api/v1/settings/language`; `GET/PUT/POST /settings/categories` | Planificado S2 | `back#8` |
+| `GET /api/v1/history`, `/history/scores` | Planificado S4 | `back#16` |
+| `GET/POST/PATCH/DELETE /api/v1/admin/categories`; `GET /admin/users`; `PATCH /admin/users/{id}/role` | Planificado S4 | `back#17` |
+| `GET /api/v1/health/live`, `/health/ready` | Implementado | — |
+| `POST /api/v1/ia/chat` | Implementado (interno) | `back#7` |
+
+No se crean módulos paralelos `/content`, `/evaluation` ni `/vocabulary`: esos
+contratos se absorbieron en `readings`, `evaluation` dentro de `readings` y
+`explanations`/TTS.
+
 ## Documentación OpenAPI
+
 
 - **Scalar UI**: `http://localhost:3333/docs`
 - **OpenAPI JSON**: `http://localhost:3333/api/v1/openapi.json`

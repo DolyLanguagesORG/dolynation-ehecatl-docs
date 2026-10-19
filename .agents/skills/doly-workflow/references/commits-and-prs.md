@@ -54,4 +54,4 @@ cuatro repos. `pr-target` valida que el PR salga de una rama
 `develop` (o `main` en releases/hotfixes).
 
 Fuentes: [`conventions/commits.md`](../../../../conventions/commits.md),
-[`COMO-HACER-UN-PR.md`](../../../../COMO-HACER-UN-PR.md).
+[`COMO-HACER-UN-PR.md`](../../../../operations/COMO-HACER-UN-PR.md).

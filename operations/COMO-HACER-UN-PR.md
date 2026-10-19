@@ -130,7 +130,7 @@ código):
 | Síntoma | Causa | Solución |
 | --- | --- | --- |
 | `'ESLINT_USE_FLAT_CONFIG' is not recognized` | El prefijo de variable de entorno es sintaxis Unix y no funciona en Windows | Ver [Windows](#si-estás-en-windows) abajo |
-| `connect ECONNREFUSED 127.0.0.1:5432` en 5 suites | `npm test` incluye los tests e2e, que necesitan Postgres | Levanta Docker ([onboarding/setup.md](./onboarding/setup.md)) o ejecuta solo los unitarios: `npx jest --testPathIgnorePatterns 'e2e-spec'` |
+| `connect ECONNREFUSED 127.0.0.1:5432` en 5 suites | `npm test` incluye los tests e2e, que necesitan Postgres | Levanta Docker ([onboarding/setup.md](../onboarding/setup.md)) o ejecuta solo los unitarios: `npx jest --testPathIgnorePatterns 'e2e-spec'` |
 
 #### Si estás en Windows
 
@@ -448,7 +448,7 @@ exactamente qué te estás saltando.
 | `link-check` en rojo | Un link roto en un `.md` | Corrige el link; en docs, rutas relativas |
 | `openapi-guard` en rojo | Cambiaste un DTO sin actualizar el contrato | Lee el error: te dice qué campo se movió |
 | El issue no se cerró al mergear | El enlace no se registró, o usaste `Refs` en vez de `Closes` | Ciérralo a mano. Comprueba antes la sección *Development* del issue |
-| `e2e` falla en verde local | Falta un servicio en tu entorno | Levanta Docker: ver [onboarding/setup.md](./onboarding/setup.md) |
+| `e2e` falla en verde local | Falta un servicio en tu entorno | Levanta Docker: ver [onboarding/setup.md](../onboarding/setup.md) |
 | Commits en rojo en `develop` | Falta actualizar la rama | `git switch develop && git pull`, luego `git rebase origin/develop` |
 
 ## Resumen en una tarjeta
@@ -489,7 +489,7 @@ DESPUÉS
 ## Documentos relacionados
 
 - [FLUJO-DE-TRABAJO.md](./FLUJO-DE-TRABAJO.md) — el panorama completo del repo
-- [conventions/git-workflow.md](./conventions/git-workflow.md) — reglas de ramas
-- [conventions/commits.md](./conventions/commits.md) — mensajes de commit
-- [conventions/versioning.md](./conventions/versioning.md) — cómo se decide la versión
-- [CONTRIBUTING.md](./CONTRIBUTING.md) — entrada rápida
+- [conventions/git-workflow.md](../conventions/git-workflow.md) — reglas de ramas
+- [conventions/commits.md](../conventions/commits.md) — mensajes de commit
+- [conventions/versioning.md](../conventions/versioning.md) — cómo se decide la versión
+- [CONTRIBUTING.md](../CONTRIBUTING.md) — entrada rápida

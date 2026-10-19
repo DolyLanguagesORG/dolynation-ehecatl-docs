@@ -234,3 +234,19 @@ npm run verify
 
 Y luego añadir al menos un `ErrorCode` nuevo (si lo necesitas) siguiendo
 [adding-error-code.md](./adding-error-code.md).
+## Paso 7: Verificar OpenAPI/Scalar
+
+El endpoint debe aparecer documentado, con request/response y errores:
+
+```bash
+# desde dolynation-atl-back
+npx jest --config ./test/jest-e2e.json openapi-envelope openapi-response-coverage openapi-schema
+```
+
+- `/docs` (Scalar) debe mostrar el endpoint y permitir "Try it".
+- `/api/v1/openapi.json` debe incluir el schema de respuesta.
+- Ningún endpoint puede quedar con el placeholder "Nobody" (sin schema).
+
+Si agregas un endpoint, actualiza también
+[`conventions/api-contracts.md`](../conventions/api-contracts.md) y, si aplica,
+el skill `openapi-scalar` del repo backend.
