@@ -1,12 +1,15 @@
 @startuml
+' Estado del modelo: los roles STUDENT/ADMIN y las categorias globales estan
+' planificados (infra#22, back#17). El adaptador AIProvider ya existe
+' (back#19) y el de TTS se implementa en el Sprint 2 (back#43).
 left to right direction
 skinparam packageStyle rectangle
 skinparam shadowing false
 skinparam actorStyle stickman
 
 ' --- COLUMNA IZQUIERDA: ACTORES HUMANOS ---
-actor "Estudiante / Usuario\n(ROLE_STUDENT)" as Student
-actor "Administrador\n(ROLE_ADMIN)" as Admin
+actor "Estudiante / Usuario\n(rol STUDENT)" as Student
+actor "Administrador\n(rol ADMIN)" as Admin
 
 ' Forzar apilamiento en la columna izquierda
 Student -[hidden]down-> Admin
@@ -25,12 +28,12 @@ rectangle "Sistema de Lectura e Inteligencia (DolyNation)" {
   ' Casos de Uso Admin
   usecase "7. Acceso a Panel Administrativo" as UC_Admin
   usecase "8. Gestionar Categorías Globales" as UC_Cat
-  usecase "9. Supervisar Métricas del Sistema" as UC_Metrics
+  usecase "9. Supervisar Usuarios Registrados" as UC_Metrics
 }
 
 ' --- COLUMNA DERECHA: SERVICIOS EXTERNOS ---
-actor "Proveedor de IA\n(SYSTEM_AI_PROVIDER)" as AI
-actor "Servicio TTS\n(SYSTEM_TTS_PROVIDER)" as TTS
+actor "Proveedor de IA\n(MiniMax-M3, via AIProvider)" as AI
+actor "Proveedor de voz\n(MiniMax TTS, via TtsProvider)" as TTS
 
 ' Forzar apilamiento en la columna derecha
 AI -[hidden]down-> TTS

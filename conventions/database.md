@@ -94,7 +94,7 @@ Detalle de columnas, tipos y relaciones en
 | Tablas SQL | `snake_case` | `auth_access_tokens` |
 | Columnas SQL | `snake_case` | `created_at` |
 | Variables TS | `camelCase` | `createdAt` |
-| Archivos TS | `kebab-case` | `auth-access.tokens.ts` |
+| Archivos TS | `kebab-case` | `auth-access-tokens.ts` |
 | Updates SQL | `NN-<kebab>` | `02-sprint2-study-config.sql` |
 
 ## Workflow al cambiar el schema

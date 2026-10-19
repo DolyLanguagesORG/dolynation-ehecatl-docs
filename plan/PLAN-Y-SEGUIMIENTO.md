@@ -162,7 +162,7 @@ rastro verificable dentro de GitHub, con fechas, no una versión de memoria.
 
 ## Documentos relacionados
 
-- [`cronograma.md`](./cronograma.md) — los 33 entregables, sprints y fechas.
+- [`cronograma.md`](./cronograma.md) — los 70 issues, sprints y fechas.
 - [`FLUJO-DE-TRABAJO.md`](../operations/FLUJO-DE-TRABAJO.md) — ramas, tablero y releases.
 - [`COMO-HACER-UN-PR.md`](../operations/COMO-HACER-UN-PR.md) — el paso a paso de un PR.
 - [`conventions/git-workflow.md`](../conventions/git-workflow.md) — ramas y hotfixes.

@@ -31,7 +31,7 @@ servidor hasta que vuelve la respuesta.
                        ┌─────────────▼──────────────┐
                        │  Drizzle ORM (PostgreSQL)  │
                        │  + AI providers            │
-                       │  (MiniMax-M3, groq)         │
+                       │  (MiniMax-M3)               │
                        └────────────────────────────┘
 ```
 
@@ -59,7 +59,7 @@ src/
 │   └── drizzle/                     # schema.ts, relations.ts, types.ts
 └── modules/
     ├── auth/                        # register, login, refresh, /me, logout
-    ├── users/                       # /users/streak, /users/points
+    ├── users/                       # /api/v1/user/streak
     ├── readings/                    # /readings (generar, evaluar, explicar, TTS)
     │   ├── prompt-generation/       # Subdomain: catalog, prompt-builder
     │   ├── prompt-logs/             # Subdomain: audit de prompts

@@ -105,8 +105,8 @@ Máximo 50 caracteres en total.
 - **Prohibido el push directo**: siempre por PR.
 - Solo **squash-merge**.
 - No se permiten force-pushes ni deleciones.
-- Al mergear el PR de release, `release-please` crea el tag y la GitHub
-  Release (ver [versioning.md](./versioning.md)).
+- Al mergear a `main`, el workflow `release.yml` crea el tag anotado y la
+  GitHub Release (ver [versioning.md](./versioning.md)).
 
 `main` permanece estable entre releases. Durante el desarrollo activo solo
 recibe merge en los hitos acordados.

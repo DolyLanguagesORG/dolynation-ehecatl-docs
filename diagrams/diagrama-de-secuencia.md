@@ -1,4 +1,8 @@
 @startuml
+' Estado del modelo: este diagrama describe el ESTADO OBJETIVO.
+' Pendiente por sprint: language en el body (infra#20 + back#10), cache por
+' prompt_hash (back#9), endpoint de TTS (back#44), tablas vocabulary_logs y
+' evaluations (infra#21) y racha/puntos (back#15).
 autonumber
 skinparam shadowing false
 skinparam sequenceMessageAlign center

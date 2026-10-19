@@ -1,4 +1,8 @@
 @startuml ERD_DolyNation
+' Estado del modelo: implementadas hoy -> users, auth_access_tokens, readings,
+' prompt_logs. Planificadas -> categories, user_preferences,
+' user_selected_categories (infra#20), evaluations, vocabulary_logs (infra#21)
+' y users.role (infra#22).
 hide circle
 skinparam linetype ortho
 skinparam shadowing false

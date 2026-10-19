@@ -12,7 +12,7 @@ en uno de estos dos patrones:
 
 ```ts
 return apiOk('Mensaje en inglés', result);              // 2xx
-return apiCreated('Created', result);                    // 201
+return apiOk('Created successfully', result);             // 201
 throw new AppHttpException(ErrorCode.X, 'safe msg');     // 4xx/5xx
 ```
 
@@ -123,7 +123,7 @@ export class ExampleService {
 // src/modules/example/example.controller.ts
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponseOf, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { CurrentUser, type AuthenticatedUser } from '@/common/decorators/current-user.decorator';
+import { CurrentUser, type AuthUser } from '@/common/decorators/current-user.decorator';
 import { Public } from '@/common/decorators/public.decorator';
 import { apiOk } from '@/common/types/api-response.type';
 import { ApiErrorDto } from '@/common/errors/api-error.dto';
@@ -146,7 +146,7 @@ export class ExampleController {
   @ApiBadRequestResponse({ type: ApiErrorDto })
   @ApiUnauthorizedResponse({ type: ApiErrorDto })
   async create(
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentUser() user: AuthUser,
     @Body() dto: CreateExampleDto,
   ): Promise<ReturnType<typeof apiOk<ExampleDto>>> {
     const result = await this.service.create(dto, user.id);
@@ -157,7 +157,8 @@ export class ExampleController {
 
 **Reglas:**
 
-- El método **siempre** devuelve `apiOk(message, data)` o `apiCreated(...)`.
+- El método **siempre** devuelve `apiOk(message, data)` (el helper `apiOk` sirve
+  tanto para 200 como para 201: el envelope es el mismo).
 - Documenta con `@ApiOperation`, `@ApiTags`, `@ApiBearerAuth`, y los
   helpers envelope (`ApiCreatedResponseOf`, `ApiOkResponseOf`).
 - Cada respuesta de error debe tener su decorador (`@ApiBadRequestResponse`,

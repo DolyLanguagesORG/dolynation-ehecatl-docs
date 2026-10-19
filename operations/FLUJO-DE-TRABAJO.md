@@ -182,7 +182,8 @@ Cada sprint cierra con una tarea de integración (por ejemplo los issues
 ### 6. Se libera
 
 `v1.0.0` es la entrega de cierre (issue **infra#4**). Consiste en mergear el PR
-de release de `release-please`, que crea el tag y publica la release.
+de `develop` a `main`: el workflow `release.yml` crea el tag anotado y publica
+la GitHub Release con las notas.
 
 ## CODEOWNERS
 

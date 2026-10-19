@@ -1,4 +1,8 @@
 @startuml Flujo_Seguridad_Auth_DolyNation
+' Estado del modelo: la persistencia, rotacion y revocacion del refresh token
+' en auth_access_tokens todavia NO esta implementada (hoy el refresh es un JWT
+' stateless y logout es un no-op). Corresponde a back#4. El hash de argon2 y el
+' JWT con expiracion ya estan implementados (back#3).
 autonumber
 skinparam shadowing false
 skinparam sequenceMessageAlign center

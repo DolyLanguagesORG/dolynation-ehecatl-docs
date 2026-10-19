@@ -16,8 +16,10 @@ versionan; las imágenes exportadas se pueden referenciar desde la documentació
 ## Convenciones
 
 - Un archivo por diagrama, en `kebab-case`, con su formato de fuente.
-- Prefiere **Mermaid** o PlantUML en texto: se renderiza en GitHub sin exportar
-  binarios.
+- El formato de fuente es texto plano: **Mermaid** se renderiza nativamente en
+  GitHub; **PlantUML** (el que usa este repo) necesita un visor o plugin para
+  renderizarse, y en GitHub se lee como texto. Mantén el fuente versionado y, si
+  necesitas la imagen, expórtala y guárdala junto al `.md`.
 - Si exportas PNG/SVG, guárdalos junto al fuente con el mismo nombre.
 - Referencia los diagramas desde el documento correspondiente con un enlace
   relativo.

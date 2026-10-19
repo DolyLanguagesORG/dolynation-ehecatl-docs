@@ -52,7 +52,10 @@ interface ApiError {
    Nunca devuelvas un objeto crudo.
 2. **`message`** es un string legible para humanos, **en inglés**.
 3. **`data`** contiene la carga útil del éxito o `null` en error.
-4. **`error`** solo aparece en respuestas de fallo.
+4. **`error`** solo aparece en respuestas de fallo. El schema OpenAPI
+   (`ApiSuccessEnvelopeDto`) lo declara siempre presente y `null` en el éxito,
+   mientras que el helper `apiOk` no incluye la clave en el objeto devuelto:
+   **el cliente debe tratar `error` como opcional o `null`**.
 
 ```ts
 // ✅ Correcto
@@ -83,8 +86,8 @@ verifica exhaustividad.
 | `RESOURCE_NOT_FOUND`                | 404  | Recurso no existe                                            |
 | `RESOURCE_FORBIDDEN`                | 403  | Usuario autenticado pero sin permiso                         |
 | `READING_PENDING_LIMIT_REACHED`     | 400  | Demasiadas lecturas pendientes, completar antes de generar    |
-| `READING_ALREADY_EVALUATED`         | 400  | La lectura ya fue evaluada, no se puede re-evaluar           |
-| `VALIDATION_ERROR`                  | 400  | Falló class-validator; `details.fields[]` con cada campo    |
+| `READING_ALREADY_EVALUATED`         | 409  | La lectura ya fue evaluada, no se puede re-evaluar           |
+| `VALIDATION_ERROR`                  | 400  | Falló class-validator; `details.fields` es un array de `{ field, message }` |
 | `INTERNAL_ERROR`                    | 500  | Error no controlado; el cliente no recibe detalles internos  |
 | `SERVICE_UNAVAILABLE`               | 503  | Dependencia externa (DB, AI provider) caída                  |
 
@@ -132,17 +135,17 @@ cliente solo recibe un código estable + mensaje seguro.
 
 | Método y ruta | Estado | Issue |
 | --- | --- | --- |
-| `POST /api/v1/auth/register`, `/login`, `/refresh`, `/logout`; `GET /auth/me` | Implementado | `back#4` |
-| `GET/PATCH /api/v1/user/profile` | En PR S1 | `back#5` |
+| `POST /api/v1/auth/register`, `/login`, `/refresh`, `/logout`; `GET /api/v1/auth/me` | En PR (back#33), en revisión | `back#4` |
+| `GET/PATCH /api/v1/user/profile` | En PR (back#34), listo para revisión | `back#5` |
 | `GET /api/v1/user/streak` | Implementado (stub inicial) | `back#15` |
 | `GET /api/v1/user/points` | Planificado S4 | `back#15` |
 | `GET /api/v1/readings/options` | Implementado | `back#8` |
 | `POST /api/v1/readings` | Implementado; se amplía en S2 | `back#10` |
 | `GET /api/v1/readings/pending`, `/completed`, `/{id}`; `DELETE /{id}` | Implementado | `back#10` |
-| `POST /api/v1/readings/{id}/evaluate` | Implementado | `back#13` |
-| `POST /api/v1/readings/{id}/explanations` | Implementado | `back#11` |
-| `GET /api/v1/readings/{id}/tts` | Planificado S3 | `back#11` |
-| `GET/PUT /api/v1/settings/language`; `GET/PUT/POST /settings/categories` | Planificado S2 | `back#8` |
+| `POST /api/v1/readings/{id}/evaluate` | Planificado S3 | `back#13` |
+| `POST /api/v1/readings/{id}/explanations` | Planificado S3 | `back#11` |
+| `GET /api/v1/readings/{id}/tts` | Planificado S3 | `back#44` |
+| `GET/PUT /api/v1/settings/languages`; `GET/PUT/POST /api/v1/settings/categories` | Planificado S2 | `back#8` |
 | `GET /api/v1/history`, `/history/scores` | Planificado S4 | `back#16` |
 | `GET/POST/PATCH/DELETE /api/v1/admin/categories`; `GET /admin/users`; `PATCH /admin/users/{id}/role` | Planificado S4 | `back#17` |
 | `GET /api/v1/health/live`, `/health/ready` | Implementado | — |
