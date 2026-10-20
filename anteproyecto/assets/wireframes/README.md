@@ -49,5 +49,6 @@ partir de esa fecha.
   [`operations/PROTOTIPO-FIGMA.md`](../../../operations/PROTOTIPO-FIGMA.md).
 - Los wireframes se muestran en el §17 del
   [anteproyyecto](../../anteproyecto-dolynation.md).
-- La ruta `/prototipo` del frontend con el embed interactivo está en el issue
-  `front#25` del repositorio del frontend.
+- El prototipo se abre desde el enlace a Figma; **no se embebe en la
+  aplicación** (decisión del 19 de octubre: no compensa el tiempo del sprint).
+  El detalle está en [`operations/PROTOTIPO-FIGMA.md`](../../../operations/PROTOTIPO-FIGMA.md) §4.
