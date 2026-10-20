@@ -17,6 +17,7 @@ José Elías Galarza Pedroza
 
 # **Índice**
 
+- [DolyNation](#dolynation)
 - [1. Título del proyecto](#1-t%C3%ADtulo-del-proyecto)
 - [2. Planteamiento del problema](#2-planteamiento-del-problema)
 - [3. Justificación](#3-justificaci%C3%B3n)
@@ -29,18 +30,19 @@ José Elías Galarza Pedroza
   - [Lecturas](#lecturas)
   - [Comprensión lectora](#comprensi%C3%B3n-lectora)
   - [Análisis contextual de vocabulario mediante inteligencia artificial](#an%C3%A1lisis-contextual-de-vocabulario-mediante-inteligencia-artificial)
-  - [Sistema de rachas](#sistema-de-rachas)
+  - [## Sistema de rachas](#sistema-de-rachas)
   - [Seguimiento del progreso](#seguimiento-del-progreso)
 - [7. Limitaciones](#7-limitaciones)
 - [8. Producto Mínimo Viable (MVP).](#8.-producto-m%C3%ADnimo-viable-(mvp).)
 - [9. Requerimientos funcionales y no funcionales](#9.-requerimientos-funcionales-y-no-funcionales)
   - [9.1. Requerimientos funcionales](#9.1.-requerimientos-funcionales)
   - [9.2. Requerimientos no funcionales](#9.2.-requerimientos-no-funcionales)
-  - [10. Análisis de riesgo](#10.-an%C3%A1lisis-de-riesgo)
+  - [## 10. Análisis de riesgo](#10.-an%C3%A1lisis-de-riesgo)
 - [11. Elección de metodología y roles del equipo](#11.-elecci%C3%B3n-de-metodolog%C3%ADa-y-roles-del-equipo)
   - [12. Separación del proyecto en tareas](#12.-separaci%C3%B3n-del-proyecto-en-tareas)
 - [14. Elección de estructura web y tecnologías.](#14.-elecci%C3%B3n-de-estructura-web-y-tecnolog%C3%ADas.)
 - [16. Selección de patrones de diseño.](#16.-selecci%C3%B3n-de-patrones-de-dise%C3%B1o.)
+  - [## 16.1. Diagramas del sistema](#16.1.-diagramas-del-sistema)
   - [17. Wireframes.](#17.-wireframes.)
   - [18. Fuentes.](#18.-fuentes.)
 
@@ -731,6 +733,22 @@ Next.js estructura la interfaz de usuario bajo patrones modernos de desarrollo w
 * **Patrón de Renderizado Híbrido (Server / Client Components):** Separa la lógica de renderizado en el servidor (para optimizar la carga inicial y el rendimiento) de la interactividad en el cliente (para acciones dinámicas como la selección de texto o envíos de formularios).
 
 ## 
+
+## **16\.1. Diagramas del sistema** {#16.1.-diagramas-del-sistema}
+
+Los diagramas del sistema están en [`../diagrams/`](../diagrams/README.md),
+escritos en **Mermaid** para que se rendericen de forma nativa en GitHub:
+
+| Diagrama | Qué representa | Requisito del anteproyecto |
+| --- | --- | --- |
+| [Arquitectura](../diagrams/diagrama-de-arquitectura.md) | Los cuatro repositorios, los módulos del backend, el frontend, la base de datos y los servicios externos | §14 (estructura y tecnologías) |
+| [Actores y casos de uso](../diagrams/diagrama-de-actores.md) | Actores humanos, casos de uso del estudiante y servicios externos | §6 (alcance) y §9.1 (RF-01 a RF-13) |
+| [Entidad-relación](../diagrams/diagrama-de-ER%28Entidad-Relacion%29.md) | Las 9 tablas del modelo de datos con sus claves y relaciones | §9.1 (RF-03, RF-08, RF-09) |
+| [Secuencia: flujo principal](../diagrams/diagrama-de-secuencia.md) | Generación de la lectura, diccionario contextual con audio y evaluación PNL | §9.1 (RF-05 a RF-09) |
+| [Secuencia: autenticación](../diagrams/diagrama-de-secuencia-de-securidad.md) | Inicio de sesión, uso del token y rotación del refresh token | §9.1.3 (RNF-05 a RNF-07) |
+
+El detalle campo por campo del modelo de datos está en el
+[diccionario de datos](../diagrams/diccionario-de-datos.md).
 
 ## **17\. Wireframes.** {#17.-wireframes.}
 
