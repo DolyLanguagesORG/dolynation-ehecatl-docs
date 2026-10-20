@@ -28,7 +28,7 @@ arquitectura, onboarding, cronograma y el anteproyecto.
 - **[Flujo de trabajo](./operations/FLUJO-DE-TRABAJO.md)** — el panorama completo: ramas,
   tablero, CODEOWNERS, dependencias, releases, y qué reglas **sí** te bloquean
   y cuáles no.
-- [Cronograma](./plan/cronograma.md) — plan de 5 sprints, 33 entregables y sus prerrequisitos, del
+- [Cronograma](./plan/cronograma.md) — plan de 5 sprints, 68 issues y sus prerrequisitos, del
   05/Oct/2026 al 10/Dic/2026.
 - [Plan y seguimiento](./plan/PLAN-Y-SEGUIMIENTO.md) — el orden de trabajo (qué
   depende de qué), cómo no perder fechas y cómo justificar atrasos.
@@ -41,6 +41,10 @@ arquitectura, onboarding, cronograma y el anteproyecto.
 - **Arquitectura**: [architecture/](./architecture/README.md)
 - **Onboarding**: [onboarding/](./onboarding/README.md)
 - **CI/CD y versionado**: [CI-CD-Y-VERSIONADO.md](./operations/CI-CD-Y-VERSIONADO.md)
+- **Plataforma de trabajo**: [JUSTIFICACION-GITHUB.md](./operations/JUSTIFICACION-GITHUB.md) —
+  por qué GitHub y no otra cosa: criterios, alternativas descartadas y límites.
+- **Despliegue**: [PLAN-DE-DESPLIEGUE.md](./operations/PLAN-DE-DESPLIEGUE.md) — los 3 entornos,
+  puertos, secretos y flujo de despliegue.
 - **Backlog** (mejoras sueltas): [backlog.md](./plan/backlog.md)
 - **Diagramas** (UML): [diagrams/](./diagrams/README.md)
 - **Decisiones**: [decisions/](./decisions/README.md)

@@ -223,16 +223,16 @@ En otras palabras:
 | ¿GitHub pide revisión al owner? | Sí, automáticamente |
 | ¿El merge se bloquea si el owner no aprueba? | **Sí** |
 | ¿Quién sí bloquea? | El code owner de la ruta tocada, más 1 aprobación (2 en `main`) |
-| ¿Y a quién puede aprobar? | A un code owner (o a un admin, ver el *bypass actor*) |
+| ¿Y a quién puede aprobar? | A un code owner de la ruta tocada |
 
 **Cómo está configurado a propósito.** La revisión del owner es obligatoria
 porque cada repositorio tiene al menos dos owners en cada ruta, así que siempre
 hay alguien del equipo que pueda aprobar sin depender de quien abrió el PR.
-Para que el rol de admin (Scrum Master y Product Owner) no se quede atascado
-cuando el autor del PR es el único owner de la ruta, el ruleset de `develop`
-declara un **bypass actor de tipo `RepositoryRole admin`**: quien tenga permisos
-de administrador puede fusionar sin la revisión, de forma explícita y sin bajar
-el requisito para los demás.
+**No hay ninguna excepción.** Los rulesets no declaran *bypass actors*:
+nadie puede saltarse la revisión de un code owner, tampoco quien administra el
+repositorio. Si el autor de un PR es el único owner de la ruta tocada, el PR
+espera a que otro miembro del equipo lo apruebe; si no hay nadie, se ajusta el
+`CODEOWNERS` de esa ruta. Es la única forma de que la revisión signifique algo.
 
 **Estado.** Elías (soporte de backend) está incorporado como
 `@EliasGalarza333`: owner por defecto en el backend y revisor de los módulos
@@ -300,8 +300,8 @@ git push origin develop
 
 Esto es lo que tienes que saber para no confiar de más en las herramientas.
 
-**Bloquean de verdad** (configuración de GitHub, no se pueden saltar salvo
-que seas admin):
+**Bloquean de verdad** (configuración de GitHub, no se pueden saltar por
+ninguna vía):
 
 - los checks de CI del repo en verde
 - 1 aprobación de otra persona (2 en `main`)
@@ -316,16 +316,14 @@ que seas admin):
 | **Mensajes de commit** | Solo los valida el hook local de husky. **CI no los revisa.** Si commiteas con `--no-verify` o sin `npm ci`, entra basura. |
 | **Scopes de commit** | El regex del CI no los valida contra la lista de `commits.md`. |
 | **Idioma de los mensajes** | Nadie lo comprueba. La convención es **español** (ver [commits.md](../conventions/commits.md)); no hay check. |
-| **CODEOWNERS** | Obligatorios: `require_code_owner_reviews: true`. Un admin puede fusionar sin ellos por el *bypass actor*. |
+| **CODEOWNERS** | Obligatorios: `require_code_owner_reviews: true`, sin excepciones. |
 | **Que la rama esté al día** | `develop` no exige estar al día con la base. Puedes mergear con la rama atrasada. |
 | **El checklist de la plantilla** | Es un recordatorio, no un gate. |
 
-**Y una advertencia concreta**: la protección de ramas vive en *rulesets*, y el
-ruleset de `develop` declara un `bypass_actors` de tipo `RepositoryRole admin`:
-quien tenga permisos de administrador puede saltarse la revisión del code owner
-**de forma explícita y auditable**, y queda registrado quién fusionó. Para el
-resto del equipo la revisión del owner sigue siendo obligatoria, y el bypass no
-se usa salvo que de verdad haga falta.
+**Y una advertencia concreta**: la protección de ramas vive en *rulesets*, y
+ninguno de ellos declara `bypass_actors`. La revisión del code owner es
+obligatoria para todo el equipo, sin atajos, y tampoco es posible hacer push
+directo a `develop` o `main`: todo cambio entra por un pull request.
 
 ## Dónde vive cada cosa
 

@@ -532,6 +532,10 @@ El sistema deberá garantizar la consistencia e integridad de la información al
 
 Para el desarrollo del proyecto **DolyNation** se implementa el marco de trabajo **Scrum** combinado con un flujo de desarrollo guiado por tareas en GitHub (*Issue-Driven Development*). El proyecto se divide en 5 Sprints con fechas estrictas de entrega que abarcan desde el **19 de octubre** hasta el **10 de diciembre** de 2026\. El Sprint 1 se reprogramó al 19 de octubre tras detectarse que su entrega se retrasó, y los sprints 4 y 5 se acortaron para sostener la fecha de entrega de la 1 a 10 de diciembre.
 
+**Plataforma de trabajo.** Toda la coordinación vive en **GitHub**: los repositorios de código, la documentación, las issues con sus entregables y dependencias, el tablero del proyecto, la revisión de código por *code owners*, la integración continua, los entornos de despliegue y los releases. La justificación de esa decisión, con los criterios, las alternativas descartadas y sus límites, está en
+[`operations/JUSTIFICACION-GITHUB.md`](../operations/JUSTIFICACION-GITHUB.md) y en el
+[ADR-009](../decisions/README.md).
+
 ### **11.2. Estructura de roles y responsabilidades** {#11.2.-estructura-de-roles-y-responsabilidades}
 
 * **Product Owner:** Sebastián  

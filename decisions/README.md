@@ -13,6 +13,8 @@ anteproyecto; lo aclara cuando la implementación tomó una decisión concreta.
 | ADR-006 | Migraciones de schema en dos fases para S2, S3 y S4 | Aceptada |
 | ADR-007 | PostgreSQL 15 con Drizzle ORM como capa de acceso a datos | Aceptada |
 | ADR-008 | Argon2id + JWT HS256 con refresh token persistido y rotado | Aceptada |
+| ADR-009 | GitHub como plataforma principal de trabajo | Aceptada |
+| ADR-010 | `DolyNation` como nombre canónico del proyecto | Aceptada |
 
 ## ADR-001 — Proveedor de IA
 
@@ -117,6 +119,38 @@ anteproyecto; lo aclara cuando la implementación tomó una decisión concreta.
   `back#27` endurece el arranque (secreto sin valor por defecto), CORS y rate
   limiting.
 
+## ADR-009 — GitHub como plataforma principal de trabajo
+
+- **Contexto:** el equipo de cinco personas tiene que coordinar código, tareas,
+  revisiones, CI/CD, entornos y documentación entre el 5 de octubre y el 10 de
+  diciembre de 2026, sin operador de infraestructura.
+- **Decisión:** GitHub es la plataforma única: repositorios, issues, sub-issues
+  y dependencias, Project, rulesets, CODEOWNERS, GitHub Actions, Environments,
+  Releases y secret scanning. No se usa una segunda herramienta de gestión ni
+  un motor de CI aparte.
+- **Alternativas:** GitLab self-hosted (hay que mantener la instancia),
+  Bitbucket (integración más débil con CI/CD y rulesets), CircleCI o Jenkins
+  (un motor de CI adicional que duplica la configuración), y Jira/Trello/Notion
+  (un tablero que se desincroniza de las issues).
+- **Consecuencia:** el proyecto depende de GitHub y una migración exigiría
+  reconstruir tablero, checks y reglas; es un coste aceptado porque la
+  alternativa costaría más tiempo de equipo, que es el recurso escaso.
+  Los rulesets **no** declaran `bypass_actors`: la revisión del code owner es
+  obligatoria para todos, sin excepciones. El detalle está en
+  [`operations/JUSTIFICACION-GITHUB.md`](../operations/JUSTIFICACION-GITHUB.md).
+
+## ADR-010 — Nombre canónico del proyecto
+
+- **Contexto:** el proyecto nació como «Dolynglish» y en algunos archivos
+  antiguos todavía aparece ese nombre.
+- **Decisión:** el nombre canónico es **DolyNation**. «Dolynglish» queda como
+  alias histórico y solo se usa para identificar el monorepo original archivado.
+- **Alternativas:** mantener «Dolynglish» (descartado: no coincide con el
+  nombre de los repositorios, el `package.json` ni el título del anteproyecto) o
+  usar los dos indistintamente (descartado: genera ambigüedad en la entrega).
+- **Consecuencia:** el `package.json`, la API, la documentación, la portada de
+  la organización y el material de la entrega usan **DolyNation**.
+
 ## Decisiones pendientes de toma
 
 Estas decisiones **no están tomadas**: se listan con sus opciones y con el
@@ -128,10 +162,9 @@ que bloquean a una issue concreta llevan esa issue en la última columna.
 | 1 | Umbral de `passed` | `score ≥ 70` / `score ≥ 80` | Qué proporción de resúmenes «razonables» debe pasar la evaluación | `back#22` |
 | 2 | Métrica de cobertura de ideas principales | Rúbrica con LLM / keywords de referencia por lectura | Reproducibilidad y costo por evaluación | `back#22` |
 | 3 | Umbral y forma del feedback | Texto libre / bullets por criterio | Que el usuario sepa qué cambiar | `back#23` |
-| 4 | Nombre canónico del producto | `DolyNation` / `Dolynglish` | El que aparezca en el `package.json`, la API y la entrega | — |
-| 5 | Tipo de columna del rol | `ENUM` de PostgreSQL / `VARCHAR` con `CHECK` | Compatibilidad con el runner de migraciones | `infra#22` |
-| 6 | Formato y límite del audio TTS | `audio/mpeg` con tope de tamaño | Compatibilidad del navegador y costo del proveedor | `back#44` |
-| 7 | Reintentos y backoff del proveedor IA | 2 reintentos exponenciales / sin reintento | Costo por llamada y latencia percibida | `back#21` |
-| 8 | Caché y rate limit en memoria o Redis | En memoria (1 instancia) / Redis | Nº de instancias del despliegue | `back#9`, `back#27` |
-| 9 | Política de contraseñas | `MinLength(8)` actual / 12 con mayúscula y número | Usabilidad contra el RNF-05 | `back#27` |
-| 10 | Modelo de despliegue | 1 servidor self-host / varias instancias | Volumen esperado de usuarios | `infra#26` |
+| 4 | Tipo de columna del rol | `ENUM` de PostgreSQL / `VARCHAR` con `CHECK` | Compatibilidad con el runner de migraciones | `infra#22` |
+| 5 | Formato y límite del audio TTS | `audio/mpeg` con tope de tamaño | Compatibilidad del navegador y costo del proveedor | `back#44` |
+| 6 | Reintentos y backoff del proveedor IA | 2 reintentos exponenciales / sin reintento | Costo por llamada y latencia percibida | `back#21` |
+| 7 | Caché y rate limit en memoria o Redis | En memoria (1 instancia) / Redis | Nº de instancias del despliegue | `back#9`, `back#27` |
+| 8 | Política de contraseñas | `MinLength(8)` actual / 12 con mayúscula y número | Usabilidad contra el RNF-05 | `back#27` |
+| 9 | Modelo de despliegue | 1 servidor self-host / varias instancias | Volumen esperado de usuarios | `infra#26` |
