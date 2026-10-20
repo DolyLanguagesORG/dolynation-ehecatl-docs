@@ -8,5 +8,8 @@ Cómo se trabaja y se despliega el proyecto.
   checks, `Closes #N` y troubleshooting.
 - [CI-CD-Y-VERSIONADO.md](./CI-CD-Y-VERSIONADO.md) — entornos, `rc`, cascada de
   releases, versionado y deploy.
+- [PLAN-DE-DESPLIEGUE.md](./PLAN-DE-DESPLIEGUE.md) — los 3 entornos (desarrollo,
+  staging y producción) sobre servidor único, puertos, secretos y flujo de
+  despliegue.
 
 La planeación y el backlog viven en [`../plan/`](../plan/README.md).

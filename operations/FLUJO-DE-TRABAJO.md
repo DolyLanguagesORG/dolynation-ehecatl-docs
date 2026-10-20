@@ -35,7 +35,7 @@ Para el paso a paso de abrir un PR, ve a
                           ┌──────▼──────────┐
                           │    develop      │  integración diaria
                           └──────┬──────────┘
-                                 │  PR + checks + 1 aprobación
+                                 │  PR + checks + 2 aprobaciones
                           ┌──────▼──────────┐
                           │     main        │  producción
                           └──────┬──────────┘
@@ -45,6 +45,9 @@ Para el paso a paso de abrir un PR, ve a
                           │  v0.x.y         │
                           └─────────────────┘
 ```
+
+> **Aprobaciones:** 1 en `develop` y en las ramas de trabajo; **2** en `main` (es
+> el PR de release).
 
 ## Las tres ramas
 
@@ -196,43 +199,46 @@ su revisión automáticamente, sin que nadie lo solicite a mano.
 
 | Repo | Owner por defecto (`*`) | Rutas con owner propio |
 | --- | --- | --- |
-| `dolynation-atl-back` | `@XxjesusalbertoxX` `@AzaelG26` | `src/common/`, `src/modules/{auth,readings,ia,users}/`, `src/app.module.ts`, `src/main.ts`, `src/database/`, `src/config/` → `@AzaelG26` |
+| `dolynation-atl-back` | `@XxjesusalbertoxX` `@AzaelG26` `@EliasGalarza333` | `src/common/`, `src/modules/ia/`, `src/app.module.ts`, `src/main.ts`, `src/database/`, `src/config/` → `@AzaelG26`; `src/modules/{auth,readings,users}/` → `@AzaelG26` `@EliasGalarza333` |
 | `dolynation-tonatiuh-front` | `@XxjesusalbertoxX` `@y0ADQ1` | — |
 | `dolynation-tlalli-infra` | `@XxjesusalbertoxX` `@AzaelG26` | `database/` → `@AzaelG26` |
-| `dolynation-ehecatl-docs` | `@XxjesusalbertoxX` `@SebastianRdzC04` | — |
+| `dolynation-ehecatl-docs` | `@XxjesusalbertoxX` `@SebastianRdzC04` `@y0ADQ1` | — |
 
-En todos los repos, `/.github/` lo revisa `@XxjesusalbertoxX`.
+En todos los repos, `/.github/` lo revisa `@XxjesusalbertoxX` y, en el backend y
+en el frontend, también `@EliasGalarza333` y `@y0ADQ1` respectivamente. Cada
+ruta tiene **dos owners como mínimo**, para que ninguna PR se quede sin
+*approving owner* cuando quien la hace es el único responsable de esa ruta.
 
-**Lo importante: aquí CODEOWNERS es una recomendación, no una obligación.**
+**Lo importante: la revisión del owner sí es obligatoria.**
 
-El repositorio está configurado con `require_code_owner_reviews: false`. Eso
-significa que GitHub **pide** la revisión del owner pero **no bloquea** el merge
-si no llegó. Lo único que bloquea es **1 aprobación de cualquier persona con
-acceso al repo**.
+Los cuatro repositorios están configurados con `require_code_owner_reviews:
+true`: GitHub **pide** la revisión del owner y **bloquea** el merge si no llegó.
+Además se exigen **1 aprobación** en `develop` (**2** en `main`) y que todos los
+comentarios del PR estén resueltos.
 
 En otras palabras:
 
 | Pregunta | Respuesta |
 | --- | --- |
 | ¿GitHub pide revisión al owner? | Sí, automáticamente |
-| ¿El merge se bloquea si el owner no aprueba? | **No** |
-| ¿Quién sí bloquea? | Cualquiera con acceso, y hace falta al menos 1 |
-| ¿Y a quién puede aprobar? | A cualquiera con acceso, no tiene que ser owner |
+| ¿El merge se bloquea si el owner no aprueba? | **Sí** |
+| ¿Quién sí bloquea? | El code owner de la ruta tocada, más 1 aprobación (2 en `main`) |
+| ¿Y a quién puede aprobar? | A un code owner (o a un admin, ver el *bypass actor*) |
 
-**Cómo está configurado a propósito.** La protección exige 1 aprobación y el
-repositorio es de `@SebastianRdzC04`, mientras que el owner real del
-cronograma de trabajo es el Scrum Master. Con
-`require_code_owner_reviews: true`, el PR quedaría atascado esperando a una
-persona que no participa en el desarrollo del sprint. Con `false`, el
-responsable del día aprueba sin fricción.
+**Cómo está configurado a propósito.** La revisión del owner es obligatoria
+porque cada repositorio tiene al menos dos owners en cada ruta, así que siempre
+hay alguien del equipo que pueda aprobar sin depender de quien abrió el PR.
+Para que el rol de admin (Scrum Master y Product Owner) no se quede atascado
+cuando el autor del PR es el único owner de la ruta, el ruleset de `develop`
+declara un **bypass actor de tipo `RepositoryRole admin`**: quien tenga permisos
+de administrador puede fusionar sin la revisión, de forma explícita y sin bajar
+el requisito para los demás.
 
-**Si algún día quieres que sí sea obligatorio**, hay que poner
-`require_code_owner_reviews: true` y tener al menos a un owner del equipo en
-la lista. Hoy no lo es.
-
-**Pendientes.** En los CODEOWNERS del backend y de infra, Elías (soporte de
-backend) aparece todavía como `PENDIENTE`: aún no tiene username de GitHub. En
-cuanto lo tenga, se añade a la lista.
+**Estado.** Elías (soporte de backend) está incorporado como
+`@EliasGalarza333`: owner por defecto en el backend y revisor de los módulos
+`auth`, `readings` y `users`. Juan (`@y0ADQ1`) es owner del frontend y del
+repositorio de documentación, donde valida el anteproyecto, el plan y las
+convenciones.
 
 ## Dependencias entre issues
 
@@ -298,7 +304,7 @@ Esto es lo que tienes que saber para no confiar de más en las herramientas.
 que seas admin):
 
 - los checks de CI del repo en verde
-- 1 aprobación de otra persona
+- 1 aprobación de otra persona (2 en `main`)
 - Toda conversación del PR resuelta
 - Nada de force-push, nada de borrar ramas, nada de merge commits
 - Solo squash-merge
@@ -310,16 +316,16 @@ que seas admin):
 | **Mensajes de commit** | Solo los valida el hook local de husky. **CI no los revisa.** Si commiteas con `--no-verify` o sin `npm ci`, entra basura. |
 | **Scopes de commit** | El regex del CI no los valida contra la lista de `commits.md`. |
 | **Idioma de los mensajes** | Nadie lo comprueba. La convención es **español** (ver [commits.md](../conventions/commits.md)); no hay check. |
-| **CODEOWNERS** | Se piden, pero no son obligatorios (`require_code_owner_reviews: false`). |
+| **CODEOWNERS** | Obligatorios: `require_code_owner_reviews: true`. Un admin puede fusionar sin ellos por el *bypass actor*. |
 | **Que la rama esté al día** | `develop` no exige estar al día con la base. Puedes mergear con la rama atrasada. |
 | **El checklist de la plantilla** | Es un recordatorio, no un gate. |
 
-**Y una advertencia concreta**: `enforce_admins` está en `false`. Eso significa
-que los administradores del repo **pueden saltarse todas las protecciones**
-haciendo push directo a `develop` o `main`. Existe porque, en un equipo de una
-persona, un bloqueo de auto-aprobación dejaría el repo trabado. No es una
-práctica recomendada para el día a día; cuando haga falta, es preferible bajar
-temporalmente el requisito de aprobaciones y restaurarlo después.
+**Y una advertencia concreta**: la protección de ramas vive en *rulesets*, y el
+ruleset de `develop` declara un `bypass_actors` de tipo `RepositoryRole admin`:
+quien tenga permisos de administrador puede saltarse la revisión del code owner
+**de forma explícita y auditable**, y queda registrado quién fusionó. Para el
+resto del equipo la revisión del owner sigue siendo obligatoria, y el bypass no
+se usa salvo que de verdad haga falta.
 
 ## Dónde vive cada cosa
 
@@ -331,6 +337,7 @@ temporalmente el requisito de aprobaciones y restaurarlo después.
 | Ver el avance del día | El standup diario del equipo (Discussions / canal del equipo) |
 | Ver el plan completo | [`cronograma.md`](../plan/cronograma.md) |
 | Saber qué depende de qué y no perder fechas | [PLAN-Y-SEGUIMIENTO.md](../plan/PLAN-Y-SEGUIMIENTO.md) |
+| Saber cómo se despliega cada entorno | [PLAN-DE-DESPLIEGUE.md](./PLAN-DE-DESPLIEGUE.md) |
 | Saber cómo abrir un PR | [COMO-HACER-UN-PR.md](./COMO-HACER-UN-PR.md) |
 | Reglas de ramas | [conventions/git-workflow.md](../conventions/git-workflow.md) |
 | Reglas de commits | [conventions/commits.md](../conventions/commits.md) |
@@ -341,5 +348,6 @@ temporalmente el requisito de aprobaciones y restaurarlo después.
 
 - [COMO-HACER-UN-PR.md](./COMO-HACER-UN-PR.md) — el paso a paso
 - [CONTRIBUTING.md](../CONTRIBUTING.md) — entrada rápida
-- [cronograma.md](../plan/cronograma.md) — los 33 entregables y sus prerrequisitos
+- [cronograma.md](../plan/cronograma.md) — los 68 issues, los sprints y sus fechas
+- [PLAN-DE-DESPLIEGUE.md](./PLAN-DE-DESPLIEGUE.md) — los entornos y el despliegue
 - [conventions/](../conventions/README.md) — todas las convenciones

@@ -182,3 +182,6 @@ La tabla completa y las reglas están en
 - **`rc-*`:** son ramas efímeras y *single-flight*: solo una a la vez. Mientras
   exista una `rc`, no se puede iniciar otra release; se elimina al consolidar la
   release en `main` para liberar el ciclo.
+- **Implementación de los entornos:** servidor, puertos, secretos y ramas de
+  despliegue se detallan en [PLAN-DE-DESPLIEGUE.md](./PLAN-DE-DESPLIEGUE.md)
+  (propuesta, aún no implementada).
