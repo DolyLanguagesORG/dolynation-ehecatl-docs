@@ -12,10 +12,11 @@
 # Integrantes (ver plan/cronograma.md):
 #   - Jesús Alberto Villarreal Pérez → @XxjesusalbertoxX  (SM / Lead Dev)
 #   - Sebastián Rodríguez             → @SebastianRdzC04   (Product Owner)
+#   - Juan Antonio Deras Durón       → @y0ADQ1             (Frontend, revisor de la documentación)
 # ─────────────────────────────────────────────────────────────────────────
 
 # Default owners for everything in the repo
-* @XxjesusalbertoxX @SebastianRdzC04
+* @XxjesusalbertoxX @SebastianRdzC04 @y0ADQ1
 
 # CI
-/.github/ @XxjesusalbertoxX @SebastianRdzC04
+/.github/ @XxjesusalbertoxX @SebastianRdzC04 @y0ADQ1
