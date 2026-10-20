@@ -17,6 +17,44 @@ npm --version     # 11.x.x
 docker --version
 ```
 
+## Alternativa: Codespaces (sin instalar nada)
+
+Si no quieres instalar Node, npm ni Docker en tu máquina, puedes trabajar en
+un **Codespace** (una máquina virtual de GitHub en el navegador). Los cuatro
+repos ya traen su `.devcontainer/devcontainer.json`, así que el entorno llega
+preconfigurado: Node 22, Docker, `gh` y las extensiones del repo.
+
+**Antes de la primera vez**, hay que habilitar Codespaces en cada repositorio
+(lo hace un administrador):
+
+> `Settings` → `Codespaces` → **Enable Codespaces**
+
+Después, en cualquier repo:
+
+```bash
+gh codespace create --repo DolyLanguagesORG/dolynation-atl-back
+```
+
+O desde el navegador: `Code` → `Codespaces` → `Create codespace on main`.
+
+Qué trae cada uno:
+
+| Repo | Imagen | Servicios y puertos | Al crear |
+| --- | --- | --- | --- |
+| `dolynation-atl-back` | `typescript-node:22` | API en 3333, Postgres en 5432 | `npm ci` + `.env` desde la plantilla |
+| `dolynation-tonatiuh-front` | `typescript-node:22` | Next.js en 3000 | `npm ci` |
+| `dolynation-tlalli-infra` | `universal:2` | Postgres 57010, API 57011, front 57012 | valida `docker-compose.test.yml` |
+| `dolynation-ehecatl-docs` | `typescript-node:22` | — | ejecuta el test del regex de `pr-labels` |
+
+**Tips**
+
+- Los Codespaces consumen minutos de cómputo: ciérralos cuando no los uses
+  (`gh codespace stop`) y bórralos si ya no los necesitas (`gh codespace delete`).
+- El Codespace es **personal**: nadie más ve tus cambios hasta que abras un PR.
+- Para el trabajo normal del equipo, el clone local sigue siendo la vía
+  principal; el Codespace es la alternativa cuando hay que levantar el entorno
+  en otro equipo o en otra máquina.
+
 ## Clonar el repo
 
 Este setup levanta el **backend**. Clona su repo (más abajo clonarás el de
