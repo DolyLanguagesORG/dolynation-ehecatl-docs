@@ -7,9 +7,9 @@ DolyNation: `dolynation-atl-back` (backend), `dolynation-tonatiuh-front`
 `dolynation-ehecatl-docs` (docs).
 
 > Para las reglas de ramas y commits del día a día, ver
-> [conventions/git-workflow.md](./conventions/git-workflow.md),
-> [conventions/commits.md](./conventions/commits.md) y
-> [conventions/versioning.md](./conventions/versioning.md). Este documento
+> [conventions/git-workflow.md](../conventions/git-workflow.md),
+> [conventions/commits.md](../conventions/commits.md) y
+> [conventions/versioning.md](../conventions/versioning.md). Este documento
 > describe el **pipeline completo** de extremo a extremo.
 
 ## Entornos (3)
@@ -36,11 +36,11 @@ no está implementado:
 | Componente | Hoy | Objetivo |
 | --- | --- | --- |
 | Checks de CI | Implementados en los 4 repos (`ci-*.yml`, `pr-title`, `pr-labels`) | Igual |
-| Versionado | Script propio en `release.yml` que corre en `push` a `main` | **release-please** con PR acumulativo en `develop` |
+| Versionado | Script propio en `release.yml` que corre en `push` a `main` | **release-please** con PR acumulativo en `develop` (`infra#7`, fuera de la entrega) |
 | Tag / Release | Se crea al llegar a `main` | Se crea al mergear el PR de release |
-| Entornos (desarrollo, staging, producción) | No existen todavía | Deploy por SSH a 3 entornos; `rc-*` es rama efímera |
-| Manifiesto `versions.yml` | No existe | Fuente de verdad de versiones en `infra` |
-| Cascada `infra → front/back` | No existe | PRs automáticos vía PAT |
+| Entornos (desarrollo, staging, producción) | Planificado; issues `infra#6`-`infra#9` | Deploy por SSH a 3 entornos; `rc-*` es rama efímera |
+| Manifiesto `versions.yml` | Planificado (`infra#7`) | Fuente de verdad de versiones en `infra` |
+| Cascada `infra → front/back` | Planificado (`infra#8`) | PRs automáticos vía PAT |
 
 ---
 
@@ -66,19 +66,19 @@ manuales por SSH.
 1. **Flujo de trabajo:** los desarrolladores crean ramas de características y
    abren Pull Requests hacia `develop` en los repos de código (*frontend* y
    *backend*).
-2. **Versionado automático:** [release-please](https://github.com/googleapis/release-please)
-   mantiene **un PR de release acumulativo** contra `develop`
-   (`chore(release): release vX.Y.Z`). Cada PR mergeado a `develop` (squash) es
-   un Conventional Commit que se suma al PR de release y sube la versión
-   propuesta. Al mergear **ese** PR, release-please actualiza la versión, crea
-   el **tag anotado** y publica el GitHub Release con las notas; luego reabre un
-   PR limpio para el ciclo siguiente.
+2. **Versionado automático:** el mechanism vigente es el workflow `release.yml`,
+   que se dispara al llegar a `main`: calcula la versión a partir del último
+   tag y de los commits mergeados, crea el **tag anotado** y publica el GitHub
+   Release con las notas. El variante con
+   [release-please](https://github.com/googleapis/release-please) (un PR de
+   release acumulativo contra `develop`) está diseñado en `infra#7` y quedó
+   fuera de la entrega: ver la sección 8.
 3. **Despliegues de desarrollo:** se compilan contenedores temporales para
    habilitar un entorno de desarrollo en la nube en tiempo real, sin saturar el
    registro con versiones estables prematuras.
 
 Detalle de las reglas de bump en
-[conventions/versioning.md](./conventions/versioning.md).
+[conventions/versioning.md](../conventions/versioning.md).
 
 ---
 
@@ -152,11 +152,12 @@ Trust (nadie hace push directo a las ramas protegidas):
 
 ---
 
-## 8. Versionado automático (release-please)
+## 8. Versionado automático
 
 - La fuente es **Conventional Commits**; con squash, **un PR = un bump**.
-- release-please evita el push directo que sí exigiría herramientas como
-  `semantic-release`, manteniendo el modelo Zero Trust.
+- Hoy el bump lo calcula el script de `release.yml` al llegar a `main`; el
+  variante con *release-please* (PR de release acumulativo) está en `infra#7`,
+  fuera de la entrega, y la tabla de bumps de abajo aplica a ambos.
 - El crecimiento de la versión no es un problema (`v0.43.253` es válido); el
   minor resetea el patch.
 
@@ -168,7 +169,7 @@ Trust (nadie hace push directo a las ramas protegidas):
 | `feat(scope)!: ...` o `BREAKING CHANGE:` | major | `v0.1.0` → `v1.0.0` |
 
 La tabla completa y las reglas están en
-[conventions/versioning.md](./conventions/versioning.md).
+[conventions/versioning.md](../conventions/versioning.md).
 
 ---
 

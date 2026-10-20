@@ -66,8 +66,8 @@ docker compose -f docker-compose.test.yml up -d
 Verifica:
 
 ```bash
-docker ps             # el contenedor 'dolynglish-postgres-test' debe estar 'healthy'
-docker logs dolynglish-postgres-test   # debe mostrar 'database system is ready'
+docker ps             # el contenedor 'dolynglish_postgres' debe estar 'healthy'
+docker logs dolynglish_postgres   # debe mostrar 'database system is ready'
 ```
 
 El schema (`01-init.sql`) se aplica **automáticamente** al primer arranque.
@@ -140,10 +140,10 @@ cd dolynation-tlalli-infra && docker compose -f docker-compose.test.yml up -d
 Verifica que `01-init.sql` se aplicó:
 
 ```bash
-docker exec -it dolynglish-postgres-test psql -U postgres -d dolynglish_test -c "\dt"
+docker exec -it dolynglish_postgres psql -U postgres -d dolynglish -c "\dt"
 ```
 
-Deberías ver 4 tablas: `users`, `auth_access_tokens`, `readings`, `prompt_logs`.
+Deberías ver las 4 tablas base: `users`, `auth_access_tokens`, `readings` y `prompt_logs`. Al aplicar las migraciones `02`, `03` y `04` se agregan `categories`, `user_preferences`, `user_selected_categories`, `evaluations`, `vocabulary_logs` y `users.role`.
 
 Si faltan, recrea el contenedor:
 

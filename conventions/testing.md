@@ -86,8 +86,8 @@ Aplicable solo a `src/` (no contar `main.ts` ni specs).
   expone las mismas funciones (`.select()`, `.insert()`, etc.).
 - Para HTTP en e2e, no mockear — usar `supertest` contra
   `app.getHttpServer()`.
-- Para providers externos de IA (`MiniMax-M3`, `groq`), mockear las interfaces
-  `IAiProvider`.
+- Para providers externos de IA (`MiniMax-M3`), mockear la interfaz `AIProvider`
+  (`src/modules/ia/providers/ai-provider.interface.ts`).
 
 ## Helpers y fixtures
 

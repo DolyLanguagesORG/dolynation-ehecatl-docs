@@ -22,15 +22,15 @@ arquitectura, onboarding, cronograma y el anteproyecto.
 
 **Empieza por aquí:**
 
-- **[Cómo hacer un Pull Request](./COMO-HACER-UN-PR.md)** — flujo paso a paso:
+- **[Cómo hacer un Pull Request](./operations/COMO-HACER-UN-PR.md)** — flujo paso a paso:
   ramas, checks, `Closes #N`, troubleshooting. **Léelo si vas a abrir tu
   primer PR.**
-- **[Flujo de trabajo](./FLUJO-DE-TRABAJO.md)** — el panorama completo: ramas,
+- **[Flujo de trabajo](./operations/FLUJO-DE-TRABAJO.md)** — el panorama completo: ramas,
   tablero, CODEOWNERS, dependencias, releases, y qué reglas **sí** te bloquean
   y cuáles no.
-- [Cronograma](./cronograma.md) — plan de 5 sprints y 33 tareas, del
+- [Cronograma](./plan/cronograma.md) — plan de 5 sprints, 33 entregables y sus prerrequisitos, del
   05/Oct/2026 al 10/Dic/2026.
-- [Plan y seguimiento](./PLAN-Y-SEGUIMIENTO.md) — el orden de trabajo (qué
+- [Plan y seguimiento](./plan/PLAN-Y-SEGUIMIENTO.md) — el orden de trabajo (qué
   depende de qué), cómo no perder fechas y cómo justificar atrasos.
 - [Entrada rápida](./CONTRIBUTING.md) — clonar, instalar, contribuir.
 
@@ -40,9 +40,10 @@ arquitectura, onboarding, cronograma y el anteproyecto.
   [conventions/](./conventions/README.md)
 - **Arquitectura**: [architecture/](./architecture/README.md)
 - **Onboarding**: [onboarding/](./onboarding/README.md)
-- **CI/CD y versionado**: [CI-CD-Y-VERSIONADO.md](./CI-CD-Y-VERSIONADO.md)
-- **Backlog** (mejoras sueltas): [backlog.md](./backlog.md)
+- **CI/CD y versionado**: [CI-CD-Y-VERSIONADO.md](./operations/CI-CD-Y-VERSIONADO.md)
+- **Backlog** (mejoras sueltas): [backlog.md](./plan/backlog.md)
 - **Diagramas** (UML): [diagrams/](./diagrams/README.md)
+- **Decisiones**: [decisions/](./decisions/README.md)
 - **Assets** (Word/PDF, capturas): [assets/](./assets/README.md)
 
 ## Documentación adicional
@@ -53,7 +54,7 @@ arquitectura, onboarding, cronograma y el anteproyecto.
 
 ## Anteproyecto
 
-[`Anteproyecto - DolyNation.md`](./Anteproyecto%20-%20DolyNation.md) — documento
+[`anteproyecto-dolynation.md`](./anteproyecto/anteproyecto-dolynation.md) — documento
 original con la planeación, roles y stack del proyecto.
 
 ## Estado del proyecto
