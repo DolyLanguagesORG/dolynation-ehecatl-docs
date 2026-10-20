@@ -31,6 +31,19 @@ caducidad ni de que Figma siga sirviendo la imagen.
 El procedimiento para re-exportarla está en
 [`anteproyecto/assets/wireframes/README.md`](../anteproyecto/assets/wireframes/README.md).
 
+## 2.1. Las pantallas del maquetado
+
+Un **enlace al prototipo** es suficiente para que el profesor lo vea, y además
+la vista previa general ya está versionada aquí. Pero el criterio de *maquetado*
+pide que se vea el diseño completo, así que lo ideal es **exportar las 5-6
+pantallas clave** (login, formulario de parámetros, visor, diccionario,
+evaluación y dashboard) y subirlas al repo: son **10-15 minutos en Figma** y
+convierten esa parte en un "Excelente".
+
+El procedimiento paso a paso, con los nombres de archivo y los tamaños
+recomendados, está en
+[`anteproyecto/assets/wireframes/pantallas/README.md`](../anteproyecto/assets/wireframes/pantallas/README.md).
+
 ## 3. Dónde se ve
 
 - En el **§17 Wireframes** del [anteproyecto](../anteproyecto/anteproyecto-dolynation.md),
@@ -91,6 +104,9 @@ del equipo.
 ## 7. Comprobaciones
 
 - [ ] La imagen del §17 se ve en GitHub (está versionada, no es una URL).
+- [ ] Las pantallas exportadas del maquetado están en
+      `anteproyecto/assets/wireframes/pantallas/` (o, si no se exportan, el
+      enlace a Figma basta).
 - [ ] El enlace de Figma abre el diseño sin necesidad de cuenta.
 - [ ] `design-tokens.json` y el `@theme` de Tailwind coinciden con Figma.
 - [ ] La app «Figma for GitHub» está instalada en los cuatro repositorios, o

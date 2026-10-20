@@ -762,6 +762,10 @@ El prototipo y los wireframes se diseñaron en **Figma**:
 ([`assets/wireframes/`](./assets/wireframes/README.md)) para que la entrega no
 dependa de un enlace externo con fecha de caducidad.*
 
+Las pantallas del maquetado se exportan desde Figma a
+[`assets/wireframes/pantallas/`](./assets/wireframes/pantallas/README.md), donde
+está el procedimiento paso a paso.
+
 El prototipo se abre en Figma con el enlace de arriba. La guía de la
 integración —de dónde sale la imagen, cómo se re-exporta y cómo se mantienen los
 tokens de diseño— está en
