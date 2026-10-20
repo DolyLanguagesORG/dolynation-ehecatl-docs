@@ -13,7 +13,7 @@ Para el paso a paso de abrir un PR, ve a
 ```
    CRONOGRAMA                 PLANIFICACIÓN (GitHub)
    cronograma.md         ──►  issues  +  milestones  +  Project
-   33 tareas, 5 sprints         │        │              │
+   33 + 5 + 3, 5 sprints       │        │              │
    quién / cuándo                │        │              │
                                  │        │              │
                           ┌──────┴────────┴──────────────┴──────┐
@@ -93,7 +93,7 @@ ya no es la default, así que ahí la palabra clave se ignora. Ese PR debe usar
 
 ### 1. Sale del cronograma
 
-El plan vive en [`cronograma.md`](./cronograma.md). 33 tareas, 5 sprints,
+El plan vive en [`cronograma.md`](../plan/cronograma.md). 33 entregables de producto, 5 tareas de plataforma y 3 migraciones, en 5 sprints,
 del 5 de octubre al 10 de diciembre de 2026. Cada fila tiene: número, issue
 asociado, descripción, responsable, fecha de inicio y fecha de entrega.
 
@@ -182,7 +182,8 @@ Cada sprint cierra con una tarea de integración (por ejemplo los issues
 ### 6. Se libera
 
 `v1.0.0` es la entrega de cierre (issue **infra#4**). Consiste en mergear el PR
-de release de `release-please`, que crea el tag y publica la release.
+de `develop` a `main`: el workflow `release.yml` crea el tag anotado y publica
+la GitHub Release con las notas.
 
 ## CODEOWNERS
 
@@ -237,8 +238,9 @@ cuanto lo tenga, se añade a la lista.
 
 A veces dos tareas tienen un orden obligatorio. El caso real del proyecto:
 **infra#4** (PR final a `main` y tag `v1.0.0`) está **bloqueado por back#18**
-(pruebas de rendimiento y seguridad). No se puede cerrar la entrega sin las
-pruebas.
+(pruebas de rendimiento y seguridad), **front#13** (usabilidad/responsivo),
+**infra#3** (revisión final S1-S4) e **infra#7/#8** (versionado y cascada). No se
+puede cerrar la entrega sin esas piezas.
 
 Eso se registra con la relación *blocked by* y aparece en la sección
 *Relationships* de ambos issues. GitHub también ofrece *relates to* para
@@ -251,12 +253,12 @@ tareas que se tocan sin depender.
 | Relación | Contiene. Jerárquica. | Orden. Horizontal. |
 | Pregunta | "¿De qué partes se compone?" | "¿Qué tiene que pasar antes?" |
 | Uso | Dividir una tarea grande | Bloquear el avance |
-| Ejemplo | `front#12 Panel admin` → `#A CRUD usuarios`, `#B CRUD reportes` | `infra#4` espera a `back#18` |
+| Ejemplo | `front#12 Panel admin` → `#A CRUD usuarios`, `#B CRUD reportes` | `infra#4` espera a `back#18`, `front#13` e `infra#3` |
 
 ## Releases y versionado
 
 `release.yml` corre cuando algo llega a `main`. El **título del PR** decide el
-salto de versión (ver [conventions/versioning.md](./conventions/versioning.md)):
+salto de versión (ver [conventions/versioning.md](../conventions/versioning.md)):
 
 | Título del PR | Salto | Ejemplo |
 | --- | --- | --- |
@@ -307,7 +309,7 @@ que seas admin):
 | --- | --- |
 | **Mensajes de commit** | Solo los valida el hook local de husky. **CI no los revisa.** Si commiteas con `--no-verify` o sin `npm ci`, entra basura. |
 | **Scopes de commit** | El regex del CI no los valida contra la lista de `commits.md`. |
-| **Idioma de los mensajes** | Nadie lo comprueba. La convención es **español** (ver [commits.md](./conventions/commits.md)); no hay check. |
+| **Idioma de los mensajes** | Nadie lo comprueba. La convención es **español** (ver [commits.md](../conventions/commits.md)); no hay check. |
 | **CODEOWNERS** | Se piden, pero no son obligatorios (`require_code_owner_reviews: false`). |
 | **Que la rama esté al día** | `develop` no exige estar al día con la base. Puedes mergear con la rama atrasada. |
 | **El checklist de la plantilla** | Es un recordatorio, no un gate. |
@@ -327,17 +329,17 @@ temporalmente el requisito de aprobaciones y restaurarlo después.
 | Ver fechas y qué se solapa | Project → vista Timeline |
 | Leer el detalle de una tarea | El issue |
 | Ver el avance del día | El standup diario del equipo (Discussions / canal del equipo) |
-| Ver el plan completo | [`cronograma.md`](./cronograma.md) |
-| Saber qué depende de qué y no perder fechas | [PLAN-Y-SEGUIMIENTO.md](./PLAN-Y-SEGUIMIENTO.md) |
+| Ver el plan completo | [`cronograma.md`](../plan/cronograma.md) |
+| Saber qué depende de qué y no perder fechas | [PLAN-Y-SEGUIMIENTO.md](../plan/PLAN-Y-SEGUIMIENTO.md) |
 | Saber cómo abrir un PR | [COMO-HACER-UN-PR.md](./COMO-HACER-UN-PR.md) |
-| Reglas de ramas | [conventions/git-workflow.md](./conventions/git-workflow.md) |
-| Reglas de commits | [conventions/commits.md](./conventions/commits.md) |
-| Reglas de versionado | [conventions/versioning.md](./conventions/versioning.md) |
-| Montar el entorno | [onboarding/setup.md](./onboarding/setup.md) |
+| Reglas de ramas | [conventions/git-workflow.md](../conventions/git-workflow.md) |
+| Reglas de commits | [conventions/commits.md](../conventions/commits.md) |
+| Reglas de versionado | [conventions/versioning.md](../conventions/versioning.md) |
+| Montar el entorno | [onboarding/setup.md](../onboarding/setup.md) |
 
 ## Documentos relacionados
 
 - [COMO-HACER-UN-PR.md](./COMO-HACER-UN-PR.md) — el paso a paso
-- [CONTRIBUTING.md](./CONTRIBUTING.md) — entrada rápida
-- [cronograma.md](./cronograma.md) — las 33 tareas
-- [conventions/](./conventions/README.md) — todas las convenciones
+- [CONTRIBUTING.md](../CONTRIBUTING.md) — entrada rápida
+- [cronograma.md](../plan/cronograma.md) — los 33 entregables y sus prerrequisitos
+- [conventions/](../conventions/README.md) — todas las convenciones

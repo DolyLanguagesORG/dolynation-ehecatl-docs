@@ -13,7 +13,7 @@ Reglas para escribir y mantener `dolynation-ehecatl-docs`.
    real del repo correspondiente cuando haga falta.
 2. **Un tema por archivo.** Si crece, divide y enlaza desde el índice.
 3. **Fuente de verdad única.** Ramas/commits → `conventions/`; el pipeline →
-   `CI-CD-Y-VERSIONADO.md`; el plan → `cronograma.md`. No repitas reglas: enlaza.
+   `operations/CI-CD-Y-VERSIONADO.md`; el plan → `plan/cronograma.md`. No repitas reglas: enlaza.
 4. **Español.** Títulos, prosa y ejemplos en español. Los términos técnicos se
    mantienen (envelope, squash, commit).
 
@@ -23,15 +23,16 @@ Reglas para escribir y mantener `dolynation-ehecatl-docs`.
 - `conventions/` — reglas no negociables (una página por área) + `README.md` índice.
 - `architecture/` — cómo está organizado el backend.
 - `onboarding/` — setup y guías paso a paso.
-- `COMO-HACER-UN-PR.md`, `FLUJO-DE-TRABAJO.md`, `CI-CD-Y-VERSIONADO.md` — guías largas.
-- `cronograma.md`, `Anteproyecto - DolyNation.md` — plan y planteamiento.
-- `backlog.md` — mejoras/pendientes sueltos.
+- `operations/` — `COMO-HACER-UN-PR.md`, `FLUJO-DE-TRABAJO.md` y `CI-CD-Y-VERSIONADO.md`.
+- `plan/` — `cronograma.md`, `PLAN-Y-SEGUIMIENTO.md` y `backlog.md`.
+- `anteproyecto/` — anteproyecto académico.
+- `decisions/` — registro de decisiones de implementación.
 - `diagrams/`, `assets/` — UML y binarios (Word/PDF), ver sus `README.md`.
 
 ## Convenciones de formato
 
-- **Enlaces internos relativos**: `[texto](./archivo.md)` o
-  `[texto](./carpeta/archivo.md#ancla)`. Nunca absolutos a tu propia máquina.
+- **Enlaces internos relativos**: usa rutas como `./archivo.md` o
+  `./carpeta/archivo.md#ancla`. Nunca absolutos a tu propia máquina.
 - **Anclas** en minúsculas y con guiones; van al ser una cabecera.
 - **Tablas** para comparar opciones, versiones o checks.
 - **Diagramas ASCII** en bloques de código cuando ayuden (evita imágenes si un

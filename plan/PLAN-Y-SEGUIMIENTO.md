@@ -8,7 +8,7 @@ Este documento responde tres preguntas prácticas del equipo:
    revisión académica)
 
 El plan vive en [`cronograma.md`](./cronograma.md) y el detalle operativo en
-[`FLUJO-DE-TRABAJO.md`](./FLUJO-DE-TRABAJO.md). Este documento es el puente
+[`FLUJO-DE-TRABAJO.md`](../operations/FLUJO-DE-TRABAJO.md). Este documento es el puente
 entre los dos.
 
 ## 1. Orden de trabajo (ruta crítica)
@@ -30,16 +30,36 @@ refleja:
 | [front#7](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/7) — Flujo completo | [back#10](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/10) |
 | [front#9](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/9) — Popup diccionario | [back#11](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/11) |
 | [front#10](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/10) — Redacción de resumen | [back#13](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/13) |
-| [front#11](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/11) — Dashboard | [back#16](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/16) |
+| [front#11](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/11) — Dashboard | [back#15](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/15), [back#16](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/16) |
 | [front#12](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/12) — Panel admin | [back#17](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/17) |
+| [front#13](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/13) — Usabilidad/responsivo | [front#11](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/11), [front#12](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/12) |
 
-Dependencias internas de backend y entre repos:
+Dependencias internas de backend y schema:
 
 | Tarea | Bloqueada por |
 | --- | --- |
-| [back#10](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/10) — Generar lectura | [back#7](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/7) |
-| [back#13](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/13) — Guardar evaluación | [back#12](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/12) |
-| [infra#4](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/4) — PR final + tag `v1.0.0` | [back#18](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/18) |
+| [back#3](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/3) — Hash/JWT | [back#2](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/2) |
+| [back#4](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/4) — Endpoints auth | [back#3](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/3) |
+| [back#5](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/5) — Perfil | [back#4](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/4) |
+| [back#6](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/6) — Cierre S1 | `back#2` a `back#5` |
+| [back#7](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/7) — IA/prompts | [back#2](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/2) |
+| [back#8](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/8) — Settings | [back#2](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/2), [infra#20](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/20) |
+| [back#9](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/9) — Caché | [back#7](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/7), [infra#20](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/20) |
+| [back#10](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/10) — Generar lectura | [back#7](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/7), [back#8](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/8), [back#9](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/9), [infra#20](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/20) |
+| [back#11](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/11) — Vocabulario/TTS | [back#7](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/7), [infra#21](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/21) |
+| [back#12](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/12) — Motor PNL | [back#7](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/7) |
+| [back#13](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/13) — Guardar evaluación | [back#12](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/12), [infra#21](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/21) |
+| [back#14](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/14) — Cierre S3 | [back#11](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/11), [back#12](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/12), [back#13](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/13) |
+| [back#15](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/15) — Racha/puntos | [back#13](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/13), [infra#21](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/21) |
+| [back#16](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/16) — Historial | [back#11](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/11), [back#13](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/13), [infra#21](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/21) |
+| [back#17](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/17) — Admin | [back#8](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/8), [infra#22](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/22) |
+| [back#18](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/18) — Cierre S5 | `back#14` a `back#17`, [infra#22](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/22) |
+| [infra#4](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/4) — PR final + tag `v1.0.0` | [back#18](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/18), [front#13](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/13), [infra#3](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/3), [infra#7](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/7) |
+| [docs#3](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/3) — Documentación final | [back#18](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/18), [front#13](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/13), [infra#4](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/4) |
+
+**Compuerta de sprint:** un issue no se mergea si su sprint no está activo o si
+tiene un `blocked_by` abierto. Los PRs de sprints futuros se mantienen en
+**Draft** hasta que toque su sprint.
 
 ### Qué puede empezar sin esperar al backend
 
@@ -142,7 +162,7 @@ rastro verificable dentro de GitHub, con fechas, no una versión de memoria.
 
 ## Documentos relacionados
 
-- [`cronograma.md`](./cronograma.md) — las 33 tareas, sprints y fechas.
-- [`FLUJO-DE-TRABAJO.md`](./FLUJO-DE-TRABAJO.md) — ramas, tablero y releases.
-- [`COMO-HACER-UN-PR.md`](./COMO-HACER-UN-PR.md) — el paso a paso de un PR.
-- [`conventions/git-workflow.md`](./conventions/git-workflow.md) — ramas y hotfixes.
+- [`cronograma.md`](./cronograma.md) — los 70 issues, sprints y fechas.
+- [`FLUJO-DE-TRABAJO.md`](../operations/FLUJO-DE-TRABAJO.md) — ramas, tablero y releases.
+- [`COMO-HACER-UN-PR.md`](../operations/COMO-HACER-UN-PR.md) — el paso a paso de un PR.
+- [`conventions/git-workflow.md`](../conventions/git-workflow.md) — ramas y hotfixes.

@@ -10,7 +10,7 @@ documentación técnica: no describe el envelope, los `ErrorCode`, Drizzle ni el
 CI. Para eso, usa las skills de cada repo (`nestjs-backend`, `nextjs-frontend`,
 `doly-workflow`).
 
-- Fuente: [`Anteproyecto - DolyNation.md`](../../../Anteproyecto%20-%20DolyNation.md).
+- Fuente: [`Anteproyecto - DolyNation.md`](../../../anteproyecto/anteproyecto-dolynation.md).
 
 ## Qué cubre
 
@@ -21,7 +21,7 @@ CI. Para eso, usa las skills de cada repo (`nestjs-backend`, `nextjs-frontend`,
 | Requerimientos | Funcionales (RF) y no funcionales (RNF) |
 | Metodología | Proceso de desarrollo por sprints |
 | Roles | SM, PO, backend, frontend, soporte |
-| Cronograma | 5 sprints, 33 tareas (resumen: [`cronograma.md`](../../../cronograma.md)) |
+| Cronograma | 5 sprints, 33 tareas (resumen: [`cronograma.md`](../../../plan/cronograma.md)) |
 | Wireframes | Bocetos de las vistas principales |
 
 ## Uso

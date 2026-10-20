@@ -90,7 +90,7 @@ Máximo 50 caracteres en total.
 - Requiere **1 aprobación** de cualquier persona con acceso al repositorio.
   Los `CODEOWNERS` se solicitan automáticamente pero **no son obligatorios**
   (`require_code_owner_reviews: false`), ver
-  [FLUJO-DE-TRABAJO.md](../FLUJO-DE-TRABAJO.md#codeowners).
+  [FLUJO-DE-TRABAJO.md](../operations/FLUJO-DE-TRABAJO.md#codeowners)).
 - **Prohibido el push directo**: siempre por PR.
 - Solo **squash-merge**, para mantener historia lineal.
 - No se permiten force-pushes ni deleciones.
@@ -105,8 +105,8 @@ Máximo 50 caracteres en total.
 - **Prohibido el push directo**: siempre por PR.
 - Solo **squash-merge**.
 - No se permiten force-pushes ni deleciones.
-- Al mergear el PR de release, `release-please` crea el tag y la GitHub
-  Release (ver [versioning.md](./versioning.md)).
+- Al mergear a `main`, el workflow `release.yml` crea el tag anotado y la
+  GitHub Release (ver [versioning.md](./versioning.md)).
 
 `main` permanece estable entre releases. Durante el desarrollo activo solo
 recibe merge en los hitos acordados.
@@ -173,7 +173,7 @@ El título del commit de squash determina el bump automático de versión
 ## Pull requests
 
 Usa la plantilla en [`.github/PULL_REQUEST_TEMPLATE.md`](../.github/PULL_REQUEST_TEMPLATE.md)
-y el paso a paso de [COMO-HACER-UN-PR.md](../COMO-HACER-UN-PR.md). Cada PR
+y el paso a paso de [COMO-HACER-UN-PR.md](../operations/COMO-HACER-UN-PR.md). Cada PR
 debe tener su checklist marcado antes de pedir review: `npm run verify` pasa,
 tests añadidos, envelope respetado, etc.
 

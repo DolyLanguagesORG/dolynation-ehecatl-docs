@@ -1,14 +1,20 @@
 # Arquitectura
 
-Cómo está organizado el backend y cómo fluye un request.
+Cómo está organizado el backend, cómo fluye un request y cuál es el modelo de
+datos.
 
 ## Índice
 
-- [overview.md](./overview.md) — diagrama de módulos, ciclo de vida del
-  request, ciclo de error, estructura de directorios
+- [overview.md](./overview.md) — módulos, ciclo de vida del request, ciclo de
+  error y estructura de directorios.
+- [data-model.md](./data-model.md) — tablas actuales, tablas planificadas y
+  migraciones de schema.
 
-Próximas páginas planeadas:
+## Documentos relacionados
 
-- `data-model.md` — esquema de tablas, relaciones Drizzle, migraciones
-- `request-lifecycle.md` — desglose paso a paso de un request típico
-- `extending.md` — cómo añadir un módulo nuevo
+- [conventions/api-contracts.md](../conventions/api-contracts.md) — envelope,
+  códigos de error y contratos HTTP.
+- [conventions/database.md](../conventions/database.md) — regla de dos fases y
+  propiedad del schema.
+- [diagrams/](../diagrams/README.md) — ER, diccionario de datos, actores y
+  secuencias.

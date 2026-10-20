@@ -17,9 +17,10 @@ de la librería es suficiente para nuestro nivel de tráfico.
 - **Algoritmo**: HS256 con `JWT_SECRET` (≥48 caracteres random).
 - **Access token TTL**: `15m` (default, configurable vía `JWT_ACCESS_TTL`).
 - **Refresh token TTL**: `30d` (configurable vía `JWT_REFRESH_TTL`).
-- **Storage en cliente**: SecureStore (mobile) / httpOnly cookie (web).
-- **Refresh tokens persistidos** en `auth_access_tokens` con hash, **nunca
-  en claro**.
+- **Storage en cliente**: access token en memoria/contexto; refresh en almacenamiento seguro del cliente. No usar `localStorage` para tokens.
+- **Refresh tokens persistidos** en `auth_access_tokens` con hash, **nunca en
+  claro** (*estado objetivo*: hoy el refresh es stateless y nada se escribe en
+  esa tabla; lo implementa `back#4`, ver la tabla de brechas de más abajo).
 
 ### Decoradores
 

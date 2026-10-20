@@ -3,16 +3,20 @@
 # Each line is a file pattern followed by one or more owners.
 # Order matters: later patterns override earlier ones.
 #
-# La protección de ramas exige 1 aprobación de cualquiera con acceso, NO de un
-# CODEOWNER en particular: `require_code_owner_reviews` está en `false`.
+# La protección de ramas exige 1 aprobación (2 en `main`) y la revisión de al
+# menos un CODEOWNER (`require_code_owner_reviews` en `true`).
 #
-# Integrantes (ver cronograma.md):
-#   - Jesús Alberto Villarrea Pérez  → @XxjesusalbertoxX  (SM / Lead Dev)
-#   - Sebastián Rodríguez             → @SebastianRdzC04  (Product Owner)
+# Cada ruta tiene DOS owners como mínimo: así ninguna PR puede quedarse sin
+# approving owner cuando quien la hace es el único responsable de esa ruta.
+#
+# Integrantes (ver plan/cronograma.md):
+#   - Jesús Alberto Villarreal Pérez → @XxjesusalbertoxX  (SM / Lead Dev)
+#   - Sebastián Rodríguez             → @SebastianRdzC04   (Product Owner)
+#   - Juan Antonio Deras Durón       → @y0ADQ1             (Frontend, revisor de la documentación)
 # ─────────────────────────────────────────────────────────────────────────
 
 # Default owners for everything in the repo
-* @XxjesusalbertoxX @SebastianRdzC04
+* @XxjesusalbertoxX @SebastianRdzC04 @y0ADQ1
 
 # CI
-/.github/ @XxjesusalbertoxX
+/.github/ @XxjesusalbertoxX @SebastianRdzC04 @y0ADQ1
