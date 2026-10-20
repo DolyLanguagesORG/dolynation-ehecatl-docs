@@ -2,7 +2,14 @@
 
 El proyecto usa [Semantic Versioning](https://semver.org/lang/es/) (`vX.Y.Z`) y
 **versionado automático al llegar a `main`**: los Conventional Commits
-determinan la próxima versión y nadie edita un número a mano.
+determinan la próxima versión.
+
+**La versión se declara en el repositorio, no solo en el tag.** En el backend y
+el frontend vive en el campo `version` del `package.json`; en el repositorio de
+documentación y en el de infraestructura, en la sección del `CHANGELOG.md`. El
+tag se crea **solo si ese número coincide** con el que el workflow ha
+calculado. Así el número que se ve en el código, en el changelog, en el tag y
+en `/health` es siempre el mismo, y nadie tiene que confiar en la memoria.
 
 ## Cómo funciona
 
@@ -15,14 +22,49 @@ siguiente:
    commitsConventional Commits merges en `main` (`feat` y `fix` bumpean
    *minor* y *patch*; `BREAKING CHANGE` bumpea *major*). Se puede forzar el
    bump con la entrada `bump` del workflow.
-2. Crea un **tag anotado** `vX.Y.Z` y lo publica.
-3. Publica la **GitHub Release** con las notas generadas entre el tag anterior
+2. **Verifica que la versión esté declarada en el repositorio**:
+   - si hay `package.json`, su campo `version` debe ser exactamente la versión
+     que se va a publicar;
+   - si hay `CHANGELOG.md`, debe existir la sección `## [X.Y.Z]` de esa versión.
+   Si algo no cuadra, el workflow **falla con un mensaje explícito** y no crea
+   el tag. No hace falta que el workflow escriba en el repositorio (eso no
+   puede hacerse sobre una rama protegida): la versión la sube una persona en
+   el pull request de la release.
+3. Crea un **tag anotado** `vX.Y.Z` y lo publica.
+4. Publica la **GitHub Release** con las notas generadas entre el tag anterior
    y `HEAD`.
 
 `main` solo recibe merges de `develop` (y `hotfix/*`), de modo que **cada run
 del workflow corresponde a una release**. Durante el desarrollo normal **no hay
 tags**: el tag nace al llegar a `main`. El detalle del pipeline está en
 [CI-CD-Y-VERSIONADO.md](../operations/CI-CD-Y-VERSIONADO.md).
+
+## Dónde vive cada versión
+
+| Repositorio | Dónde se declara | Quién la sube |
+| --- | --- | --- |
+| `dolynation-atl-back` | `package.json` → `version` | El PR de la release |
+| `dolynation-tonatiuh-front` | `package.json` → `version` | El PR de la release |
+| `dolynation-tlalli-infra` | `CHANGELOG.md` → `## [X.Y.Z]` | El PR de la release |
+| `dolynation-ehecatl-docs` | `CHANGELOG.md` → `## [X.Y.Z]` | El PR de la release |
+| **Manifiesto del proyecto** | `dolynation-tlalli-infra/versions.yml` | El PR de la release |
+
+`versions.yml` es el **manifiesto**: una tabla con la versión publicada de cada
+repositorio y la fecha de la entrega. Sirve para saber de un vistazo si los
+cuatro repos van juntos o si uno se quedó atrás.
+
+## El pull request de la release
+
+Antes de mergear `develop` → `main`, el pull request tiene que subir la versión
+en los repositorios afectados:
+
+1. `package.json` → `version` (backend y frontend) y el `package-lock.json`.
+2. `CHANGELOG.md` → una sección `## [X.Y.Z]` con lo que trae la release.
+3. `versions.yml` → la versión de cada repositorio.
+
+Si el número no coincide con el que el workflow calcula, **la release no sale**
+y el workflow dice exactamente qué corregir. Es un error que se ve en el merge, no
+después del despliegue.
 
 > **Pendiente (fuera de la entrega del 1-10 dic).** El versionado con
 > *release-please* (PR de release acumulativo contra `develop`) está diseñado
@@ -78,12 +120,19 @@ gh pr create --base develop \
   --title "feat(users): persist study preferences in user_preferences" \
   --body "Closes #8"
 
-# 3. Cuando toca release: mergear develop -> main.
-#    El workflow de release calcula la versión, crea el tag y publica la release.
+# 3. PR de release: subir la versión en package.json / CHANGELOG.md
+#    y en versions.yml (infra), y añadir la sección del changelog.
+npm version 0.2.0 --no-git-tag-version   # backend y frontend
+#    y en CHANGELOG.md:  ## [0.2.0] - 2026-12-10
+
+# 4. Mergear develop -> main.
+#    El workflow verifica la versión, crea el tag y publica la release.
 ```
 
 Al llegar el merge a `main`, `release.yml` calcula la versión a partir de los
-commits, crea el tag anotado y publica el GitHub Release con las notas.
+commits, **comprueba que el repositorio declare esa misma versión**, crea el
+tag anotado y publica el GitHub Release con las notas. Si no coincide, la
+release se detiene y avisa de qué archivo hay que corregir.
 
 ## Notas
 
@@ -92,3 +141,6 @@ commits, crea el tag anotado y publica el GitHub Release con las notas.
   y el historial conserven la fecha y el mensaje.
 - Si un ciclo no tiene commits que bumpeen versión, el workflow aborta con un
   error explícito: no se crean tags vacíos ni duplicados.
+- El backend expone la **versión y el commit** en `GET /api/v1/health/live` y
+  `GET /api/v1/health/ready`, así que en el servidor se puede comprobar qué
+  build está corriendo.

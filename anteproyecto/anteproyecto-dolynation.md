@@ -734,7 +734,21 @@ Next.js estructura la interfaz de usuario bajo patrones modernos de desarrollo w
 
 ## **17\. Wireframes.** {#17.-wireframes.}
 
-[DolyNation – Figma](https://www.figma.com/design/NpeSJlQsZhpa0233xNcYkP/DolyNation?node-id=0-1&p=f&t=sNXZOHJbsUWWNBUK-0)
+El prototipo y los wireframes se diseñaron en **Figma**:
+
+> **[DolyNation – Figma](https://www.figma.com/design/NpeSJlQsZhpa0233xNcYkP/DolyNation?node-id=0-1&p=f&t=sNXZOHJbsUWWNBUK-0)**
+
+![Vista previa del prototipo de DolyNation](./assets/wireframes/dolynation-prototipo.webp)
+
+*Figura 1. Vista previa del prototipo. La imagen está versionada en este repositorio
+([`assets/wireframes/`](./assets/wireframes/README.md)) para que la entrega no
+dependa de un enlace externo con fecha de caducidad.*
+
+El prototipo **interactivo** se ve embebido en la propia aplicación, en la ruta
+`/prototipo` del frontend, mediante el *Embed Kit 2.0* de Figma. La guía
+completa de la integración —el componente, la variable de entorno, la política de
+seguridad y el manejo del caso «sin sesión de Figma»— está en
+[`operations/PROTOTIPO-FIGMA.md`](../operations/PROTOTIPO-FIGMA.md).
 
 ## **18\. Fuentes.** {#18.-fuentes.}
 

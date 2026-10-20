@@ -45,6 +45,9 @@ arquitectura, onboarding, cronograma y el anteproyecto.
   por qué GitHub y no otra cosa: criterios, alternativas descartadas y límites.
 - **Despliegue**: [PLAN-DE-DESPLIEGUE.md](./operations/PLAN-DE-DESPLIEGUE.md) — los 3 entornos,
   puertos, secretos y flujo de despliegue.
+- **Prototipo**: [PROTOTIPO-FIGMA.md](./operations/PROTOTIPO-FIGMA.md) — el
+  prototipo de Figma: vista previa versionada, embed en la app, tokens de diseño
+  y la app «Figma for GitHub».
 - **Backlog** (mejoras sueltas): [backlog.md](./plan/backlog.md)
 - **Diagramas** (UML en Mermaid, se ven nativos en GitHub): [diagrams/](./diagrams/README.md)
 - **Decisiones**: [decisions/](./decisions/README.md)
