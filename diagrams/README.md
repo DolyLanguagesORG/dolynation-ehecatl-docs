@@ -8,6 +8,7 @@ sin exportar imágenes y sin que se rompan al cambiar el diagrama.
 
 | Archivo | Tema |
 | --- | --- |
+| [diagrama-de-arquitectura.md](./diagrama-de-arquitectura.md) | Arquitectura del sistema: repositorios, módulos, base de datos y servicios externos |
 | [diagrama-de-actores.md](./diagrama-de-actores.md) | Actores, casos de uso y servicios externos |
 | [diagrama-de-ER(Entidad-Relacion).md](./diagrama-de-ER%28Entidad-Relacion%29.md) | Entidades, relaciones y columnas |
 | [diagrama-de-secuencia.md](./diagrama-de-secuencia.md) | Generación, vocabulario/TTS y evaluación |
