@@ -1,138 +1,78 @@
 # Prototipo de Figma
 
-Cómo se integra el prototipo de DolyNation (Figma) en el proyecto, cómo se
-mantiene y qué hace falta para que todo el equipo —y el profesor— lo puedan ver
-sin depender de una cuenta de Figma.
+Dónde está el prototipo de DolyNation, cómo se mantiene y qué hace falta para
+que el profesor pueda verlo sin necesidad de una cuenta de Figma.
 
 ---
 
-## 1. Qué hay y dónde
+## 1. El prototipo
 
-| Pieza | Dónde | Qué es |
-| --- | --- | --- |
-| Archivo de diseño | <https://www.figma.com/design/NpeSJlQsZhpa0233xNcYkP/DolyNation> | El diseño y el prototipo. `file_key`: `NpeSJlQsZhpa0233xNcYkP` |
-| Vista previa (imagen) | [`anteproyecto/assets/wireframes/`](../anteproyecto/assets/wireframes/) | Miniatura oficial, **versionada en el repo** para que no expire |
-| Mención en el anteproyecto | §17 *Wireframes* | La referencia al prototipo dentro del documento académico |
-| Ruta interactiva en la app | `dolynation-tonatiuh-front` → `/prototipo` | El embed del **Embed Kit 2.0** (issue `front#25`) |
-
----
-
-## 2. Lo que dice la documentación de Figma (y por qué importa)
-
-| Regla de Figma | Consecuencia para el proyecto |
+| Dato | Valor |
 | --- | --- |
-| El endpoint de embed es `https://embed.figma.com/...` (**Embed Kit 2.0**), no `www.figma.com/embed` | La URL que se usa es la de `embed.figma.com` |
-| `embed-host` es **obligatorio** | Sin él el embed no carga. El valor identifica el sitio: `embed-host=dolynation` |
-| `embed_origin` **no se usa** en v2 | El control del prototipo por `postMessage` exige una OAuth app de Figma (fuera de alcance de la entrega) |
-| `node-id` fija el frame o página | Se puede abrir el prototipo en un punto concreto |
-| `theme=light\|dark\|system` | El embed se adapta al tema del sistema |
-| `allowfullscreen` | Da el botón de pantalla completa |
-| Eventos: `INITIAL_LOAD`, `PRESENTED_NODE_CHANGED`, `NEW_STATE`, `MOUSE_PRESS_OR_RELEASE`, `REQUEST_CLOSE`, `LOGIN_SCREEN_SHOWN`, `PASSWORD_SCREEN_SHOWN` | `LOGIN_SCREEN_SHOWN` es el caso crítico: se dispara cuando el visitante ve la **pantalla de login de Figma** |
-| El oEmbed devuelve `404` si el archivo **no tiene acceso público por link** | Nuestro archivo sí lo tiene (el oEmbed responde 200 con miniatura) |
+| Archivo de Figma | <https://www.figma.com/design/NpeSJlQsZhpa0233xNcYkP/DolyNation> |
+| Enlace directo | <https://www.figma.com/design/NpeSJlQsZhpa0233xNcYkP/DolyNation?t=8gwQ2d6Pm2A7mIa-1> |
+| Clave del archivo (`file_key`) | `NpeSJlQsZhpa0233xNcYkP` |
+| Vista previa en la documentación | [`anteproyecto/assets/wireframes/`](../anteproyecto/assets/wireframes/) |
 
----
+El archivo tiene **acceso público por link**: cualquiera que abra el enlace ve
+el diseño, sin necesidad de cuenta de Figma. Eso se comprobó con la API
+*oEmbed* de Figma, que responde `404` cuando el archivo **no** tiene ese
+acceso.
 
-## 3. En la documentación (este repo)
-
-La imagen del prototipo está **versionada**, no enlazada a ciegas:
+## 2. La imagen versionada
 
 ![Vista previa del prototipo de DolyNation](../anteproyecto/assets/wireframes/dolynation-prototipo.webp)
 
-> La miniatura oficial de Figma se sirve desde una URL **firmada que expira**
-> (la actual, el 25 de diciembre de 2026). Por eso se descarga y se versiona en
-> el repo: así la entrega no depende de una fecha de caducidad ni de que
-> Figma siga sirviendo la imagen.
+La miniatura oficial que devuelve el oEmbed viene en una **URL firmada que
+expira** (la actual, el 25 de diciembre de 2026). Por eso se **descarga y se
+versiona en el repositorio**: así la entrega no depende de una fecha de
+caducidad ni de que Figma siga sirviendo la imagen.
 
 El procedimiento para re-exportarla está en
 [`anteproyecto/assets/wireframes/README.md`](../anteproyecto/assets/wireframes/README.md).
 
-**GitHub no renderiza `iframe`**, así que el prototipo interactivo no puede
-vivir en un `.md`. Lo que sí se puede —y es lo que hay— es la imagen
-versionada y el enlace al original.
+## 3. Dónde se ve
 
----
+- En el **§17 Wireframes** del [anteproyecto](../anteproyecto/anteproyecto-dolynation.md),
+  con la imagen embebida y el enlace a Figma.
+- En la **portada de la organización** y en el README del repositorio de
+  documentación, con el enlace al archivo.
 
-## 4. En la app (frontend)
+## 4. Lo que NO se hace (y por qué)
 
-Ruta **`/prototipo`** con el embed interactivo. El componente es pequeño y
-va en `src/components/FigmaEmbed.tsx`:
+- **No se embebe el prototipo en la aplicación.** Decidido el 19 de octubre:
+  la ruta `/prototipo` con el *Embed Kit 2.0* no aporta a la entrega de la
+  1 al 10 de diciembre y consume tiempo del sprint. El prototipo se abre desde
+  el enlace de Figma.
+  *Si algún día se quiere*, la vía es `https://embed.figma.com/design/<key>/<nombre>?embed-host=<host>`
+  (el parámetro `embed-host` es obligatorio) dentro de un `iframe`, y hay que
+  tratar el evento `LOGIN_SCREEN_SHOWN` para no dejar un espacio en blanco
+  cuando el visitante no tiene sesión de Figma.
+- **No se automatiza la extracción de tokens de diseño.** La *Variables API* de
+  Figma es **solo para planes Enterprise** (devuelve 403 «Limited by Figma
+  plan»). La extracción se hace a mano, como en el punto 5.
 
-```tsx
-"use client";
+## 5. Tokens de diseño (opcional)
 
-import { useEffect, useRef, useState } from "react";
+1. Exportar desde Figma en **Dev Mode** la paleta, la tipografía, los radios y
+   los espaciados que usa el sistema.
+2. Guardarlos como `design-tokens.json` en el repositorio del frontend.
+3. Alimentar el `@theme` de Tailwind 4 con ese archivo.
+4. Dejar anotado que **Figma es la fuente de verdad** y que cualquier cambio se
+   re-exporta.
 
-const FIGMA_ORIGIN = "https://www.figma.com";
+Con eso, el código y el diseño no se separan: el PR que cambia un token cambia
+el JSON, el tema y (opcionalmente) la imagen de referencia.
 
-export function FigmaEmbed({ className }: { className?: string }) {
-  const iframe = useRef<HTMLIFrameElement>(null);
-  const [needsFigmaLogin, setNeedsFigmaLogin] = useState(false);
-  const url = process.env.NEXT_PUBLIC_FIGMA_PROTOTYPE_URL ?? "";
-
-  useEffect(() => {
-    const onMessage = (event: MessageEvent) => {
-      if (event.origin !== FIGMA_ORIGIN) return;
-      if (event.data?.type === "LOGIN_SCREEN_SHOWN") setNeedsFigmaLogin(true);
-    };
-    window.addEventListener("message", onMessage);
-    return () => window.removeEventListener("message", onMessage);
-  }, []);
-
-  return (
-    <section className={className}>
-      {needsFigmaLogin ? (
-        <p>
-          El prototipo necesita una sesión de Figma.{" "}
-          <a href={url} target="_blank" rel="noreferrer">
-            Ábrelo en Figma
-          </a>
-          .
-        </p>
-      ) : (
-        <iframe
-          ref={iframe}
-          title="Prototipo de DolyNation"
-          src={url}
-          className="h-[600px] w-full rounded-xl border"
-          allowFullScreen
-          loading="lazy"
-          referrerPolicy="strict-origin-when-cross-origin"
-        />
-      )}
-    </section>
-  );
-}
-```
-
-Y la URL va en la variable de entorno (nunca hardcodeada):
-
-```bash
-# .env.local del frontend
-NEXT_PUBLIC_FIGMA_PROTOTYPE_URL=https://embed.figma.com/design/NpeSJlQsZhpa0233xNcYkP/DolyNation?embed-host=dolynation&theme=system
-```
-
-**Seguridad.** El frontend hoy no define CSP, así que el iframe funciona. Si se
-añade una política de seguridad, tiene que permitir el origen:
-
-```
-Content-Security-Policy: frame-src 'self' https://embed.figma.com;
-```
-
-El backend no sirve el frontend y su CSP de *helmet* **no** necesita cambios.
-
----
-
-## 5. La app oficial «Figma for GitHub»
+## 6. App oficial «Figma for GitHub» (opcional)
 
 Permite que **cada PR y cada issue muestren el diseño** y que se creen issues
-desde un frame. Es el único punto que **no** se puede automatizar: la
-instalación de una GitHub App requiere navegador y la cuenta de Figma.
+desde un frame. Hoy la organización **no tiene ninguna app instalada**.
 
-### Qué hace falta
-
-- La **cuenta de Figma de quien creó el archivo** (`NpeSJlQsZhpa0233xNcYkP`), o
-  la de un miembro del equipo con acceso de edición al archivo.
-- Acceso de administrador a la organización `DolyLanguagesORG`.
+**Qué hace falta:** la **cuenta de Figma de quien creó el archivo** (o la de un
+miembro del equipo con acceso de edición) y permisos de administrador en la
+organización. **No se puede instalar por API**: el flujo de instalación de una
+GitHub App necesita navegador.
 
 ### Pasos
 
@@ -142,55 +82,16 @@ instalación de una GitHub App requiere navegador y la cuenta de Figma.
    repositorios**: `dolynation-atl-back`, `dolynation-tonatiuh-front`,
    `dolynation-tlalli-infra` y `dolynation-ehecatl-docs`.
 3. Comprobar en cada repositorio: **Settings → Apps → Figma → Installed**.
-4. En Figma, abrir el archivo → **Share → Publish / Connect** y conectarlo con los
-   repositorios (o al revés, desde la app en GitHub: *Connect Figma design*).
+4. En Figma, abrir el archivo → *Share* y conectarlo con los repositorios.
 
-### Qué se obtiene
-
-- Los PRs muestran la miniatura del diseño afectado.
-- Los issues pueden enlazarse a un frame concreto.
-- Los cambios de diseño notifican a los PRs relacionados.
-
-### Riesgo
-
-La app pide acceso de lectura a los repositorios y a los archivos de Figma de
-la organización. **Que la instalen solo las personas con la cuenta de Figma del
-equipo** y que quede registrado en el issue de la organización.
-
----
-
-## 6. Tokens de diseño
-
-La **Variables API de Figma es solo para planes Enterprise** (devuelve 403
-«Limited by Figma plan»), así que **no se puede automatizar** la extracción de
-tokens en el plan de la escuela. La API de estilos y de contenido de archivo
-sí funciona con un *token* personal, pero es frágil para un proyecto que
-entrega en dos meses.
-
-**Lo que sí funciona** (y es lo que hace el issue `front#24`):
-
-1. Exportar desde Figma en **Dev Mode** los valores que usa el sistema
-   (paleta, tipografía, radios, espaciados).
-2. Guardarlos como `design-tokens.json` en el repositorio del frontend.
-3. Alimentar el `@theme` de Tailwind 4 con ese archivo.
-4. Dejar anotado en el propio archivo que **Figma es la fuente de verdad** y
-   que cualquier cambio se re-exporta.
-
-Con eso, el código y el diseño no se separan: el PR que cambia un token
-cambia el JSON, el tema y (opcionalmente) la imagen de referencia.
-
----
+**Riesgo:** la app pide acceso de lectura a los repositorios y a los archivos
+de Figma de la organización. Que la instalen solo las personas con la cuenta
+del equipo.
 
 ## 7. Comprobaciones
 
-Antes de dar por buena la entrega:
-
-- [ ] La imagen del §17 se ve en GitHub (es un archivo versionado, no una URL).
-- [ ] `/prototipo` carga el embed y se ve en un móvil.
-- [ ] Si se abre sin sesión de Figma, sale el mensaje con el enlace, no un
-      espacio en blanco.
-- [ ] El enlace «abrir en Figma» funciona desde el móvil.
-- [ ] `design-tokens.json` y el `@theme` de Tailwind tienen los mismos valores
-      que el archivo de Figma.
-- [ ] La app «Figma for GitHub» está instalada en los cuatro repositorios (o
-      queda registrado por qué no).
+- [ ] La imagen del §17 se ve en GitHub (está versionada, no es una URL).
+- [ ] El enlace de Figma abre el diseño sin necesidad de cuenta.
+- [ ] `design-tokens.json` y el `@theme` de Tailwind coinciden con Figma.
+- [ ] La app «Figma for GitHub» está instalada en los cuatro repositorios, o
+      queda registrado por qué no.

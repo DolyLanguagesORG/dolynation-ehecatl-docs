@@ -744,10 +744,9 @@ El prototipo y los wireframes se diseñaron en **Figma**:
 ([`assets/wireframes/`](./assets/wireframes/README.md)) para que la entrega no
 dependa de un enlace externo con fecha de caducidad.*
 
-El prototipo **interactivo** se ve embebido en la propia aplicación, en la ruta
-`/prototipo` del frontend, mediante el *Embed Kit 2.0* de Figma. La guía
-completa de la integración —el componente, la variable de entorno, la política de
-seguridad y el manejo del caso «sin sesión de Figma»— está en
+El prototipo se abre en Figma con el enlace de arriba. La guía de la
+integración —de dónde sale la imagen, cómo se re-exporta y cómo se mantienen los
+tokens de diseño— está en
 [`operations/PROTOTIPO-FIGMA.md`](../operations/PROTOTIPO-FIGMA.md).
 
 ## **18\. Fuentes.** {#18.-fuentes.}

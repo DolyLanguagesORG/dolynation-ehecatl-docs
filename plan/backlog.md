@@ -23,9 +23,9 @@ issue.
 
 ## Prototipo y diseño (Figma)
 
-- **Ruta `/prototipo` en el frontend** con el embed del prototipo (Embed Kit
-  2.0). Componente, variable de entorno y manejo de `LOGIN_SCREEN_SHOWN` en
-  [`operations/PROTOTIPO-FIGMA.md`](../operations/PROTOTIPO-FIGMA.md) §4.
+- ~~**Ruta `/prototipo` en el frontend** con el embed del prototipo~~ →
+  **descartado**: no aporta a la entrega y consume tiempo del sprint. El
+  prototipo se abre desde el enlace de Figma en la documentación.
 - **App oficial «Figma for GitHub»** en los cuatro repositorios, para que los
   PRs muestren el diseño. **Requiere la cuenta de Figma de quien creó el
   archivo** (`NpeSJlQsZhpa0233xNcYkP`) y permisos de administrador en la
