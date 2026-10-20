@@ -46,7 +46,7 @@ arquitectura, onboarding, cronograma y el anteproyecto.
 - **Despliegue**: [PLAN-DE-DESPLIEGUE.md](./operations/PLAN-DE-DESPLIEGUE.md) — los 3 entornos,
   puertos, secretos y flujo de despliegue.
 - **Backlog** (mejoras sueltas): [backlog.md](./plan/backlog.md)
-- **Diagramas** (UML): [diagrams/](./diagrams/README.md)
+- **Diagramas** (UML en Mermaid, se ven nativos en GitHub): [diagrams/](./diagrams/README.md)
 - **Decisiones**: [decisions/](./decisions/README.md)
 - **Assets** (Word/PDF, capturas): [assets/](./assets/README.md)
 
