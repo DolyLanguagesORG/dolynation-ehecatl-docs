@@ -56,6 +56,12 @@ en este repositorio:
 | **[Justificación de la plataforma](./operations/JUSTIFICACION-GITHUB.md)** | Por qué **Git** y **GitHub**: criterios, alternativas descartadas y límites reales |
 | **[Plan de despliegue](./operations/PLAN-DE-DESPLIEGUE.md)** | Los 3 entornos, puertos, secretos y flujo de despliegue |
 
+### Índice de evidencias de la Unidad 2
+
+| Documento | Qué contiene |
+| --- | --- |
+| **[Conformidad con la rúbrica](./plan/RUBRICA-UNIDAD-2.md)** | Cada criterio de la rúbrica con el archivo y el enlace que lo respalda |
+
 ## Configuración del entorno de versiones
 
 | Elemento | Dónde |
@@ -96,6 +102,7 @@ archivo, sin plugins y sin exportar imágenes.
 | **[Arquitectura](./architecture/README.md)** | Módulos del backend, modelo de datos y decisiones |
 | **[Onboarding](./onboarding/README.md)** | Levantar el entorno (local o en Codespaces) |
 | **[Cronograma](./plan/cronograma.md)** | Los 5 sprints, sus fechas, responsables y entregables |
+| **[Conformidad con la rúbrica](./plan/RUBRICA-UNIDAD-2.md)** | Índice de evidencias de la Unidad 2, criterio por criterio |
 | **[Plan y seguimiento](./plan/PLAN-Y-SEGUIMIENTO.md)** | El orden de trabajo, las dependencias y cómo justificar atrasos |
 | **[Decisiones](./decisions/README.md)** | Los ADR con contexto, alternativas y consecuencias, y las decisiones pendientes |
 | **[Backlog](./plan/backlog.md)** | Mejoras sueltas que no forman parte de los 5 sprints |

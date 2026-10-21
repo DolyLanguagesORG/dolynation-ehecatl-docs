@@ -255,7 +255,7 @@ issue.
 > enlace y el issue no se cierra ni aunque merges. Es el caso del PR de
 > release `develop` → `main`, así que **ese PR usa `Refs`, nunca `Closes`**.
 > Explicación completa en
-> [FLUJO-DE-TRABAJO.md](./FLUJO-DE-TRABAJO.md#por-que-develop-es-la-rama-por-defecto).
+> [FLUJO-DE-TRABAJO.md](./FLUJO-DE-TRABAJO.md#por-qu%C3%A9-develop-es-la-rama-por-defecto).
 
 Tres cosas que no funcionan y la gente intenta:
 

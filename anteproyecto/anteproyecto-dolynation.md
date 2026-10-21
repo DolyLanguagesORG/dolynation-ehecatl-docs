@@ -33,7 +33,7 @@ José Elías Galarza Pedroza
   - [## Sistema de rachas](#sistema-de-rachas)
   - [Seguimiento del progreso](#seguimiento-del-progreso)
 - [7. Limitaciones](#7-limitaciones)
-- [8. Producto Mínimo Viable (MVP).](#8.-producto-m%C3%ADnimo-viable-(mvp).)
+- [8. Producto Mínimo Viable (MVP).](#8.-producto-m%C3%ADnimo-viable-%28mvp%29.).)
 - [9. Requerimientos funcionales y no funcionales](#9.-requerimientos-funcionales-y-no-funcionales)
   - [9.1. Requerimientos funcionales](#9.1.-requerimientos-funcionales)
   - [9.2. Requerimientos no funcionales](#9.2.-requerimientos-no-funcionales)
@@ -750,6 +750,10 @@ escritos en **Mermaid** para que se rendericen de forma nativa en GitHub:
 El detalle campo por campo del modelo de datos está en el
 [diccionario de datos](../diagrams/diccionario-de-datos.md).
 
+El índice de evidencias de la Unidad 2 —con el archivo que respalda cada
+criterio de la rúbrica— está en
+[`plan/RUBRICA-UNIDAD-2.md`](../plan/RUBRICA-UNIDAD-2.md).
+
 ## **17\. Wireframes.** {#17.-wireframes.}
 
 El prototipo y los wireframes se diseñaron en **Figma**:
@@ -762,9 +766,64 @@ El prototipo y los wireframes se diseñaron en **Figma**:
 ([`assets/wireframes/`](./assets/wireframes/README.md)) para que la entrega no
 dependa de un enlace externo con fecha de caducidad.*
 
-Las pantallas del maquetado se exportan desde Figma a
-[`assets/wireframes/pantallas/`](./assets/wireframes/pantallas/README.md), donde
-está el procedimiento paso a paso.
+### Maquetado
+
+Las nueve pantallas del maquetado están versionadas en este repositorio, en
+[`assets/wireframes/pantallas/`](./assets/wireframes/pantallas/README.md). El
+recorrido completo es el siguiente:
+
+| # | Pantalla | Cubre |
+| --- | --- | --- |
+| 1 | **Inicio** | Portada y navegación (RF-12) |
+| 2 | **Iniciar sesión** | Autenticación (RF-01) |
+| 3 | **Registro de usuario** | Alta de cuenta (RF-01) |
+| 4 | **Perfil y progreso** | Perfil, preferencias y racha (RF-03, RF-11) |
+| 5 | **Generación de lectura** | Parámetros de estudio y llamada a la IA (RF-02, RF-05) |
+| 6 | **Detalle de lectura** | Visor, diccionario contextual y audio (RF-06, RF-08) |
+| 7 | **Respuesta de comprensión** | Redacción libre del resumen (RF-07) |
+| 8 | **Resultado de evaluación** | Calificación y retroalimentación (RF-07) |
+| 9 | **Historial de lecturas** | Actividades y métricas (RF-09, RF-10) |
+
+![Inicio](./assets/wireframes/pantallas/01-inicio.png)
+
+*Figura 2. Inicio: portada y navegación principal.*
+
+![Iniciar sesión](./assets/wireframes/pantallas/02-iniciar-sesion.png)
+
+*Figura 3. Inicio de sesión.*
+
+![Registro de usuario](./assets/wireframes/pantallas/03-registro-de-usuario.png)
+
+*Figura 4. Registro de usuario.*
+
+![Perfil y progreso](./assets/wireframes/pantallas/04-perfil-y-progreso.png)
+
+*Figura 5. Perfil del usuario y seguimiento del progreso.*
+
+![Generación de lectura](./assets/wireframes/pantallas/05-generacion-de-lectura.png)
+
+*Figura 6. Selección de los parámetros de estudio y generación de la lectura.*
+
+![Detalle de lectura](./assets/wireframes/pantallas/06-detalle-de-lectura.png)
+
+*Figura 7. Visor de lectura, con el diccionario contextual y el audio de la palabra.*
+
+![Respuesta de comprensión](./assets/wireframes/pantallas/07-respuesta-de-comprension.png)
+
+*Figura 8. Redacción libre del resumen para su evaluación.*
+
+![Resultado de evaluación](./assets/wireframes/pantallas/08-resultado-de-evaluacion.png)
+
+*Figura 9. Calificación, cobertura de ideas principales y retroalimentación.*
+
+![Historial de lecturas](./assets/wireframes/pantallas/09-historial-de-lecturas.png)
+
+*Figura 10. Historial de lecturas y actividad del usuario.*
+
+El diseño original está en Figma:
+<https://www.figma.com/design/NpeSJlQsZhpa0233xNcYkP/DolyNation>. La procedencia
+de las imágenes y el procedimiento para re-exportarlas están en
+[`assets/wireframes/README.md`](./assets/wireframes/README.md).
 
 El prototipo se abre en Figma con el enlace de arriba. La guía de la
 integración —de dónde sale la imagen, cómo se re-exporta y cómo se mantienen los
