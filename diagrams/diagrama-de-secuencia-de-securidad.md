@@ -25,7 +25,7 @@ sequenceDiagram
         Note over BE,DB: Flujo objetivo pendiente: persistir hash del Refresh Token en auth_access_tokens
         BE-->>FE: HTTP 200 OK<br/>Access Token + Refresh Token + User Info
         FE->>FE: Guardar Access Token en memoria/contexto
-        Note over FE: Refresh Token en almacenamiento seguro&#59; evitar localStorage
+        Note over FE: Refresh Token en almacenamiento seguro, evitar localStorage
         FE-->>U: Redirigir al Dashboard de Usuario
     else Credenciales inválidas
         BE-->>FE: HTTP 401 Unauthorized<br/>Mensaje genérico
