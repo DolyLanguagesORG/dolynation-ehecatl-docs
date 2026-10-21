@@ -1,0 +1,23 @@
+{
+  "name": "DolyNation — Documentación (Ehecatl)",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "davidanson.vscode-markdownlint",
+        "esbenp.prettier-vscode",
+        "usernamehere.github-vscode-remotes"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "files.trimTrailingWhitespace": true
+      }
+    }
+  },
+  "postCreateCommand": "node .github/workflows/pr-labels.regex.test.cjs",
+  "remoteUser": "node"
+}
