@@ -3,7 +3,7 @@
 Reglas del contrato HTTP del backend. **Toda respuesta**, éxito o error,
 sigue un único envelope. Toda excepción se mapea a un código estable.
 
-## ⚠️ TL;DR — Regla del envelope
+## TL;DR: regla del envelope
 
 **Toda respuesta del API — éxito o error — sigue este contrato:**
 

@@ -3,7 +3,7 @@
 Paso a paso para añadir un nuevo endpoint al backend respetando todas las
 convenciones del proyecto.
 
-## ⚠️ Antes de empezar — Regla #1
+## Antes de empezar: regla 1
 
 **Este endpoint debe devolver el envelope `{ message, data, error? }`.**
 
