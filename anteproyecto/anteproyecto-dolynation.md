@@ -17,6 +17,7 @@ José Elías Galarza Pedroza
 
 # **Índice**
 
+- [DolyNation](#dolynation)
 - [1. Título del proyecto](#1-t%C3%ADtulo-del-proyecto)
 - [2. Planteamiento del problema](#2-planteamiento-del-problema)
 - [3. Justificación](#3-justificaci%C3%B3n)
@@ -29,18 +30,19 @@ José Elías Galarza Pedroza
   - [Lecturas](#lecturas)
   - [Comprensión lectora](#comprensi%C3%B3n-lectora)
   - [Análisis contextual de vocabulario mediante inteligencia artificial](#an%C3%A1lisis-contextual-de-vocabulario-mediante-inteligencia-artificial)
-  - [Sistema de rachas](#sistema-de-rachas)
+  - [## Sistema de rachas](#sistema-de-rachas)
   - [Seguimiento del progreso](#seguimiento-del-progreso)
 - [7. Limitaciones](#7-limitaciones)
 - [8. Producto Mínimo Viable (MVP).](#8.-producto-m%C3%ADnimo-viable-(mvp).)
 - [9. Requerimientos funcionales y no funcionales](#9.-requerimientos-funcionales-y-no-funcionales)
   - [9.1. Requerimientos funcionales](#9.1.-requerimientos-funcionales)
   - [9.2. Requerimientos no funcionales](#9.2.-requerimientos-no-funcionales)
-  - [10. Análisis de riesgo](#10.-an%C3%A1lisis-de-riesgo)
+  - [## 10. Análisis de riesgo](#10.-an%C3%A1lisis-de-riesgo)
 - [11. Elección de metodología y roles del equipo](#11.-elecci%C3%B3n-de-metodolog%C3%ADa-y-roles-del-equipo)
   - [12. Separación del proyecto en tareas](#12.-separaci%C3%B3n-del-proyecto-en-tareas)
 - [14. Elección de estructura web y tecnologías.](#14.-elecci%C3%B3n-de-estructura-web-y-tecnolog%C3%ADas.)
 - [16. Selección de patrones de diseño.](#16.-selecci%C3%B3n-de-patrones-de-dise%C3%B1o.)
+  - [## 16.1. Diagramas del sistema](#16.1.-diagramas-del-sistema)
   - [17. Wireframes.](#17.-wireframes.)
   - [18. Fuentes.](#18.-fuentes.)
 
@@ -532,6 +534,10 @@ El sistema deberá garantizar la consistencia e integridad de la información al
 
 Para el desarrollo del proyecto **DolyNation** se implementa el marco de trabajo **Scrum** combinado con un flujo de desarrollo guiado por tareas en GitHub (*Issue-Driven Development*). El proyecto se divide en 5 Sprints con fechas estrictas de entrega que abarcan desde el **19 de octubre** hasta el **10 de diciembre** de 2026\. El Sprint 1 se reprogramó al 19 de octubre tras detectarse que su entrega se retrasó, y los sprints 4 y 5 se acortaron para sostener la fecha de entrega de la 1 a 10 de diciembre.
 
+**Plataforma de trabajo.** Toda la coordinación vive en **GitHub**: los repositorios de código, la documentación, las issues con sus entregables y dependencias, el tablero del proyecto, la revisión de código por *code owners*, la integración continua, los entornos de despliegue y los releases. La justificación de esa decisión, con los criterios, las alternativas descartadas y sus límites, está en
+[`operations/JUSTIFICACION-GITHUB.md`](../operations/JUSTIFICACION-GITHUB.md) y en el
+[ADR-009](../decisions/README.md).
+
 ### **11.2. Estructura de roles y responsabilidades** {#11.2.-estructura-de-roles-y-responsabilidades}
 
 * **Product Owner:** Sebastián  
@@ -728,9 +734,42 @@ Next.js estructura la interfaz de usuario bajo patrones modernos de desarrollo w
 
 ## 
 
+## **16\.1. Diagramas del sistema** {#16.1.-diagramas-del-sistema}
+
+Los diagramas del sistema están en [`../diagrams/`](../diagrams/README.md),
+escritos en **Mermaid** para que se rendericen de forma nativa en GitHub:
+
+| Diagrama | Qué representa | Requisito del anteproyecto |
+| --- | --- | --- |
+| [Arquitectura](../diagrams/diagrama-de-arquitectura.md) | Los cuatro repositorios, los módulos del backend, el frontend, la base de datos y los servicios externos | §14 (estructura y tecnologías) |
+| [Actores y casos de uso](../diagrams/diagrama-de-actores.md) | Actores humanos, casos de uso del estudiante y servicios externos | §6 (alcance) y §9.1 (RF-01 a RF-13) |
+| [Entidad-relación](../diagrams/diagrama-de-ER%28Entidad-Relacion%29.md) | Las 9 tablas del modelo de datos con sus claves y relaciones | §9.1 (RF-03, RF-08, RF-09) |
+| [Secuencia: flujo principal](../diagrams/diagrama-de-secuencia.md) | Generación de la lectura, diccionario contextual con audio y evaluación PNL | §9.1 (RF-05 a RF-09) |
+| [Secuencia: autenticación](../diagrams/diagrama-de-secuencia-de-securidad.md) | Inicio de sesión, uso del token y rotación del refresh token | §9.1.3 (RNF-05 a RNF-07) |
+
+El detalle campo por campo del modelo de datos está en el
+[diccionario de datos](../diagrams/diccionario-de-datos.md).
+
 ## **17\. Wireframes.** {#17.-wireframes.}
 
-[DolyNation – Figma](https://www.figma.com/design/NpeSJlQsZhpa0233xNcYkP/DolyNation?node-id=0-1&p=f&t=sNXZOHJbsUWWNBUK-0)
+El prototipo y los wireframes se diseñaron en **Figma**:
+
+> **[DolyNation – Figma](https://www.figma.com/design/NpeSJlQsZhpa0233xNcYkP/DolyNation?node-id=0-1&p=f&t=sNXZOHJbsUWWNBUK-0)**
+
+![Vista previa del prototipo de DolyNation](./assets/wireframes/dolynation-prototipo.webp)
+
+*Figura 1. Vista previa del prototipo. La imagen está versionada en este repositorio
+([`assets/wireframes/`](./assets/wireframes/README.md)) para que la entrega no
+dependa de un enlace externo con fecha de caducidad.*
+
+Las pantallas del maquetado se exportan desde Figma a
+[`assets/wireframes/pantallas/`](./assets/wireframes/pantallas/README.md), donde
+está el procedimiento paso a paso.
+
+El prototipo se abre en Figma con el enlace de arriba. La guía de la
+integración —de dónde sale la imagen, cómo se re-exporta y cómo se mantienen los
+tokens de diseño— está en
+[`operations/PROTOTIPO-FIGMA.md`](../operations/PROTOTIPO-FIGMA.md).
 
 ## **18\. Fuentes.** {#18.-fuentes.}
 

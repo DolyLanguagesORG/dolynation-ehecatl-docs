@@ -1,81 +1,74 @@
-@startuml
-' Estado del modelo: este diagrama describe el ESTADO OBJETIVO.
-' Pendiente por sprint: language en el body (infra#20 + back#10), cache por
-' prompt_hash (back#9), endpoint de TTS (back#44), tablas vocabulary_logs y
-' evaluations (infra#21) y racha/puntos (back#15).
-autonumber
-skinparam shadowing false
-skinparam sequenceMessageAlign center
-skinparam boxPadding 10
+# Diagrama de secuencia — flujo principal
 
-actor "Estudiante" as Student
-participant "Frontend\n(Next.js)" as FE
-participant "Backend\n(NestJS)" as BE
-database "Base de Datos\n(PostgreSQL)" as DB
-actor "API de IA\n(MiniMax-M3)" as AI
-actor "Servicio TTS" as TTS
+Las tres fases del flujo de aprendizaje: generación de la lectura con IA, diccionario contextual con audio TTS y evaluación PNL con racha diaria.
 
-' ==========================================
-' FASE 1: GENERACIÓN DE LECTURA CON IA
-' ==========================================
-box "1. Módulo de Lecturas (RF-05, RF-06, RF-13)" #LightBlue
-Student -> FE: Selecciona idioma, categoría, dificultad y longitud
-FE -> BE: POST /api/v1/readings\n[Header: Bearer JWT | Body: language, category, difficulty, size]
-BE -> BE: Validar JWT y DTO de entrada
+```mermaid
+sequenceDiagram
+    autonumber
 
-alt Lectura en Caché (mismo usuario + prompt_hash)
-    BE -> DB: Buscar lectura no borrada por (user_id, prompt_hash)
-    DB --> BE: Retorna lectura almacenada previamente
-    BE --> FE: HTTP 200 OK (Objeto Lectura cacheada)
-else Lectura Nueva (Generación por IA)
-    BE -> AI: Solicitar texto personalizado (prompt versionado por idioma)
-    AI --> BE: Retorna lectura (título, descripción, contenido, metadatos)
-    BE -> DB: Guardar lectura + language, length_type, category_id, prompt_hash
-    DB --> BE: Confirmación (reading_id)
-    BE --> FE: HTTP 201 Created (Objeto Lectura)
-end
+    actor Student as Estudiante
+    participant FE as Frontend (Next.js)
+    participant BE as Backend (NestJS)
+    participant DB as Base de Datos (PostgreSQL)
+    participant AI as API de IA (MiniMax-M3)
+    participant TTS as Servicio TTS
 
-FE --> Student: Despliega texto en el Visor Inmersivo de Lectura
-end box
+    Note over Student,DB: FASE 1: Generación de Lectura con IA (RF-05, RF-06, RF-13)
 
-' ==========================================
-' FASE 2: DICCIONARIO Y AUDIO TTS
-' ==========================================
-box "2. Módulo de Vocabulario Contextual (RF-08)" #LightGreen
-Student -> FE: Selecciona palabra o frase dentro del texto
-FE -> BE: POST /api/v1/readings/{id}/explanations\n[Body: word, context]
-BE -> AI: Solicitar significado, definición y ejemplo en contexto
-AI --> BE: Retorna explicación estructurada
-BE -> DB: Guardar en vocabulary_logs
-BE --> FE: HTTP 200 OK (significado, definición, ejemplos, oración original)
-FE --> Student: Muestra Pop-up / Modal de Diccionario Contextual
+    Student->>FE: Selecciona idioma, categoría, dificultad y longitud
+    FE->>BE: POST /api/v1/readings<br/>Header: Bearer JWT<br/>Body: language, category, difficulty, size
+    BE->>BE: Validar JWT y DTO de entrada
 
-opt Reproducir Pronunciación de Audio
-    Student -> FE: Clic en botón de Audio
-    FE -> BE: GET /api/v1/readings/{id}/tts?text=frase_corta
-    BE -> TTS: Solicitar síntesis de voz (texto corto)
-    TTS --> BE: Retorna buffer de audio
-    BE --> FE: Stream de Audio (MP3/WAV)
-    FE --> Student: Reproduce audio de pronunciación
-end
-end box
+    alt Lectura en caché (mismo usuario + prompt_hash)
+        BE->>DB: Buscar lectura no borrada por user_id y prompt_hash
+        DB-->>BE: Retorna lectura almacenada previamente
+        BE-->>FE: HTTP 200 OK (Objeto Lectura cacheada)
+    else Lectura nueva (Generación por IA)
+        BE->>AI: Solicitar texto personalizado (prompt versionado por idioma)
+        AI-->>BE: Retorna título, descripción, contenido y metadatos
+        BE->>DB: Guardar lectura, language, length_type, category_id y prompt_hash
+        DB-->>BE: Confirmación (reading_id)
+        BE-->>FE: HTTP 201 Created (Objeto Lectura)
+    end
 
-' ==========================================
-' FASE 3: EVALUACIÓN PNL Y RACHA DIARIA
-' ==========================================
-box "3. Evaluación PNL y Racha (RF-07, RF-09, RF-10)" #LightYellow
-Student -> FE: Redacta resumen libre y clic en "Enviar Evaluación"
-FE -> BE: POST /api/v1/readings/{id}/evaluate\n[Body: userResponse]
-BE -> AI: Enviar texto original + resumen para análisis PNL/LLM
-AI --> BE: Retorna cobertura, precisión, coherencia y feedback
-BE -> DB: Guardar resultado en evaluations
-BE -> DB: Actualizar lectura a status='completed'
-BE -> BE: Calcular racha y puntos desde la evaluación
-BE -> DB: Actualizar users.current_streak / last_streak_date
-DB --> BE: Confirmación de actualización
+    FE-->>Student: Despliega texto en el Visor Inmersivo de Lectura
 
-BE --> FE: HTTP 200 OK (score, passed, feedback, racha actualizada)
-FE --> Student: Muestra pantalla de resultados y animación de Racha Diaria
-end box
+    Note over Student,TTS: FASE 2: Diccionario y Audio TTS (RF-08)
 
-@enduml
+    Student->>FE: Selecciona palabra o frase dentro del texto
+    FE->>BE: POST /api/v1/readings/{id}/explanations<br/>Body: word, context
+    BE->>AI: Solicitar significado, definición y ejemplo en contexto
+    AI-->>BE: Retorna explicación estructurada
+    BE->>DB: Guardar en vocabulary_logs
+    DB-->>BE: Confirmación de guardado
+    BE-->>FE: HTTP 200 OK (significado, definición, ejemplos y oración original)
+    FE-->>Student: Muestra Pop-up / Modal de Diccionario Contextual
+
+    opt Reproducir pronunciación de audio
+        Student->>FE: Clic en botón de Audio
+        FE->>BE: GET /api/v1/readings/{id}/tts?text=frase_corta
+        BE->>TTS: Solicitar síntesis de voz (texto corto)
+        TTS-->>BE: Retorna buffer de audio
+        BE-->>FE: Stream de Audio (MP3/WAV)
+        FE-->>Student: Reproduce audio de pronunciación
+    end
+
+    Note over Student,DB: FASE 3: Evaluación PNL y Racha Diaria (RF-07, RF-09, RF-10)
+
+    Student->>FE: Redacta resumen libre y clic en Enviar Evaluación
+    FE->>BE: POST /api/v1/readings/{id}/evaluate<br/>Body: userResponse
+    BE->>AI: Enviar texto original y resumen para análisis PNL/LLM
+    AI-->>BE: Retorna cobertura, precisión, coherencia y feedback
+    BE->>DB: Guardar resultado en evaluations
+    BE->>DB: Actualizar lectura a status=completed
+    BE->>BE: Calcular racha y puntos desde la evaluación
+    BE->>DB: Actualizar users.current_streak y last_streak_date
+    DB-->>BE: Confirmación de actualización
+
+    BE-->>FE: HTTP 200 OK (score, passed, feedback y racha actualizada)
+    FE-->>Student: Muestra resultados y animación de Racha Diaria
+```
+
+
+**Estado:** describe el comportamiento **objetivo**. La caché por `prompt_hash` (`back#9`), el endpoint de TTS (`back#44`) y el motor de evaluación (`back#12`) se entregan en los sprints 2 y 3.
+

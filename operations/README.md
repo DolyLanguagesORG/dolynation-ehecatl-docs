@@ -11,5 +11,11 @@ Cómo se trabaja y se despliega el proyecto.
 - [PLAN-DE-DESPLIEGUE.md](./PLAN-DE-DESPLIEGUE.md) — los 3 entornos (desarrollo,
   staging y producción) sobre servidor único, puertos, secretos y flujo de
   despliegue.
+- [PROTOTIPO-FIGMA.md](./PROTOTIPO-FIGMA.md) — el prototipo de Figma: dónde está,
+  la imagen versionada, cómo se re-exporta, los tokens de diseño y la app
+  «Figma for GitHub».
+- [JUSTIFICACION-GITHUB.md](./JUSTIFICACION-GITHUB.md) — por qué GitHub es la
+  plataforma principal de trabajo: criterios, alternativas descartadas y límites
+  reales de la decisión.
 
 La planeación y el backlog viven en [`../plan/`](../plan/README.md).

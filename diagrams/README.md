@@ -1,12 +1,14 @@
 # Diagramas
 
-Diagramas del proyecto (UML y arquitectura). Los **fuentes** van aquí y se
-versionan; las imágenes exportadas se pueden referenciar desde la documentación.
+Diagramas del proyecto (UML y arquitectura). Están escritos en **Mermaid**, que
+GitHub **renderiza de forma nativa**: se ven en el propio archivo, sin plugins,
+sin exportar imágenes y sin que se rompan al cambiar el diagrama.
 
 ## Contenido
 
 | Archivo | Tema |
 | --- | --- |
+| [diagrama-de-arquitectura.md](./diagrama-de-arquitectura.md) | Arquitectura del sistema: repositorios, módulos, base de datos y servicios externos |
 | [diagrama-de-actores.md](./diagrama-de-actores.md) | Actores, casos de uso y servicios externos |
 | [diagrama-de-ER(Entidad-Relacion).md](./diagrama-de-ER%28Entidad-Relacion%29.md) | Entidades, relaciones y columnas |
 | [diagrama-de-secuencia.md](./diagrama-de-secuencia.md) | Generación, vocabulario/TTS y evaluación |
@@ -15,12 +17,16 @@ versionan; las imágenes exportadas se pueden referenciar desde la documentació
 
 ## Convenciones
 
-- Un archivo por diagrama, en `kebab-case`, con su formato de fuente.
-- El formato de fuente es texto plano: **Mermaid** se renderiza nativamente en
-  GitHub; **PlantUML** (el que usa este repo) necesita un visor o plugin para
-  renderizarse, y en GitHub se lee como texto. Mantén el fuente versionado y, si
-  necesitas la imagen, expórtala y guárdala junto al `.md`.
-- Si exportas PNG/SVG, guárdalos junto al fuente con el mismo nombre.
+- Un archivo por diagrama, en `kebab-case`, con el diagrama dentro de una valla
+  ` ```mermaid `.
+- Todo diagrama se escribe en **Mermaid** para que se renderice solo en GitHub.
+  Si necesitas el mismo diagrama fuera de GitHub, se exporta a PNG/SVG y se
+  guarda junto al `.md` con el mismo nombre.
+- Cada diagrama lleva arriba su título, una frase de qué muestra y una nota de
+  **estado** (qué está implementado y qué es el flujo objetivo pendiente), para
+  que no se lea como si todo existiera ya.
+- El bloque `---` de configuración de Mermaid (por ejemplo `layout: fixed`) va
+  al principio del diagrama, dentro de la valla.
 - Referencia los diagramas desde el documento correspondiente con un enlace
   relativo.
 - Mantén el ER y el diccionario alineados con

@@ -27,7 +27,7 @@ Reglas para escribir y mantener `dolynation-ehecatl-docs`.
 - `plan/` — `cronograma.md`, `PLAN-Y-SEGUIMIENTO.md` y `backlog.md`.
 - `anteproyecto/` — anteproyecto académico.
 - `decisions/` — registro de decisiones de implementación.
-- `diagrams/`, `assets/` — UML y binarios (Word/PDF), ver sus `README.md`.
+- `diagrams/` — UML en Mermaid (se renderiza nativo en GitHub), `assets/` — binarios (Word/PDF); ver sus `README.md`.
 
 ## Convenciones de formato
 

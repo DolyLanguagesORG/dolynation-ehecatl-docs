@@ -1,0 +1,17 @@
+# Sistema
+.DS_Store
+Thumbs.db
+*.swp
+
+# Editores
+.idea/
+.vscode/
+*.code-workspace
+
+# Exportaciones de diagramas y temporales
+*.tmp
+*.bak
+*~
+
+# Node (para las herramientas de los diagramas y el link check)
+node_modules/

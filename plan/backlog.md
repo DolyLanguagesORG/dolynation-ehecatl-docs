@@ -21,6 +21,21 @@ issue.
 - Revisar la **seguridad**: permisos y “poderes” por usuario.
 - Arreglar el bug de **generación de niveles de dificultad** en los textos.
 
+## Prototipo y diseño (Figma)
+
+- ~~**Ruta `/prototipo` en el frontend** con el embed del prototipo~~ →
+  **descartado**: no aporta a la entrega y consume tiempo del sprint. El
+  prototipo se abre desde el enlace de Figma en la documentación.
+- **App oficial «Figma for GitHub»** en los cuatro repositorios, para que los
+  PRs muestren el diseño. **Requiere la cuenta de Figma de quien creó el
+  archivo** (`NpeSJlQsZhpa0233xNcYkP`) y permisos de administrador en la
+  organización; no se puede instalar por API. Pasos en
+  [`operations/PROTOTIPO-FIGMA.md`](../operations/PROTOTIPO-FIGMA.md) §5.
+- **Tokens de diseño** exportados a mano desde Dev Mode → `design-tokens.json`
+  en el frontend + el `@theme` de Tailwind. La Variables API de Figma es solo
+  Enterprise, así que no se puede automatizar
+  ([`operations/PROTOTIPO-FIGMA.md`](../operations/PROTOTIPO-FIGMA.md) §6).
+
 ## Mobile (fuera del alcance de `v1.0.0`)
 
 - Arreglar el bug del botón al responder/fallar: no debería permitir reabrir una

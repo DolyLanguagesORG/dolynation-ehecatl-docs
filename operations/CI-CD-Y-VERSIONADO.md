@@ -37,7 +37,8 @@ no está implementado:
 | --- | --- | --- |
 | Checks de CI | Implementados en los 4 repos (`ci-*.yml`, `pr-title`, `pr-labels`) | Igual |
 | Versionado | Script propio en `release.yml` que corre en `push` a `main` | **release-please** con PR acumulativo en `develop` (`infra#7`, fuera de la entrega) |
-| Tag / Release | Se crea al llegar a `main` | Se crea al mergear el PR de release |
+| Tag / Release | Se crea al llegar a `main`, **solo si la versión declarada en el repo coincide** | Se crea al mergear el PR de release |
+| Manifiesto | `versions.yml` en infra, con la versión de cada repositorio | Automático |
 | Entornos (desarrollo, staging, producción) | Planificado; issues `infra#6`-`infra#9` | Deploy por SSH a 3 entornos; `rc-*` es rama efímera |
 | Manifiesto `versions.yml` | Planificado (`infra#7`) | Fuente de verdad de versiones en `infra` |
 | Cascada `infra → front/back` | Planificado (`infra#8`) | PRs automáticos vía PAT |
@@ -151,6 +152,23 @@ Trust (nadie hace push directo a las ramas protegidas):
   runs y evitar carreras entre versiones.
 
 ---
+
+## 7.1. El pull request de la release
+
+Antes de mergear `develop` → `main`, el pull request de release sube la versión
+en los repositorios afectados:
+
+1. `package.json` → `version` (backend y frontend) y el `package-lock.json`.
+2. `CHANGELOG.md` → una sección `## [X.Y.Z]` con lo que trae la release.
+3. `dolynation-tlalli-infra/versions.yml` → la versión de cada repositorio.
+
+El workflow `release.yml` **verifica** esos tres puntos antes de crear el tag:
+si la versión del `package.json` o la sección del changelog no coinciden con la
+que ha calculado, la release **no sale** y el error dice qué archivo corregir.
+
+Después del merge, `GET /api/v1/health/live` del backend devuelve la **versión**
+y el **commit** del build en ejecución, de modo que se puede confirmar en el
+servidor qué se acaba de desplegar.
 
 ## 8. Versionado automático
 

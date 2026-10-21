@@ -1,147 +1,137 @@
-@startuml ERD_DolyNation
-' Estado del modelo: implementadas hoy -> users, auth_access_tokens, readings,
-' prompt_logs. Planificadas -> categories, user_preferences,
-' user_selected_categories (infra#20), evaluations, vocabulary_logs (infra#21)
-' y users.role (infra#22).
-hide circle
-skinparam linetype ortho
-skinparam shadowing false
+# Diagrama entidad-relación
 
-entity "users" as user {
-  * **id** : SERIAL
-  --
-  * email : VARCHAR(254) <<UNIQUE>>
-  * password : VARCHAR(255) <<hash Argon2id>>
-  * full_name : VARCHAR(255)
-  * role : VARCHAR(20) [STUDENT, ADMIN]
-  * current_streak : INTEGER
-  * last_streak_date : DATE
-  * created_at : TIMESTAMP
-  * updated_at : TIMESTAMP
-  * deleted_at : TIMESTAMP
-}
+Modelo de datos de PostgreSQL: diez tablas, sus claves y sus relaciones.
 
-entity "auth_access_tokens" as token {
-  * **id** : SERIAL
-  --
-  * tokenable_id : INTEGER <<FK users.id>>
-  * type : VARCHAR(255) [refresh]
-  * name : VARCHAR(255)
-  * hash : VARCHAR(255)
-  * abilities : TEXT
-  * created_at : TIMESTAMP
-  * updated_at : TIMESTAMP
-  * last_used_at : TIMESTAMP
-  * expires_at : TIMESTAMP
-  * deleted_at : TIMESTAMP
-}
+```mermaid
+erDiagram
+    users {
+        SERIAL id PK
+        VARCHAR email UK
+        VARCHAR password
+        VARCHAR full_name
+        VARCHAR role
+        INTEGER current_streak
+        DATE last_streak_date
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+        TIMESTAMP deleted_at
+    }
 
-entity "categories" as cat {
-  * **id** : SERIAL
-  --
-  * slug : VARCHAR(50) <<UNIQUE>>
-  * name : VARCHAR(50)
-  * description : TEXT
-  * is_global : BOOLEAN
-  * created_by_user_id : INTEGER <<FK users.id, nullable>>
-  * created_at : TIMESTAMP
-}
+    auth_access_tokens {
+        SERIAL id PK
+        INTEGER tokenable_id FK
+        VARCHAR type
+        VARCHAR name
+        VARCHAR hash
+        TEXT abilities
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+        TIMESTAMP last_used_at
+        TIMESTAMP expires_at
+        TIMESTAMP deleted_at
+    }
 
-entity "user_preferences" as pref {
-  * **user_id** : INTEGER <<PK, FK users.id>>
-  --
-  * target_language : VARCHAR(10) [en, fr, es, it]
-  * default_difficulty : VARCHAR(20) [easy, medium, hard]
-  * default_length : VARCHAR(20) [short, medium, long]
-  * updated_at : TIMESTAMP
-}
+    categories {
+        SERIAL id PK
+        VARCHAR slug UK
+        VARCHAR name
+        TEXT description
+        BOOLEAN is_global
+        INTEGER created_by_user_id FK
+        TIMESTAMP created_at
+    }
 
-entity "user_selected_categories" as user_cat {
-  * **user_id** : INTEGER <<PK, FK users.id>>
-  * **category_id** : INTEGER <<PK, FK categories.id>>
-}
+    user_preferences {
+        INTEGER user_id PK, FK
+        VARCHAR target_language
+        VARCHAR default_difficulty
+        VARCHAR default_length
+        TIMESTAMP updated_at
+    }
 
-entity "readings" as reading {
-  * **id** : SERIAL
-  --
-  * user_id : INTEGER <<FK users.id>>
-  * category : VARCHAR(50) <<deprecada>>
-  * category_id : INTEGER <<FK categories.id>>
-  * language : VARCHAR(10) [en, fr, es, it]
-  * length_type : VARCHAR(20) [short, medium, long]
-  * prompt_hash : VARCHAR(64)
-  * title : VARCHAR(255)
-  * description : TEXT
-  * content : TEXT
-  * difficulty : VARCHAR(20) [easy, medium, hard]
-  * word_count : INTEGER
-  * status : VARCHAR(20) [pending, completed]
-  * score : INTEGER <<legacy>>
-  * passed : BOOLEAN <<legacy>>
-  * user_response : TEXT <<legacy>>
-  * feedback : TEXT <<legacy>>
-  * created_at : TIMESTAMP
-  * updated_at : TIMESTAMP
-  * deleted_at : TIMESTAMP
-}
+    user_selected_categories {
+        INTEGER user_id PK, FK
+        INTEGER category_id PK, FK
+    }
 
-entity "evaluations" as eval {
-  * **id** : SERIAL
-  --
-  * reading_id : INTEGER <<FK readings.id, UNIQUE>>
-  * user_id : INTEGER <<FK users.id>>
-  * user_summary : TEXT
-  * score : INTEGER [0-100]
-  * passed : BOOLEAN
-  * feedback : TEXT
-  * main_ideas_coverage : TEXT
-  * created_at : TIMESTAMP
-}
+    readings {
+        SERIAL id PK
+        INTEGER user_id FK
+        VARCHAR category
+        INTEGER category_id FK
+        VARCHAR language
+        VARCHAR length_type
+        VARCHAR prompt_hash
+        VARCHAR title
+        TEXT description
+        TEXT content
+        VARCHAR difficulty
+        INTEGER word_count
+        VARCHAR status
+        INTEGER score
+        BOOLEAN passed
+        TEXT user_response
+        TEXT feedback
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+        TIMESTAMP deleted_at
+    }
 
-entity "vocabulary_logs" as vocab {
-  * **id** : SERIAL
-  --
-  * user_id : INTEGER <<FK users.id>>
-  * reading_id : INTEGER <<FK readings.id, nullable>>
-  * selected_text : VARCHAR(255)
-  * original_sentence : TEXT
-  * definition : TEXT
-  * contextual_example : TEXT
-  * created_at : TIMESTAMP
-}
+    evaluations {
+        SERIAL id PK
+        INTEGER reading_id FK, UK
+        INTEGER user_id FK
+        TEXT user_summary
+        INTEGER score
+        BOOLEAN passed
+        TEXT feedback
+        TEXT main_ideas_coverage
+        TIMESTAMP created_at
+    }
 
-entity "prompt_logs" as plog {
-  * **id** : SERIAL
-  --
-  * level : VARCHAR(20)
-  * event : VARCHAR(100)
-  * message : TEXT
-  * seed : VARCHAR(255)
-  * user_id : INTEGER <<FK users.id, nullable>>
-  * text_id : INTEGER <<FK readings.id, nullable>>
-  * params : JSONB
-  * system_prompt : TEXT
-  * user_prompt : TEXT
-  * error_message : TEXT
-  * error_stack : TEXT
-  * duration_ms : INTEGER
-  * created_at : TIMESTAMP
-}
+    vocabulary_logs {
+        SERIAL id PK
+        INTEGER user_id FK
+        INTEGER reading_id FK
+        VARCHAR selected_text
+        TEXT original_sentence
+        TEXT definition
+        TEXT contextual_example
+        TIMESTAMP created_at
+    }
 
-' ==========================================
-' RELACIONES
-' ==========================================
-user ||--o| pref : "1:1 prefiere"
-user ||--o{ token : "1:N posee"
-user ||--o{ user_cat : "1:N selecciona"
-cat  ||--o{ user_cat : "1:N pertenece"
-user ||--o{ reading : "1:N genera"
-cat  ||--o{ reading : "1:N clasifica"
-reading ||--o| eval : "1:1 evalúa"
-user ||--o{ eval : "1:N realiza"
-user ||--o{ vocab : "1:N consulta"
-reading ||--o{ vocab : "1:N contiene"
-user ||--o{ plog : "1:N audita"
-reading ||--o{ plog : "1:N registra"
+    prompt_logs {
+        SERIAL id PK
+        VARCHAR level
+        VARCHAR event
+        TEXT message
+        VARCHAR seed
+        INTEGER user_id FK
+        INTEGER text_id FK
+        JSONB params
+        TEXT system_prompt
+        TEXT user_prompt
+        TEXT error_message
+        TEXT error_stack
+        INTEGER duration_ms
+        TIMESTAMP created_at
+    }
 
-@enduml
+    users ||--o| user_preferences : "tiene preferencias"
+    users ||--o{ auth_access_tokens : "posee tokens"
+    users ||--o{ user_selected_categories : "selecciona"
+    categories ||--o{ user_selected_categories : "es seleccionada"
+    users ||--o{ readings : "genera"
+    categories ||--o{ readings : "clasifica"
+    readings ||--o| evaluations : "tiene evaluacion"
+    users ||--o{ evaluations : "realiza"
+    users ||--o{ vocabulary_logs : "consulta vocabulario"
+    readings o|--o{ vocabulary_logs : "contextualiza"
+    users o|--o{ prompt_logs : "genera registros"
+    readings o|--o{ prompt_logs : "se registra en"
+    users o|--o{ categories : "crea categorias"
+```
+
+
+**Estado:** el diagrama muestra el modelo **objetivo**. Hoy existen `users`, `auth_access_tokens`, `readings` y `prompt_logs` (`01-init.sql`); las demás tablas llegan con las migraciones `02`, `03` y `04` (`infra#20`, `infra#21`, `infra#22`). El detalle campo por campo está en [`diccionario-de-datos.md`](./diccionario-de-datos.md).
+
