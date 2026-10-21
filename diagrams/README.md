@@ -27,6 +27,13 @@ sin exportar imágenes y sin que se rompan al cambiar el diagrama.
   que no se lea como si todo existiera ya.
 - El bloque `---` de configuración de Mermaid (por ejemplo `layout: fixed`) va
   al principio del diagrama, dentro de la valla.
+- **No uses `;` dentro de los textos** de los diagramas de secuencia, ni lo
+  escribas como entidad HTML (`&#59;`). GitHub decodifica las entidades del
+  bloque antes de pasarlo a Mermaid, y el `;` resultante corta la gramática y
+  deja el diagrama en error ("Unable to render rich display"). Usa comas o
+  guiones.
+- Antes de subir un diagrama nuevo, comprueba que parsea. Si no hay forma de
+  probarlo, revisa que no tenga `;` ni caracteres poco habituales.
 - Referencia los diagramas desde el documento correspondiente con un enlace
   relativo.
 - Mantén el ER y el diccionario alineados con
