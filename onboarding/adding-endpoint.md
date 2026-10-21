@@ -21,7 +21,7 @@ El envelope lo enforza el test e2e
 en CI. Si tu endpoint no lo respeta, el PR no se puede mergear.
 
 → Contrato completo:
-[api-contracts.md](../conventions/api-contracts.md#tldr--regla-del-envelope)
+[api-contracts.md](../conventions/api-contracts.md#-tldr-regla-del-envelope)
 → Helpers:
 [`apiOk`/`apiFail`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/types/api-response.type.ts)
 → Catálogo en vivo: `http://localhost:3333/docs`
