@@ -85,6 +85,14 @@ abrió PR.
 | `dolynation-tonatiuh-front` | #33 |
 | `dolynation-tlalli-infra` | #32 |
 
+Estos PRs traen **dos fixes apilados**:
+
+1. El bump se calcula con **todos los commits del ciclo**, no solo con el
+   último. Sin esto, una funcionalidad puede publicarse como `patch`.
+2. El workflow acepta un input **`version`** para indicar la versión exacta
+   (`1.0.0`), que es lo que necesita la entrega del 10-dic. Antes solo había
+   `major`/`minor`/`patch`, y el `v1.0.0` salía por casualidad.
+
 Sin estos PRs, la primera release con un `feat` publicará un número
 incorrecto. Detalle en `infra#7` y en la
 [discusión #25](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/discussions/25).
