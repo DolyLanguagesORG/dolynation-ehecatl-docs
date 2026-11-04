@@ -579,8 +579,8 @@ La columna «Asignaciones» cuenta una vez por persona cada issue que tiene asig
 
 ### **13.1. Hitos del proyecto**
 
-* **Sprint 1 (05/Oct – 18/Oct/2026):** Configuración del repositorio y cimientos. *Cerrado con retraso: se completó el 19/Oct/2026.*  
-* **Sprint 2 (19/Oct – 01/Nov/2026):** Fundamentos: autenticación, perfil y base del frontend.  
+* **Sprint 1 (05/Oct – 08/Nov/2026):** Configuración del repositorio y cimientos. *Venció el 18-Oct y se amplió al 08-Nov para cerrar la documentación pendiente.*  
+* **Sprint 2 (19/Oct – 22/Nov/2026):** Fundamentos: autenticación, perfil y base del frontend. *Venció el 01-Nov y se amplió al 22-Nov para que quepan las tres migraciones de schema y la base del frontend.*  
 * **Sprint 3 (02/Nov – 15/Nov/2026):** Lecturas con IA.  
 * **Sprint 4 (16/Nov – 29/Nov/2026):** Vocabulario, TTS, evaluación y progreso.  
 * **Sprint 5 (30/Nov – 06/Dic/2026):** Calidad, integración y release v1.0.0. Del **07 al 10/Dic/2026**: entrega del *release*, capturas y presentación del proyecto.

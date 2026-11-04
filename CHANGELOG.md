@@ -26,8 +26,8 @@ que exista la sección de la versión que se va a publicar antes de crear el tag
   corregida, el índice navegable y el cronograma 19-oct → 10-dic.
 
 ### Cambiado
-- Los milestones pasan a las fechas reales de entrega (31-oct, 14-nov, 28-nov,
-  5-dic y 10-dic).
+- Los milestones de los cuatro repos quedan alineados con el cierre de cada
+  sprint del cronograma: 18-oct, 01-nov, 15-nov, 29-nov y 10-dic.
 
 ## [0.1.0] - 2026-10-12
 

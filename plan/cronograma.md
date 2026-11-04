@@ -54,7 +54,8 @@ Referencias de repo: `back` = `dolynation-atl-back`, `front` =
 
 ## Sprint 1 — Configuración del repositorio y cimientos
 
-**Periodo:** 05 al 18 de octubre de 2026  
+**Periodo:** 05 de octubre al **08 de noviembre** de 2026 (extendido: el sprint
+venció el 18-oct y se amplió para cerrar la documentación pendiente)  
 **Objetivo:** Dejar el proyecto listo para desarrollar: cuatro repositorios separados, reglas de protección, CI/CD, plantillas, skills, documentación saneada y el contrato de la API alineado al código. **Sprint cerrado con retraso: el trabajo se completó el 19 de octubre de 2026.**  
 **Cierre (milestone):** Sprint 1: Configuración del repositorio y cimientos — [back](https://github.com/DolyLanguagesORG/dolynation-atl-back/milestone/1) · [front](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/milestone/1) · [infra](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/milestone/1)  
 **Tareas:** 9
@@ -75,7 +76,9 @@ Referencias de repo: `back` = `dolynation-atl-back`, `front` =
 
 ## Sprint 2 — Fundamentos: autenticación, perfil y base del frontend
 
-**Periodo:** 19 de octubre al 01 de noviembre de 2026  
+**Periodo:** 19 de octubre al **22 de noviembre** de 2026 (extendido: el sprint
+venció el 01-nov y se amplió para que quepan las 3 migraciones de schema y la
+base del frontend)  
 **Objetivo:** Cimientos del producto: autenticación completa con refresh rotado, perfil de usuario, base del frontend (layout, tokens, i18n, sistema de diseño y base de pruebas) y base de infraestructura (entornos, secretos y runner de migraciones).  
 **Cierre (milestone):** Sprint 2: Fundamentos: autenticación, perfil y base del frontend — [back](https://github.com/DolyLanguagesORG/dolynation-atl-back/milestone/2) · [front](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/milestone/2)  
 **Tareas:** 17

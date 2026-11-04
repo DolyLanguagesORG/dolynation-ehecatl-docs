@@ -159,14 +159,14 @@ infraestructural de `front#2`; **ninguna otra tarea de frontend tiene código**.
 
 | # | Inconsistencia | Detalle |
 | --- | --- | --- |
-| 5 | **Dos calendars distintos para los milestones** | Los milestones están en 18-oct, 01-nov, 15-nov, 29-nov y 10-dic, que coinciden con el fin de cada sprint del cronograma. Pero `docs#15` y el `CHANGELOG.md` del repo de docs prometen 31-oct, 14-nov, 28-nov, 05-dic y 10-dic. Hay que decidir cuál manda y alinear el otro. |
+| 5 | ~~Dos calendars distintos para los milestones~~ **Resuelto** | Los milestones están en 18-oct, 01-nov, 15-nov, 29-nov y 10-dic, que coinciden con el cronograma. Se corrigieron el `CHANGELOG.md` y el criterio de `docs#15`, que prometían otras fechas. |
 | 6 | **La tabla «Correspondencia completa» contradice las tablas por sprint** | 21 de 33 filas asignan un sprint distinto al del milestone y al del encabezado del issue. Ejemplo: `front#2` aparece como Sprint 1 en la correspondencia y como Sprint 2 en la tabla por sprint (y su milestone es Sprint 2). |
 | 7 | **El conteo de issues no cuadra** | El cronograma dice «68 abiertas», el anteproyecto dice «70» y la realidad son **65 abiertas** (84 en total, 19 cerradas). |
 | 8 | **Faltan 3 entregables de la tabla de correspondencia** | `infra#20`, `#21` y `#22` (migraciones) están en la sección de prerrequisitos pero no en la numeración 1–33 de entregables. |
-| 9 | **El milestone «Fuera de alcance (post-entrega)» no existe** | El cronograma dice que P3 y P4 «siguen abiertos y visibles» en ese milestone, pero no hay ningún milestone con ese nombre en los 4 repos, y P3 y P4 son en realidad `infra#7` y `infra#8`, **ya cerrados**. |
+| 9 | **El milestone «Fuera de alcance (post-entrega)» no existe** | El cronograma dice que P3 y P4 «siguen abiertos y visibles» en ese milestone, pero no hay ningún milestone con ese nombre en los 4 repos, y P3 y P4 son en realidad `infra#7` y `infra#8`, **ya cerrados**. *Queda pendiente de decisión.* |
 | 10 | **La tabla de distribución del anteproyecto no cuadra** | Suma 27 + 20 + 19 + 18 = 84 asignaciones sobre 70 issues declaradas. |
 | 11 | **El endpoint `/api/v1/user/points` está en el contrato pero `back#15` no lo entrega** | `back#15` solo contempla el cálculo y la asignación de puntos, no un endpoint `/user/points`; el contrato lo lista como «Planificado S4». |
-| 12 | **Los 9 PRs de features usan `Closes #N` sin cumplir el issue** | Si se mergean tal cual, cierran issues incompletos. La regla de `PLAN-Y-SEGUIMIENTO.md` dice `Refs #N` cuando el PR aporta pero no completa. |
+| 12 | **Los 8 PRs de features usan `Closes #N` sin cumplir el issue** | Si se mergean tal cual, cierran issues incompletos. La regla de `PLAN-Y-SEGUIMIENTO.md` dice `Refs #N` cuando el PR aporta pero no completa. *Queda pendiente por decisión del equipo; está en [`PENDIENTES-AUDITORIA.md`](./PENDIENTES-AUDITORIA.md).* |
 
 ### 4.3 Sobre qué fuente manda
 
@@ -214,6 +214,35 @@ Reescribir `#36` a `POST /api/v1/readings` y `#37` a
 existen en `develop`, así que de lo contrario se duplicarían.
 
 ---
+
+## 5. Decisiones tomadas y estado final
+
+| Decisión | Resultado |
+| --- | --- |
+| Dónde anunciar los cierres | `dolynation-ehecatl-docs` es el **anuncio central**; cada repo mantiene las suyas para lo propio (código de ese repo) |
+| Fechas de los milestones | Coinciden con el **cronograma**: 18-oct, 01-nov, 15-nov, 29-nov y 10-dic |
+| Sprint 1 y 2 vencidos | **Extendidos** a **08-nov** y **22-nov**, sin mover S3, S4 ni S5. El Project se recalculó conservando la duración de cada tarea |
+| Tema del frontend | **Blanco y negro**, el de los wireframes. `front#24` se actualizó para que no exija la paleta naranja |
+| Aprobación de PRs | Cada PR lo aprueba **otro** miembro del equipo: quien lo sube no puede aprobarse a sí mismo |
+
+**Anuncios publicados** (4-nov-2026):
+
+| Repo | Discusión |
+| --- | --- |
+| `dolynation-ehecatl-docs` | [#23 — Central: qué se entregó, qué se cerró y qué sigue](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/discussions/23) |
+| `dolynation-atl-back` | [#58 — Cierre de Sprint 1 y Sprint 2](https://github.com/DolyLanguagesORG/dolynation-atl-back/discussions/58) |
+| `dolynation-tonatiuh-front` | [#32 — El frontend entra en marcha](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/discussions/32) |
+| `dolynation-tlalli-infra` | [#31 — El schema es el bloqueo raíz](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/discussions/31) |
+
+**PRs en revisión:**
+
+| PR | Estado | Cierra |
+| --- | --- | --- |
+| `ehecatl-docs#22` | 4/4 checks en verde, `MERGEABLE` | `docs#11`, `docs#13`, `docs#14` |
+| `tonatiuh-front#31` | 7/7 checks en verde, revisión publicada | `front#2` |
+
+Lo que quedó en suspense está en
+[`PENDIENTES-AUDITORIA.md`](./PENDIENTES-AUDITORIA.md).
 
 ## Documentos relacionados
 
