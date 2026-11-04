@@ -152,8 +152,12 @@ infraestructural de `front#2`; **ninguna otra tarea de frontend tiene código**.
 | --- | --- | --- | --- |
 | 1 | La etiqueta `sprint-N` no coincide con el milestone | 39 issues | Etiqueta alineada al milestone |
 | 2 | El marcador `<!-- doly:... -->` traía `sprint=`, `start=` y `due=` obsoletos | 46 issues | Marcador reescrito con los valores del encabezado |
-| 3 | El Project mantenía un issue cerrado (`docs#12`) | 1 item | Item eliminado del tablero |
-| 4 | 15 tarjetas con estado que no reflejan el código | 15 items | Estado recalculado |
+| 3 | El Project mantenía issues cerrados (`docs#12`, `docs#15`) | 2 items | Items eliminados del tablero |
+| 4 | Tarjetas con estado que no reflejan el código | 16 items | Estado recalculado |
+| 5 | El `CHANGELOG.md` y el criterio de `docs#15` prometían fechas de milestone que nunca se aplicaron | 2 fuentes | Alineados con el cronograma |
+| 6 | Sprint 1 y Sprint 2 vencidos con trabajo pendiente | 2 sprints | **Extendidos** al 08-nov y 22-nov, sin mover S3–S5 |
+| 7 | `FLUJO-DE-TRABAJO.md` decía `require_code_owner_reviews: true` y `git-workflow.md` decía `false` | 2 documentos | Ambos reflejan la configuración real |
+| 8 | `front#24` pedía la paleta naranja, que los wireframes no usan | 1 issue | Actualizado al tema **blanco y negro** |
 
 ### 4.2 Pendientes de decisión del equipo
 
