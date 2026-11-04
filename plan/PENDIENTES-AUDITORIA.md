@@ -26,7 +26,7 @@ Si se mergean tal cual, cierran tareas a medias.
 | #39 | `back#17` | Tabla `admins` en vez de `users.role`; solo GET |
 | #40 | `back#18` | Solo retry + circuit breaker, sin integrar ni pruebas |
 
-**Regla del repo** (`plan/PLAN-Y-SEGUIMIENTO.md`, sección 3): `Closes #N`
+**Regla del repo** (`plan/PLAN-Y-SEGUIMIENTO.md`, sección 4): `Closes #N`
 cuando el PR **completa** el issue; `Refs #N` cuando solo aporta.
 
 **Acción:** editar el cuerpo de los 8 PRs y cambiar `Closes` por `Refs`, para
