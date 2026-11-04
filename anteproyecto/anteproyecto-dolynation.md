@@ -589,7 +589,7 @@ La columna «Asignaciones» cuenta una vez por persona cada issue que tiene asig
 
 > **Referencia de issues.** Al separar el monorepo en cuatro repositorios, cada tarea es un issue en su repositorio. El identificador `back#N`, `front#N`, `infra#N` o `docs#N` indica el repo (`dolynation-atl-back`, `dolynation-tonatiuh-front`, `dolynation-tlalli-infra`, `dolynation-ehecatl-docs`) y el número del issue. El tablero con el estado, las fechas y los responsables en vivo está en [el Project de la organización](https://github.com/orgs/DolyLanguagesORG/projects/1/views/3).
 
-> **Alcance de la entrega.** El desarrollo termina el **06 de diciembre de 2026**; del **07 al 10 de diciembre** se reserva para el *release* `v1.0.0`, las capturas y la presentación.
+> **Alcance de la entrega.** El desarrollo termina el **06 de diciembre de 2026**; del **07 al 10 de diciembre** se reserva para el *release* `v1.0.0`, las capturas y la presentación. El **10 de diciembre es el límite literal** de la entrega; el 06 de diciembre es el corte interno que deja cuatro días de margen.
 
 #### **Sprint 1: Configuración del repositorio y cimientos**
 

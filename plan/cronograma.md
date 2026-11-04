@@ -18,7 +18,8 @@ tarea en los issues del repositorio.
 | Dato | Valor |
 | --- | --- |
 | Inicio del proyecto | 05/Oct/2026 |
-| Entrega final | 10/Dic/2026 |
+| Entrega final | 10/Dic/2026 (límite literal) |
+| Corte interno de desarrollo | 06/Dic/2026 (deja 4 días de margen) |
 | Límite diario por tarea | 23:59 CST |
 | Sprints | 5 |
 | Issues | 84 en total: 65 abiertas (33 entregables + 12 sub-issues + 3 de plataforma + 3 migraciones + 14 de saneamiento) y 19 cerradas |
@@ -164,7 +165,7 @@ base del frontend)
 
 ## Sprint 5 — Calidad, integración y release v1.0.0
 
-**Periodo:** 30 de noviembre al 06 de diciembre de 2026 (desarrollo) y del 07 al 10 de diciembre (entrega)  
+**Periodo:** 30 de noviembre al **06 de diciembre** de 2026 (desarrollo) y del **07 al 10 de diciembre** (entrega). El **10-dic es el límite literal**; el 06-dic es el corte interno para dejar días de margen.  
 **Objetivo:** Calidad e integración: panel administrativo, auditoría de seguridad, pruebas de carga y modo degradado, revisión general, **release v1.0.0 (07-dic), documentación final y presentación (08-10 dic)**.  
 **Cierre (milestone):** Sprint 5: Calidad, integración y release v1.0.0 — [back](https://github.com/DolyLanguagesORG/dolynation-atl-back/milestone/5) · [front](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/milestone/5) · [infra](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/milestone/5) · [docs](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/milestone/5)  
 **Tareas:** 16

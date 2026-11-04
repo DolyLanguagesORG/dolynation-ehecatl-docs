@@ -100,6 +100,10 @@ Lo que hay que tener presente al empezar:
 - **El Sprint 1 se extiende al 08-nov y el Sprint 2 al 22-nov.** Los dos
   vencieron con trabajo pendiente; ampliarlos permite que quepa antes del
   10-dic. S3, S4 y S5 no se mueven.
+- **El 10-dic es el límite literal y el 06-dic el corte interno.** El
+  desarrollo termina el 06-dic para dejar cuatro días de margen; del 07 al
+  10-dic se reserva para la release `v1.0.0`, las capturas y la
+  presentación. Si algo no está mergingado el 06-dic, entra en la reserva.
 - **Dos PRs esperan aprobación**: el #22 de docs (cierra `docs#11`, `docs#13` y
   `docs#14`) y el #31 del frontend (cierra `front#2`).
 

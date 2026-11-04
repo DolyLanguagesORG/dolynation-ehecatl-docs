@@ -158,6 +158,10 @@ infraestructural de `front#2`; **ninguna otra tarea de frontend tiene código**.
 | 6 | Sprint 1 y Sprint 2 vencidos con trabajo pendiente | 2 sprints | **Extendidos** al 08-nov y 22-nov, sin mover S3–S5 |
 | 7 | `FLUJO-DE-TRABAJO.md` decía `require_code_owner_reviews: true` y `git-workflow.md` decía `false` | 2 documentos | Ambos reflejan la configuración real |
 | 8 | `front#24` pedía la paleta naranja, que los wireframes no usan | 1 issue | Actualizado al tema **blanco y negro** |
+| 9 | Los 8 PRs de features llevaban `Closes #N` sin completar su issue | 8 PRs | Cambiados a `Refs #N` con el motivo en el cuerpo |
+| 10 | El milestone «Fuera de alcance (post-entrega)» no existía | 4 repos | Creado, con `infra#7` y `infra#8` abiertos y asignados |
+| 11 | `versions.yml` no se validaba contra los tags reales | 1 repo | Workflow `versions-manifest.yml` que valida formato y existencia del tag |
+| 12 | El corte de desarrollo no estaba explícito | 3 docs | **06-dic** como corte interno, **10-dic** como límite literal |
 
 ### 4.2 Pendientes de decisión del equipo
 
