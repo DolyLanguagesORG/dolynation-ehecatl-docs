@@ -209,30 +209,33 @@ en el frontend, también `@EliasGalarza333` y `@y0ADQ1` respectivamente. Cada
 ruta tiene **dos owners como mínimo**, para que ninguna PR se quede sin
 *approving owner* cuando quien la hace es el único responsable de esa ruta.
 
-**Lo importante: la revisión del owner sí es obligatoria.**
+**Lo importante: la revisión de otra persona sí es obligatoria.**
 
-Los cuatro repositorios están configurados con `require_code_owner_reviews:
-true`: GitHub **pide** la revisión del owner y **bloquea** el merge si no llegó.
-Además se exigen **1 aprobación** en `develop` (**2** en `main`) y que todos los
-comentarios del PR estén resueltos.
+Los cuatro repositorios exigen **1 aprobación** en `develop` (**2** en `main`)
+de cualquier persona con acceso al repositorio, y que todos los comentarios
+del PR estén resueltos. Los `CODEOWNERS` se **solicitan automáticamente**, pero
+**no son obligatorios** (`require_code_owner_review: false`).
+
+Además, `require_last_push_approval: true` garantiza que **quien abrió el PR
+no pueda aprobarlo**: si haces un push nuevo, la aprobación anterior se
+descarta (`dismiss_stale_reviews_on_push: true`).
 
 En otras palabras:
 
 | Pregunta | Respuesta |
 | --- | --- |
-| ¿GitHub pide revisión al owner? | Sí, automáticamente |
-| ¿El merge se bloquea si el owner no aprueba? | **Sí** |
-| ¿Quién sí bloquea? | El code owner de la ruta tocada, más 1 aprobación (2 en `main`) |
-| ¿Y a quién puede aprobar? | A un code owner de la ruta tocada |
+| ¿GitHub pide revisión al owner? | Sí, automáticamente, como sugerencia |
+| ¿El merge se bloquea sin aprobación? | **Sí**: hacen falta 1 aprobación (2 en `main`) |
+| ¿A quién puede aprobar? | A cualquier persona con acceso al repositorio, **excepto quien abrió el PR** |
+| ¿El owner tiene que aprobar? | No, pero se le avisa y su opinión es la que conviene pedir |
 
-**Cómo está configurado a propósito.** La revisión del owner es obligatoria
-porque cada repositorio tiene al menos dos owners en cada ruta, así que siempre
-hay alguien del equipo que pueda aprobar sin depender de quien abrió el PR.
-**No hay ninguna excepción.** Los rulesets no declaran *bypass actors*:
-nadie puede saltarse la revisión de un code owner, tampoco quien administra el
-repositorio. Si el autor de un PR es el único owner de la ruta tocada, el PR
-espera a que otro miembro del equipo lo apruebe; si no hay nadie, se ajusta el
-`CODEOWNERS` de esa ruta. Es la única forma de que la revisión signifique algo.
+**Por qué está configurado así.** Los `CODEOWNERS` mantienen **dos owners por
+ruta**, así que siempre hay alguien del equipo que puede revisar la ruta
+tocada, y se le avisa automáticamente. Pero la regla de *una aprobación de
+otra persona* es la que garantiza que **nadie se apruebe a sí mismo** — ni
+siquiera cuando es code owner de la ruta. Los rulesets no declaran *bypass
+actors*: nadie puede saltarse la revisión, tampoco quien administra el
+repositorio.
 
 **Estado.** Elías (soporte de backend) está incorporado como
 `@EliasGalarza333`: owner por defecto en el backend y revisor de los módulos
@@ -316,7 +319,7 @@ ninguna vía):
 | **Mensajes de commit** | Solo los valida el hook local de husky. **CI no los revisa.** Si commiteas con `--no-verify` o sin `npm ci`, entra basura. |
 | **Scopes de commit** | El regex del CI no los valida contra la lista de `commits.md`. |
 | **Idioma de los mensajes** | Nadie lo comprueba. La convención es **español** (ver [commits.md](../conventions/commits.md)); no hay check. |
-| **CODEOWNERS** | Obligatorios: `require_code_owner_reviews: true`, sin excepciones. |
+| **CODEOWNERS** | Se solicitan automáticamente, pero **no son obligatorios** (`require_code_owner_review: false`). Lo que sí es obligatorio es **1 aprobación de otra persona**. |
 | **Que la rama esté al día** | `develop` no exige estar al día con la base. Puedes mergear con la rama atrasada. |
 | **El checklist de la plantilla** | Es un recordatorio, no un gate. |
 
