@@ -70,6 +70,29 @@ Ya está hecho:
 **Pendiente:** decidir el alcance final y cerrar el issue. El criterio de las
 fechas ya se actualizó para que coincida con el cronograma.
 
+## 4. Fix del versionado: aprobar los tres PRs
+
+**Estado:** PRs abiertos, checks en verde, esperando aprobación · **Prioridad:** alta
+
+El cálculo del bump en `release.yml` mira **solo el último commit** del ciclo,
+así que una funcionalidad puede publicarse como `patch`. El fix ya estaba
+escrito desde el 20-oct en las ramas `fix/issue-*-bump-commits`, pero nunca se
+abrió PR.
+
+| Repo | PR |
+| --- | --- |
+| `dolynation-atl-back` | #59 |
+| `dolynation-tonatiuh-front` | #33 |
+| `dolynation-tlalli-infra` | #32 |
+
+Sin estos PRs, la primera release con un `feat` publicará un número
+incorrecto. Detalle en `infra#7` y en la
+[discusión #25](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/discussions/25).
+
+**Relacionado:** en el PR de la release del 10-dic hay que subir la versión en
+`package.json` / `CHANGELOG.md` **y** en `versions.yml`, porque ningún workflow
+puede escribir sobre una rama protegida.
+
 ## Decisiones ya tomadas en esta sesión
 
 | Decisión | Resultado |
@@ -87,6 +110,7 @@ fechas ya se actualizó para que coincida con el cronograma.
 | --- | --- | --- |
 | `ehecatl-docs#22` | 4/4 checks en verde, `MERGEABLE` | Cierra la parte documental de `docs#11`, `docs#13` y `docs#14` |
 | `tonatiuh-front#31` | 7/7 checks en verde, revisión publicada | Cierra `front#2` al mergear; `front#22` sigue abierta por `fr`/`it` |
+| `atl-back#59`, `tonatiuh-front#33`, `tlalli-infra#32` | Checks en verde | Fix del cálculo del bump de versión |
 
 ## Documentos relacionados
 
