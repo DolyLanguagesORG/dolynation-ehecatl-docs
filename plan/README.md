@@ -6,6 +6,8 @@ Planificación del producto y seguimiento del trabajo.
   plataforma y 3 migraciones de schema.
 - [PLAN-Y-SEGUIMIENTO.md](./PLAN-Y-SEGUIMIENTO.md) — ruta crítica,
   dependencias, compuerta de sprint y monitoreo.
+- [AUDITORIA-ESTADO-SPRINTS.md](./AUDITORIA-ESTADO-SPRINTS.md) — qué trabajo ya
+  está mergeado, qué issues se pueden cerrar y qué inconsistencias tiene el plan.
 - [backlog.md](./backlog.md) — mejoras y pendientes fuera del cronograma.
 - [RUBRICA-UNIDAD-2.md](./RUBRICA-UNIDAD-2.md) — índice de evidencias de la
   Unidad 2: cada criterio de la rúbrica con el archivo que lo respalda.
