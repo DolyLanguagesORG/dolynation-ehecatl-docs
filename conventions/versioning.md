@@ -53,6 +53,11 @@ tags**: el tag nace al llegar a `main`. El detalle del pipeline está en
 repositorio y la fecha de la entrega. Sirve para saber de un vistazo si los
 cuatro repos van juntos o si uno se quedó atrás.
 
+> **El manifiesto lo actualiza una persona**, en el PR de la release: ningún
+> workflow lo modifica, porque no puede escribir sobre una rama protegida. Si
+> se olvida, el manifiesto se queda en la versión anterior mientras los tags
+> avanzan, y deja de reflejar la realidad.
+
 ## El pull request de la release
 
 Antes de mergear `develop` → `main`, el pull request tiene que subir la versión
@@ -88,6 +93,14 @@ PR**. Ese título es el que decide el bump:
 La lista de tipos es la misma de [commits.md](./commits.md). El título del PR
 lo valida el check `pr-title` de CI **antes** de poder mergear, así que un
 título inválido nunca llega a la release.
+
+> **El bump se calcula con TODOS los commits del ciclo, no solo con el último.**
+> Como los merges son squash, el subject de cada commit es el título de su PR.
+> Si un ciclo incluye un `feat` y el **último** PR fusionado fue un `chore`, el
+> release se publica como `patch` y la funcionalidad queda numerada como un
+> ajuste menor. El workflow recorre `$current..HEAD` completo para evitarlo.
+> Este fix está en los PRs #59 (backend), #33 (frontend) y #32 (infra); ver
+> `infra#7` para el detalle.
 
 ## Línea de tiempo del proyecto
 
