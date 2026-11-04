@@ -10,7 +10,7 @@
 
 ## 1. Pasar los `Closes #N` a `Refs #N` en los 8 PRs de features
 
-**Estado:** pendiente · **Responsable:** coordinación · **Prioridad:** alta
+**Estado:** ✅ hecho (04-nov-2026) · **Responsable:** coordinación · **Prioridad:** alta
 
 Los ocho PRs del backend llevan `Closes #N` aunque **no completan** su issue.
 Si se mergean tal cual, cierran tareas a medias.
@@ -29,14 +29,15 @@ Si se mergean tal cual, cierran tareas a medias.
 **Regla del repo** (`plan/PLAN-Y-SEGUIMIENTO.md`, sección 4): `Closes #N`
 cuando el PR **completa** el issue; `Refs #N` cuando solo aporta.
 
-**Acción:** editar el cuerpo de los 8 PRs y cambiar `Closes` por `Refs`, para
-que un merge no cierre una tarea incompleta. Los que se reescriban (por
-ejemplo #35, #36 y #37, que deben ir a las rutas canónicas) recuperan el
-`Closes` cuando de verdad completen su issue.
+**Hecho:** los 8 cuerpos de PR tienen ahora `Refs #N` en lugar de `Closes #N`,
+con una nota que explica **qué les falta** para completar el issue. GitHub ya
+no los registra como cierres (`closingIssuesReferences` vacío en los 8).
+
+Cuando un PR incluya ese trabajo, el enlace vuelve a `Closes #N`.
 
 ## 2. Crear el milestone «Fuera de alcance (post-entrega)»
 
-**Estado:** pendiente · **Responsable:** coordinación · **Prioridad:** media
+**Estado:** ✅ hecho (04-nov-2026) · **Responsable:** coordinación · **Prioridad:** media
 
 El cronograma dice que P3 y P4 «siguen abiertos y visibles en el milestone
 «Fuera de alcance (post-entrega)»», pero **ese milestone no existe** en
@@ -46,10 +47,13 @@ Además, la afirmación ya no es exacta: P3 y P4 son `infra#7` y `infra#8`, y
 ambos están **cerrados**. El árbol `infra#10`–`#17` también se cerró como
 duplicado.
 
-**Acción:** decidir entre (a) crear el milestone en los cuatro repos para
-alojar el trabajo que se pospone, o (b) corregir el cronograma para que
-refleje que P3 y P4 ya se cerraron y no queda nada fuera de alcance. La opción
-(b) es la más simple si no hay trabajo pendiente postergado.
+**Hecho (opción a):** el milestone «Fuera de alcance (post-entrega)» está
+creado en los cuatro repos, con fecha de cierre 31-ene-2027. `infra#7` y
+`infra#8` se **reabrieron** y se le asignaron, con la etiqueta
+`scope:deferred`, que es lo que el cronograma ya decía
+("siguen abiertos y visibles en el milestone").
+
+El texto del cronograma sobre P3 y P4 queda así exacto.
 
 ## 3. Cerrar `docs#15` (saneamiento de la configuración de GitHub)
 
@@ -100,6 +104,37 @@ incorrecto. Detalle en `infra#7` y en la
 **Relacionado:** en el PR de la release del 10-dic hay que subir la versión en
 `package.json` / `CHANGELOG.md` **y** en `versions.yml`, porque ningún workflow
 puede escribir sobre una rama protegida.
+
+## 5. Manifiesto de versiones: quién lo actualiza y quién lo valida
+
+**Estado:** preparado (04-nov-2026) · **Responsable:** coordinación
+
+`versions.yml` declara la versión publicada de cada repositorio. Ningún
+workflow puede escribirlo (la rama está protegida), así que **lo sube una
+persona en el PR de la release**, junto con la versión del `package.json` y la
+sección del `CHANGELOG.md`.
+
+Lo que se hizo:
+
+- **PR #33 en `dolynation-tlalli-infra`**: nuevo workflow
+  `versions-manifest.yml` que valida el formato `X.Y.Z` de cada entrada y
+  comprueba que el tag declarado exista en el repositorio. Es el **punto de
+  enganche** del despliegue por tags exactos: **no despliega**, porque eso es
+  `infra#27` y sigue sin implementarse.
+- `versions.yml` documenta el flujo y registra las fechas con margen
+  (`development-deadline: 2026-12-06`, `deadline: 2026-12-10`).
+
+**Para la entrega del 10-dic**, el orden es:
+
+1. En cada repo: subir la versión (`npm version 1.0.0 --no-git-tag-version` en
+   backend y frontend; sección `## [1.0.0]` en el `CHANGELOG.md` de infra y
+   docs) **y** `versions.yml` con los cuatro tags en 1.0.0.
+2. Mergear `develop` → `main` en los cuatro repos.
+3. Si el cálculo no dio `v1.0.0`, forzar la versión exacta:
+   `gh workflow run release.yml -f version=1.0.0`.
+
+Los cuatro tags **no se crean a la vez**: hay que comprobar los cuatro al
+terminar.
 
 ## Decisiones ya tomadas en esta sesión
 

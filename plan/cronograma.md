@@ -244,10 +244,11 @@ label `area:infra`) que cierran el pipeline descrito en
 
 El árbol `infra#10-#17` se fusionó en P2-P5 e `infra#4`; los issues quedaron cerrados como duplicados.
 
-**P3 y P4 quedan fuera de la entrega** (1-10 dic 2026): el cierre usa el tag
-manual `v1.0.0` de `release.yml` y el despliegue por SHA con rollback
-(`infra#27`). Ambos issues siguen abiertos y visibles en el milestone
-«Fuera de alcance (post-entrega)».
+**P3 y P4 quedan fuera de la entrega** (1-10 dic 2026): el cierre usa la
+versión exacta `v1.0.0` de `release.yml` (input `version`) y el despliegue por
+SHA con rollback (`infra#27`). Ambos issues están **abiertos** y visibles en el
+milestone «Fuera de alcance (post-entrega)», que existe en los cuatro repos con
+cierre el 31-ene-2027.
 
 ## Prerrequisitos de schema
 

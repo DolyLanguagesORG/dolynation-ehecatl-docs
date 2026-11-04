@@ -181,7 +181,40 @@ que no haya drift.
 | Qué se desbloqueó | `docs#15` y este documento | Las brechas que se cerraron |
 | Qué se pospuso | Los issues con comentario | El motivo y la fecha |
 
-### 2.8 Decisiones pendientes que no bloquean el código
+### 2.8 El flujo de la release `v1.0.0`
+
+Queda **preparado** para el 06-dic. Son cuatro pasos, y el primero es el que
+más se olvida:
+
+```bash
+# 1. En cada repositorio, subir la versión en el PR de release:
+#    backend y frontend:  npm version 1.0.0 --no-git-tag-version
+#    infra y docs:         sección "## [1.0.0] - 2026-12-10" en CHANGELOG.md
+#    infra:                versions.yml con los cuatro tags en 1.0.0
+
+# 2. Mergear develop -> main en los cuatro repositorios.
+
+# 3. Si el cálculo no dio v1.0.0, forzar la versión exacta:
+gh workflow run release.yml -f version=1.0.0
+
+# 4. Comprobar los cuatro tags y que versions.yml los refleje.
+```
+
+Tres cosas que hay que tener presentes:
+
+- **Los cuatro tags no se crean a la vez.** Cada repo tiene su propio
+  `release.yml`. Hay que comprobar los cuatro al terminar.
+- **`versions.yml` lo sube una persona**, en el PR de la release: ningún
+  workflow puede escribir en una rama protegida. Es el primer paso, no el
+  último, porque es lo que dice qué versión va en cada repositorio.
+- **El bump se calcula con todos los commits del ciclo**, no solo con el
+  último. Por eso una funcionalidad no puede salir como `patch` si el último
+  PR fue un `chore`.
+
+El detalle está en [`conventions/versioning.md`](../conventions/versioning.md) y
+en [`operations/CI-CD-Y-VERSIONADO.md`](../operations/CI-CD-Y-VERSIONADO.md).
+
+### 2.9 Decisiones pendientes que no bloquean el código
 
 Estas no bloquean a nadie, pero hay que cerrarlas antes del 10-dic:
 
