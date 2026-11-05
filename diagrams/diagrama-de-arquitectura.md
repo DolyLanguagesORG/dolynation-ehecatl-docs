@@ -13,7 +13,8 @@ flowchart TB
         FE_ROUTES["App Router<br/>páginas y componentes"]
         FE_I18N["i18n en/fr/es/it"]
         FE_STATE["Estado de sesión<br/>tokens en memoria"]
-        FE_API["Cliente HTTP<br/>src/lib/api.ts"]
+        FE_API["Cliente HTTP<br/>src/lib/http-client.ts"]
+        FE_PROXY["Proxy de API<br/>/api/v1/*<br/>route.ts"]
     end
 
     subgraph BACK["dolynation-atl-back · NestJS 11"]
@@ -56,10 +57,11 @@ flowchart TB
     FE_ROUTES --> FE_I18N
     FE_ROUTES --> FE_STATE
     FE_STATE --> FE_API
-    FE_API -->|"REST /api/v1 + JWT"| M_AUTH
-    FE_API --> M_USERS
-    FE_API --> M_READ
-    FE_API --> M_HEALTH
+    FE_API -->|"REST /api/v1 (mismo origen)"| FE_PROXY
+    FE_PROXY -->|"REST /api/v1 + JWT<br/>BACKEND_INTERNAL_URL"| M_AUTH
+    FE_PROXY --> M_USERS
+    FE_PROXY --> M_READ
+    FE_PROXY --> M_HEALTH
     C_GUARD -.->|"protege"| FE_API
     M_AUTH --> DB_ACCESS
     M_USERS --> DB_ACCESS
@@ -84,7 +86,7 @@ flowchart TB
     classDef ext fill:#fdecec,stroke:#c0392b,color:#111111
     classDef data fill:#f5f5f5,stroke:#555555,color:#111111
 
-    class FE_ROUTES,FE_I18N,FE_STATE,FE_API front
+    class FE_ROUTES,FE_I18N,FE_STATE,FE_API,FE_PROXY front
     class M_AUTH,M_USERS,M_READ,M_IA,M_HEALTH,C_ENV,C_GUARD,C_ENVELOPE,C_ERRORS,C_VERSION,DB_ACCESS back
     class COMPOSE,SCHEMA,CI infra
     class ANT,U2 docs

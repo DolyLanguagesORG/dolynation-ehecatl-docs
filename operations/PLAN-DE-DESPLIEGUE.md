@@ -16,9 +16,40 @@ implementación todavía no está hecha.
 | Servidor | **Uno solo** aloja los 3 entornos (por directorio y puertos) |
 | Puertos | **≥ 55000** y < 65535 |
 | Secretos | **GitHub Environments** (`desarrollo`, `staging`, `produccion`); ningún valor sensible en el repo |
-| Llave SSH | **Sin passphrase**; se restringe en el servidor (`authorized_keys` / usuario dedicado) |
+| Llave SSH | **Con passphrase**, cargada en un **agente SSH** durante el job (el runner no es interactivo) |
+| Usuario de despliegue | **`ddeploy`**, sin sudo ni shell interactivo; su `authorized_keys` usa `restrict` (sin forwarding, sin PTY) |
+| Publicación | **nginx** delante, con **Origin Certificate** de Cloudflare. Los contenedores escuchan **solo en `127.0.0.1`** |
 | Merge | **Solo squash** (ya forzado por los rulesets) |
 | `rc-<version>` | **No es un entorno**: rama/estado efímero y *single-flight* |
+
+### El servidor de desarrollo
+
+| Dato | Valor |
+| --- | --- |
+| IP | `141.148.148.45` |
+| Sistema | Ubuntu 24.04.5, Docker 29.9.1, Compose v5.6.0, nginx 1.24.0 |
+| Raíz de los repos | `/srv/doly/dev` (los tres repos, hermanos) |
+| Red de Docker | `doly-dev-net` (definida en `docker-compose.dev.yml`) |
+| Puertos | `57010` (DB), `57011` (backend), `57012` (frontend), **solo en `127.0.0.1`** |
+| Proxy | nginx en `80` (redirige) y `443` (Cloudflare) |
+| DNS | `devweb.yacaterkos.tech` → frontend, `devapi.yacaterkos.tech` → API |
+
+> El `compose` de desarrollo vive **solo** en `dolynation-tlalli-infra` y
+> levanta los tres contenedores a la vez. No hay un compose por repositorio:
+> el `PLAN-DE-DESPLIEGUE.md` anterior lo contemplaba, pero el modelo real es
+> un compose central en infra que monta `../dolynation-atl-back` y
+> `../dolynation-tonatiuh-front`.
+
+### TLS
+
+Cloudflare gestiona el TLS con el navegador. El tramo Cloudflare → origen va
+cifrado con un **Origin Certificate**, que solo es válido entre Cloudflare y
+el servidor: el navegador nunca negocia TLS contra el origen y el certificado
+no sale del servidor. El CSR se genera en el servidor y se emite en el panel
+de Cloudflare.
+
+Detalle operativo en
+[`nginx/README.md`](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/blob/develop/nginx/README.md).
 
 ## Arquitectura
 
