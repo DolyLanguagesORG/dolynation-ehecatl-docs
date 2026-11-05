@@ -32,7 +32,7 @@ implementación todavía no está hecha.
 | Red de Docker | `doly-dev-net` (definida en `docker-compose.dev.yml`) |
 | Puertos | `57010` (DB), `57011` (backend), `57012` (frontend), **solo en `127.0.0.1`** |
 | Proxy | nginx en `80` (redirige) y `443` (Cloudflare) |
-| DNS | `devweb.yakatercos.tech` → frontend, `devapi.yakatercos.tech` → API |
+| DNS | `devweb.yacaterkos.tech` → frontend, `devapi.yacaterkos.tech` → API |
 
 > El `compose` de desarrollo vive **solo** en `dolynation-tlalli-infra` y
 > levanta los tres contenedores a la vez. No hay un compose por repositorio:
