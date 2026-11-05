@@ -53,6 +53,11 @@ tags**: el tag nace al llegar a `main`. El detalle del pipeline está en
 repositorio y la fecha de la entrega. Sirve para saber de un vistazo si los
 cuatro repos van juntos o si uno se quedó atrás.
 
+> **El manifiesto lo actualiza una persona**, en el PR de la release: ningún
+> workflow lo modifica, porque no puede escribir sobre una rama protegida. Si
+> se olvida, el manifiesto se queda en la versión anterior mientras los tags
+> avanzan, y deja de reflejar la realidad.
+
 ## El pull request de la release
 
 Antes de mergear `develop` → `main`, el pull request tiene que subir la versión
@@ -89,6 +94,14 @@ La lista de tipos es la misma de [commits.md](./commits.md). El título del PR
 lo valida el check `pr-title` de CI **antes** de poder mergear, así que un
 título inválido nunca llega a la release.
 
+> **El bump se calcula con TODOS los commits del ciclo, no solo con el último.**
+> Como los merges son squash, el subject de cada commit es el título de su PR.
+> Si un ciclo incluye un `feat` y el **último** PR fusionado fue un `chore`, el
+> release se publica como `patch` y la funcionalidad queda numerada como un
+> ajuste menor. El workflow recorre `$current..HEAD` completo para evitarlo.
+> Este fix está en los PRs #59 (backend), #33 (frontend) y #32 (infra); ver
+> `infra#7` para el detalle.
+
 ## Línea de tiempo del proyecto
 
 | Versión  | Significado                                                        |
@@ -96,6 +109,30 @@ título inválido nunca llega a la release.
 | `v0.1.0` | Primer release.                                                      |
 | `v0.x.y` | Iteración durante el desarrollo. Cada merge a `main` bumpea.         |
 | `v1.0.0` | Release final del entregable de diciembre.                          |
+
+## Publicar una versión exacta
+
+A veces hace falta publicar una versión concreta y no la que saldría del
+cálculo: el caso claro es la **entrega final**, donde los cuatro repositorios
+tienen que pasar a `v1.0.0` el mismo día.
+
+Para eso el workflow acepta un input `version`:
+
+```bash
+gh workflow run release.yml -f version=1.0.0
+```
+
+- Tiene **prioridad sobre el cálculo del bump**: si se indica `version`, no se
+  calcula nada.
+- Se valida contra el formato `X.Y.Z`; si no lo cumple, el workflow falla.
+- Se **rechaza publicar una versión anterior** a la actual, para no romper el
+  orden de las releases.
+- La versión sigue teniendo que coincidir con la declarada en el repositorio
+  (`package.json` o `CHANGELOG.md`), igual que en el flujo automático.
+
+> **Los cuatro repositorios no se versionan a la vez.** Cada uno tiene su
+> `release.yml` y su propio tag. Para la entrega hay que correr el workflow en
+> los cuatro y comprobar que `versions.yml` refleja los cuatro tags.
 
 ## Forzar un bump
 
@@ -133,6 +170,29 @@ Al llegar el merge a `main`, `release.yml` calcula la versión a partir de los
 commits, **comprueba que el repositorio declare esa misma versión**, crea el
 tag anotado y publica el GitHub Release con las notas. Si no coincide, la
 release se detiene y avisa de qué archivo hay que corregir.
+
+### La entrega final (`v1.0.0`)
+
+La entrega es el caso en que la versión no sale del cálculo, sino que se
+indica a mano. En los cuatro repositorios:
+
+```bash
+# 1. En cada repo, subir la versión y la sección del changelog
+#    backend y frontend:  npm version 1.0.0 --no-git-tag-version
+#    infra y docs:         añadir "## [1.0.0] - 2026-12-10" al CHANGELOG.md
+#    infra:                versions.yml con los cuatro tags en 1.0.0
+
+# 2. Mergear develop -> main (un PR por repositorio)
+
+# 3. Si el cálculo no dio v1.0.0, forzar la versión exacta
+gh workflow run release.yml -f version=1.0.0
+```
+
+El orden importa: **primero el manifiesto** (`versions.yml` en infra), porque
+es lo que dice qué versión va en cada repositorio.
+
+> Los cuatro repositorios **no se versionan a la vez**: cada uno crea su tag
+> en su propio run. Hay que comprobar los cuatro al terminar.
 
 ## Notas
 

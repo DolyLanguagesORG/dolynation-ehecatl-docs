@@ -89,8 +89,13 @@ Máximo 50 caracteres en total.
   (ver [los checks de CI](#los-checks-de-ci-que-bloquean-el-merge)).
 - Requiere **1 aprobación** de cualquier persona con acceso al repositorio.
   Los `CODEOWNERS` se solicitan automáticamente pero **no son obligatorios**
-  (`require_code_owner_reviews: false`), ver
+  (`require_code_owner_review: false`), ver
   [FLUJO-DE-TRABAJO.md](../operations/FLUJO-DE-TRABAJO.md#codeowners)).
+- **Quien abre el PR no puede aprobarlo.** `require_last_push_approval: true`
+  obliga a que la aprobación sea posterior al último push, y
+  `dismiss_stale_reviews_on_push: true` la descarta si el PR se vuelve a
+  actualizar. Así, aunque abras un PR y seas code owner de la ruta tocada,
+  necesita a otra persona del equipo.
 - **Prohibido el push directo**: siempre por PR.
 - Solo **squash-merge**, para mantener historia lineal.
 - No se permiten force-pushes ni deleciones.

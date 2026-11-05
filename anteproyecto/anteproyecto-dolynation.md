@@ -18,33 +18,33 @@ José Elías Galarza Pedroza
 # **Índice**
 
 - [DolyNation](#dolynation)
-- [1. Título del proyecto](#1-t%C3%ADtulo-del-proyecto)
+- [1. Título del proyecto](#1-título-del-proyecto)
 - [2. Planteamiento del problema](#2-planteamiento-del-problema)
-- [3. Justificación](#3-justificaci%C3%B3n)
+- [3. Justificación](#3-justificación)
 - [4. Objetivo general](#4-objetivo-general)
-- [5. Objetivos específicos](#5-objetivos-espec%C3%ADficos)
+- [5. Objetivos específicos](#5-objetivos-específicos)
 - [6. Alcance del proyecto](#6-alcance-del-proyecto)
-  - [Registro y autenticación](#registro-y-autenticaci%C3%B3n)
-  - [Selección de idioma](#selecci%C3%B3n-de-idioma)
+  - [Registro y autenticación](#registro-y-autenticación)
+  - [Selección de idioma](#selección-de-idioma)
   - [Contenido por niveles](#contenido-por-niveles)
   - [Lecturas](#lecturas)
-  - [Comprensión lectora](#comprensi%C3%B3n-lectora)
-  - [Análisis contextual de vocabulario mediante inteligencia artificial](#an%C3%A1lisis-contextual-de-vocabulario-mediante-inteligencia-artificial)
-  - [## Sistema de rachas](#sistema-de-rachas)
+  - [Comprensión lectora](#comprensión-lectora)
+  - [Análisis contextual de vocabulario mediante inteligencia artificial](#análisis-contextual-de-vocabulario-mediante-inteligencia-artificial)
+  - [Sistema de rachas](#sistema-de-rachas)
   - [Seguimiento del progreso](#seguimiento-del-progreso)
 - [7. Limitaciones](#7-limitaciones)
-- [8. Producto Mínimo Viable (MVP).](#8.-producto-m%C3%ADnimo-viable-%28mvp%29.).)
-- [9. Requerimientos funcionales y no funcionales](#9.-requerimientos-funcionales-y-no-funcionales)
-  - [9.1. Requerimientos funcionales](#9.1.-requerimientos-funcionales)
-  - [9.2. Requerimientos no funcionales](#9.2.-requerimientos-no-funcionales)
-  - [## 10. Análisis de riesgo](#10.-an%C3%A1lisis-de-riesgo)
-- [11. Elección de metodología y roles del equipo](#11.-elecci%C3%B3n-de-metodolog%C3%ADa-y-roles-del-equipo)
-  - [12. Separación del proyecto en tareas](#12.-separaci%C3%B3n-del-proyecto-en-tareas)
-- [14. Elección de estructura web y tecnologías.](#14.-elecci%C3%B3n-de-estructura-web-y-tecnolog%C3%ADas.)
-- [16. Selección de patrones de diseño.](#16.-selecci%C3%B3n-de-patrones-de-dise%C3%B1o.)
-  - [## 16.1. Diagramas del sistema](#16.1.-diagramas-del-sistema)
-  - [17. Wireframes.](#17.-wireframes.)
-  - [18. Fuentes.](#18.-fuentes.)
+- [8. Producto Mínimo Viable (MVP).](#8-producto-mínimo-viable-mvp).)
+- [9. Requerimientos funcionales y no funcionales](#9-requerimientos-funcionales-y-no-funcionales)
+  - [9.1. Requerimientos funcionales](#91-requerimientos-funcionales)
+  - [9.2. Requerimientos no funcionales](#92-requerimientos-no-funcionales)
+  - [10. Análisis de riesgo](#10-análisis-de-riesgo)
+- [11. Elección de metodología y roles del equipo](#11-elección-de-metodología-y-roles-del-equipo)
+  - [12. Separación del proyecto en tareas](#12-separación-del-proyecto-en-tareas)
+- [14. Elección de estructura web y tecnologías.](#14-elección-de-estructura-web-y-tecnologías)
+- [16. Selección de patrones de diseño.](#16-selección-de-patrones-de-diseño)
+  - [16.1. Diagramas del sistema](#161-diagramas-del-sistema)
+  - [17. Wireframes.](#17-wireframes)
+  - [18. Fuentes.](#18-fuentes)
 
 # **1\. Título del proyecto**
 
@@ -144,7 +144,7 @@ Además, dentro del diccionario el usuario podrá reproducir en audio la pronunc
 
 ## 
 
-## **Sistema de rachas** {#sistema-de-rachas}
+## **Sistema de rachas**
 
 Para incentivar el uso constante de la aplicación, el sistema incluirá un sistema de rachas diarias que funcionará como mecanismo de motivación y seguimiento, reconociendo la constancia del usuario al utilizar la plataforma día con día. 
 
@@ -173,7 +173,7 @@ El proyecto tendrá determinadas limitaciones durante su primera versión.
 > * La evaluación de comprensión se basa en la calificación por IA de resúmenes redactados por el usuario, y no en preguntas estructuradas (opción múltiple, verdadero/falso, etc.), debido a la naturaleza dinámica del contenido generado.  
 > * Las fechas de entrega pueden verse comprometidas por falta de tokens para la IA que generara los textos
 
-# **8\. Producto Mínimo Viable (MVP).** {#8.-producto-mínimo-viable-(mvp).}
+# **8\. Producto Mínimo Viable (MVP).**
 
 El MVP de DolyNation consiste en una plataforma web de aprendizaje de idiomas centrada en la lectura contextualizada y asistida por inteligencia artificial. Está diseñada para ofrecer una experiencia directa donde el usuario rompe con las limitaciones de las aplicaciones tradicionales basadas en ejercicios aislados o de opción múltiple.   
 
@@ -193,11 +193,11 @@ El MVP de DolyNation consiste en una plataforma web de aprendizaje de idiomas ce
 * El usuario escribe con sus propias palabras lo que entendió del texto y lo envía. La inteligencia artificial analiza el escrito evaluando la cobertura de ideas principales, coherencia y precisión.     
 * Como resultado, el usuario recibe una calificación cuantitativa inmediata, junto con observaciones y retroalimentación constructiva para mejorar su desempeño.   
 
-# **9\. Requerimientos funcionales y no funcionales** {#9.-requerimientos-funcionales-y-no-funcionales}
+# **9\. Requerimientos funcionales y no funcionales**
 
-## **9.1. Requerimientos funcionales** {#9.1.-requerimientos-funcionales}
+## **9.1. Requerimientos funcionales**
 
-#### **RF-01. Registro y autenticación de usuarios** {#rf-01.-registro-y-autenticación-de-usuarios}
+#### **RF-01. Registro y autenticación de usuarios**
 
 **Descripción:**  
 El sistema debe permitir a los usuarios registrarse e iniciar sesión mediante un mecanismo de autenticación que permita identificar de forma única a cada usuario y gestionar de manera segura el acceso a la plataforma.
@@ -210,7 +210,7 @@ El sistema debe permitir a los usuarios registrarse e iniciar sesión mediante u
 * Validar las credenciales proporcionadas.  
 * Mantener asociadas las actividades y preferencias a la cuenta correspondiente.
 
-#### **RF-02. Selección de idioma de aprendizaje** {#rf-02.-selección-de-idioma-de-aprendizaje}
+#### **RF-02. Selección de idioma de aprendizaje**
 
 **Descripción:**  
 El sistema debe proporcionar una interfaz que permita al usuario seleccionar manualmente el idioma que desea estudiar entre los idiomas disponibles.
@@ -228,14 +228,14 @@ El idioma seleccionado deberá utilizarse como parámetro para la generación y 
 
 #### 
 
-#### **RF-03. Selección de categorías de interés** {#rf-03.-selección-de-categorías-de-interés}
+#### **RF-03. Selección de categorías de interés**
 
 **Descripción:**  
 El sistema debe permitir al usuario seleccionar o agregar categorías de interés para personalizar las temáticas utilizadas en la generación de contenidos educativos.
 
 Las categorías seleccionadas deberán almacenarse como preferencias del usuario y podrán ser modificadas posteriormente.
 
-#### **RF-04. Selección del nivel de dificultad** {#rf-04.-selección-del-nivel-de-dificultad}
+#### **RF-04. Selección del nivel de dificultad**
 
 Descripción:  
 El sistema debe permitir al usuario seleccionar el nivel de dificultad con el que desea trabajar durante su aprendizaje.
@@ -248,7 +248,7 @@ Niveles disponibles:
 
 El nivel seleccionado deberá utilizarse como parámetro para determinar la complejidad del contenido generado.
 
-#### **RF-05. Generación de contenido educativo personalizado** {#rf-05.-generación-de-contenido-educativo-personalizado}
+#### **RF-05. Generación de contenido educativo personalizado**
 
 **Descripción:**  
 El sistema debe integrar un módulo de inteligencia artificial capaz de generar contenido educativo personalizado de acuerdo con las preferencias y parámetros establecidos por el usuario.
@@ -264,7 +264,7 @@ El sistema debe integrar un módulo de inteligencia artificial capaz de generar 
 
 #### 
 
-#### **RF-06. Configuración de parámetros de generación** {#rf-06.-configuración-de-parámetros-de-generación}
+#### **RF-06. Configuración de parámetros de generación**
 
 **Descripción:**  
 El sistema debe proporcionar una interfaz que permita configurar los parámetros utilizados para generar una lectura educativa.
@@ -277,7 +277,7 @@ El sistema debe proporcionar una interfaz que permita configurar los parámetros
 
 El sistema deberá utilizar estos parámetros como entrada para el proceso de generación mediante inteligencia artificial.
 
-#### **RF-07. Evaluación de comprensión lectora mediante IA** {#rf-07.-evaluación-de-comprensión-lectora-mediante-ia}
+#### **RF-07. Evaluación de comprensión lectora mediante IA**
 
 **Descripción:**  
 El sistema debe permitir al usuario redactar un resumen o explicación libre sobre una lectura realizada y enviarlo para su evaluación mediante inteligencia artificial.
@@ -294,7 +294,7 @@ El sistema debe permitir al usuario redactar un resumen o explicación libre sob
 * Retroalimentación sobre el desempeño.  
 * Observaciones que ayuden al usuario a identificar aspectos que puede mejorar.
 
-#### **RF-08. Consulta de vocabulario contextual** {#rf-08.-consulta-de-vocabulario-contextual}
+#### **RF-08. Consulta de vocabulario contextual**
 
 **Descripción:**  
 El sistema debe permitir al usuario seleccionar palabras u oraciones dentro de una lectura para consultar información relacionada con ellas mediante inteligencia artificial.
@@ -308,7 +308,7 @@ El sistema debe permitir al usuario seleccionar palabras u oraciones dentro de u
 
 El sistema también deberá permitir reproducir mediante audio la pronunciación de la palabra o frase seleccionada.
 
-#### **RF-09. Registro de progreso e historial** {#rf-09.-registro-de-progreso-e-historial}
+#### **RF-09. Registro de progreso e historial**
 
 **Descripción:**  
 El sistema debe registrar y almacenar de forma persistente las actividades realizadas por cada usuario para permitir el seguimiento de su proceso de aprendizaje.
@@ -322,7 +322,7 @@ El sistema debe registrar y almacenar de forma persistente las actividades reali
 * Calificaciones obtenidas.  
 * Fecha de realización de las actividades.
 
-#### **RF-10. Sistema de rachas de aprendizaje** {#rf-10.-sistema-de-rachas-de-aprendizaje}
+#### **RF-10. Sistema de rachas de aprendizaje**
 
 **Descripción:**  
 El sistema debe registrar la actividad diaria del usuario y calcular su racha de aprendizaje con base en los días consecutivos en los que haya realizado actividades dentro de la plataforma.
@@ -333,7 +333,7 @@ El sistema debe registrar la actividad diaria del usuario y calcular su racha de
 * Registro de actividad.  
 * Días consecutivos de aprendizaje.
 
-#### **RF-11. Perfil y preferencias del usuario** {#rf-11.-perfil-y-preferencias-del-usuario}
+#### **RF-11. Perfil y preferencias del usuario**
 
 **Descripción:**  
 El sistema debe proporcionar un módulo de perfil que permita al usuario consultar y administrar la información asociada a su cuenta.
@@ -349,7 +349,7 @@ El sistema debe proporcionar un módulo de perfil que permita al usuario consult
 
 #### 
 
-#### **RF-12. Interfaz de navegación y visualización de contenidos** {#rf-12.-interfaz-de-navegación-y-visualización-de-contenidos}
+#### **RF-12. Interfaz de navegación y visualización de contenidos**
 
 **Descripción:**  
 El sistema debe proporcionar una interfaz web que permita al usuario navegar entre las diferentes funcionalidades de la plataforma y acceder a los contenidos educativos generados.
@@ -363,7 +363,7 @@ El sistema debe proporcionar una interfaz web que permita al usuario navegar ent
 * Progreso e historial.  
 * Perfil y preferencias.
 
-#### **RF-13. Soporte de idiomas** {#rf-13.-soporte-de-idiomas}
+#### **RF-13. Soporte de idiomas**
 
 **Descripción:**  
 El sistema debe proporcionar soporte funcional para los idiomas definidos para la primera versión de la plataforma.
@@ -377,11 +377,11 @@ El sistema debe proporcionar soporte funcional para los idiomas definidos para l
 
 El soporte deberá contemplar la generación y presentación de contenidos educativos correspondientes al idioma seleccionado.
 
-## **9.2. Requerimientos no funcionales** {#9.2.-requerimientos-no-funcionales}
+## **9.2. Requerimientos no funcionales**
 
-### **9.2.1. Usabilidad y accesibilidad** {#9.2.1.-usabilidad-y-accesibilidad}
+### **9.2.1. Usabilidad y accesibilidad**
 
-#### **RNF-01. Interfaz responsiva** {#rnf-01.-interfaz-responsiva}
+#### **RNF-01. Interfaz responsiva**
 
 **Descripción:**  
 La aplicación web debe adaptarse correctamente a diferentes tamaños de pantalla, permitiendo su utilización desde computadoras de escritorio, tabletas y dispositivos móviles.
@@ -390,13 +390,13 @@ La aplicación web debe adaptarse correctamente a diferentes tamaños de pantall
 
 #### 
 
-#### **RNF-02. Facilidad de uso** {#rnf-02.-facilidad-de-uso}
+#### **RNF-02. Facilidad de uso**
 
 **Descripción:**  
 La interfaz debe permitir que un usuario pueda utilizar las funciones principales de la plataforma sin requerir conocimientos técnicos o capacitación previa.  
 Las principales acciones deberán encontrarse claramente identificadas y ser accesibles mediante una navegación consistente.
 
-#### **RNF-03. Diseño centrado en la lectura** {#rnf-03.-diseño-centrado-en-la-lectura}
+#### **RNF-03. Diseño centrado en la lectura**
 
 **Descripción:**  
 La interfaz destinada a la visualización de contenidos educativos debe priorizar la legibilidad y reducir elementos visuales innecesarios que puedan distraer al usuario durante la lectura.  
@@ -408,9 +408,9 @@ La interfaz destinada a la visualización de contenidos educativos debe prioriza
 * Jerarquía visual clara.  
 * Presentación diferenciada de títulos, párrafos y elementos interactivos.
 
-### **9.1.2. Rendimiento** {#9.1.2.-rendimiento}
+### **9.1.2. Rendimiento**
 
-#### **RNF-04. Tiempo de respuesta** {#rnf-04.-tiempo-de-respuesta}
+#### **RNF-04. Tiempo de respuesta**
 
 **Descripción:**  
 El sistema deberá proporcionar una respuesta visual inmediata ante las acciones del usuario y mostrar indicadores de carga durante operaciones que dependan de servicios externos, especialmente aquellas relacionadas con la generación y evaluación mediante inteligencia artificial.  
@@ -424,27 +424,27 @@ Para las operaciones de IA, se deberá establecer posteriormente un tiempo objet
 
 ### 
 
-### **9.1.3. Seguridad** {#9.1.3.-seguridad}
+### **9.1.3. Seguridad**
 
-#### **RNF-05. Almacenamiento seguro de credenciales** {#rnf-05.-almacenamiento-seguro-de-credenciales}
+#### **RNF-05. Almacenamiento seguro de credenciales**
 
 **Descripción:**  
 Las contraseñas de los usuarios no deberán almacenarse en texto plano. El sistema deberá utilizar mecanismos de hashing criptográfico seguros y adecuados para el almacenamiento de credenciales con el uso de **Argon2id**.
 
-#### **RNF-06. Autenticación y autorización de API** {#rnf-06.-autenticación-y-autorización-de-api}
+#### **RNF-06. Autenticación y autorización de API**
 
 **Descripción:**  
 Los endpoints de la API que proporcionen acceso a información privada deberán requerir autenticación y autorización.  
 El sistema deberá garantizar que cada usuario únicamente pueda consultar o modificar la información correspondiente a su propia cuenta, de acuerdo con los permisos establecidos.
 
-#### **RNF-07. Protección de información** {#rnf-07.-protección-de-información}
+#### **RNF-07. Protección de información**
 
 **Descripción:**  
 La información sensible transmitida entre el cliente y el servidor deberá protegerse mediante protocolos de comunicación seguros, como HTTPS/TLS.
 
-### **9.1.4. Escalabilidad** {#9.1.4.-escalabilidad}
+### **9.1.4. Escalabilidad**
 
-#### **RNF-08. Arquitectura modular y desacoplada** {#rnf-08.-arquitectura-modular-y-desacoplada}
+#### **RNF-08. Arquitectura modular y desacoplada**
 
 **Descripción:**  
 El sistema deberá utilizar una arquitectura modular que permita separar las responsabilidades principales de la aplicación y facilite la incorporación de nuevas funcionalidades.  
@@ -464,9 +464,9 @@ El sistema deberá utilizar una arquitectura modular que permita separar las res
 
 ### 
 
-### **9.1.5. Mantenibilidad** {#9.1.5.-mantenibilidad}
+### **9.1.5. Mantenibilidad**
 
-#### **RNF-09. Organización y mantenibilidad del código** {#rnf-09.-organización-y-mantenibilidad-del-código}
+#### **RNF-09. Organización y mantenibilidad del código**
 
 **Descripción:**  
 El código fuente deberá organizarse de manera modular y mantener una separación clara de responsabilidades entre las diferentes capas o componentes del sistema.  
@@ -478,7 +478,7 @@ El código fuente deberá organizarse de manera modular y mantener una separaci�
 * Incorporación de nuevas funcionalidades.  
 * Comprensión del código por parte de otros desarrolladores.
 
-#### **RNF-10. Manejo de errores y servicios externos** {#rnf-10.-manejo-de-errores-y-servicios-externos}
+#### **RNF-10. Manejo de errores y servicios externos**
 
 **Descripción:**  
 El sistema deberá implementar mecanismos de manejo de errores para situaciones relacionadas con servicios externos.
@@ -491,21 +491,21 @@ El sistema deberá implementar mecanismos de manejo de errores para situaciones 
 
 El sistema deberá informar al usuario cuando una operación no pueda completarse y evitar que un fallo de un servicio externo provoque el bloqueo o la interrupción completa de la aplicación.
 
-### **9.1.6. Disponibilidad y confiabilidad** {#9.1.6.-disponibilidad-y-confiabilidad}
+### **9.1.6. Disponibilidad y confiabilidad**
 
-#### **RNF-11. Persistencia de información** {#rnf-11.-persistencia-de-información}
+#### **RNF-11. Persistencia de información**
 
 **Descripción:**  
 La información relacionada con usuarios, preferencias, actividades, resultados, progreso e historial deberá almacenarse de manera persistente para evitar su pérdida durante reinicios o interrupciones del sistema.
 
-#### **RNF-12. Integridad de la información** {#rnf-12.-integridad-de-la-información}
+#### **RNF-12. Integridad de la información**
 
 **Descripción:**  
 El sistema deberá garantizar la consistencia e integridad de la información almacenada, evitando registros duplicados o inconsistentes y manteniendo las relaciones entre usuarios, actividades, contenidos y resultados.
 
 ## 
 
-## **10\. Análisis de riesgo** {#10.-análisis-de-riesgo}
+## **10\. Análisis de riesgo**
 
 *Escala: Probabilidad e Impacto se califican de 1 (muy bajo) a 5 (muy alto). Puntuación \= Probabilidad × Impacto. Nivel de riesgo: Bajo (1–5), Medio (6–10), Alto (11–15), Crítico (16–25).*
 
@@ -528,9 +528,9 @@ El sistema deberá garantizar la consistencia e integridad de la información al
 | R15 | Cambios en políticas o precios de proveedores de IA | 2 | 3 | 6 | Medio | El costo o el acceso al proveedor deja de ser viable para el proyecto | Interfaz de proveedor adaptable, caché por `prompt_hash` y seguimiento del gasto por usuario | ACEPTAR |
 | R16 | Lecturas repetitivas o poco variadas en temática | 3 | 2 | 6 | Medio | El usuario pierde interés por falta de variedad en el contenido | Categorías, dificultades y longitudes configurables, con ampliación temporal de los parámetros disponibles | MITIGAR |
 
-# **11\. Elección de metodología y roles del equipo** {#11.-elección-de-metodología-y-roles-del-equipo}
+# **11\. Elección de metodología y roles del equipo**
 
-### **11.1. Metodología de trabajo** {#11.1.-metodología-de-trabajo}
+### **11.1. Metodología de trabajo**
 
 Para el desarrollo del proyecto **DolyNation** se implementa el marco de trabajo **Scrum** combinado con un flujo de desarrollo guiado por tareas en GitHub (*Issue-Driven Development*). El proyecto se divide en 5 Sprints con fechas estrictas de entrega que abarcan desde el **19 de octubre** hasta el **10 de diciembre** de 2026\. El Sprint 1 se reprogramó al 19 de octubre tras detectarse que su entrega se retrasó, y los sprints 4 y 5 se acortaron para sostener la fecha de entrega de la 1 a 10 de diciembre.
 
@@ -538,7 +538,7 @@ Para el desarrollo del proyecto **DolyNation** se implementa el marco de trabajo
 [`operations/JUSTIFICACION-GITHUB.md`](../operations/JUSTIFICACION-GITHUB.md) y en el
 [ADR-009](../decisions/README.md).
 
-### **11.2. Estructura de roles y responsabilidades** {#11.2.-estructura-de-roles-y-responsabilidades}
+### **11.2. Estructura de roles y responsabilidades**
 
 * **Product Owner:** Sebastián  
   * **Responsabilidades:** Definición y validación de historias de usuario, priorización del backlog de productos, diseño de prompts para los modelos de Inteligencia Artificial y validación de criterios de aceptación de los entregables.  
@@ -551,49 +551,45 @@ Para el desarrollo del proyecto **DolyNation** se implementa el marco de trabajo
 * **Desarrollador Backend (Soporte):** José Elías Galarza Pedroza  
   * **Responsabilidades:** Diseño de DTOs, controladores de base de datos (PostgreSQL), endpoints para perfiles, historial de actividades y módulo administrativo.
 
-## **12\. Separación del proyecto en tareas** {#12.-separación-del-proyecto-en-tareas}
+## **12\. Separación del proyecto en tareas**
 
-El proyecto se gestiona como un conjunto de **issues en GitHub**, uno por entregable, y esa lista es la fuente de verdad. En total hay **70 issues abiertas** repartidas en cuatro repositorios: 33 entregables de producto derivados de los requerimientos funcionales y del MVP, 12 sub-issues que descomponen los entregables grandes, 5 tareas de plataforma de CI/CD y entornos, 3 migraciones de schema y 17 issues de saneamiento creadas en la auditoría del proyecto.
+El proyecto se gestiona como un conjunto de **issues en GitHub**, uno por entregable, y esa lista es la fuente de verdad. En total hay **65 issues abiertas** repartidas en cuatro repositorios: 33 entregables de producto derivados de los requerimientos funcionales y del MVP, 12 sub-issues que descomponen los entregables grandes, 5 tareas de plataforma de CI/CD y entornos, 3 migraciones de schema y 12 issues de saneamiento creadas en la auditoría del proyecto.
 
 Las tareas están divididas por capas técnicas: los desarrolladores backend y frontend trabajan en sus áreas específicas y colaboran en tareas en pareja para la integración de la API con la interfaz de usuario. **Cada issue tiene estado actual, entregables, criterios de aceptación, dependencias, evidencia esperada y fecha objetivo**; el avance se mide en los sub-issues, no en los padres, para no contarlo dos veces.
 
-### **Resumen de distribución de tareas** {#resumen-de-distribución-de-tareas}
+### **Resumen de distribución de tareas**
 
-La columna «Asignaciones» cuenta una vez por persona cada issue que tiene asignada, de modo que una tarea en pareja aparece en las dos. Las 70 issues abiertos suman 85 asignaciones.
+La columna «Asignaciones» cuenta una vez por persona cada issue que tiene asignada, de modo que una tarea en pareja aparece en las dos. Las 68 tareas del cronograma suman 86 asignaciones.
 
 | Persona | Rol | Issues asignadas | En pareja con | Total |
 | :---- | :---- | ---: | :---- | ---: |
-| **Jesús Alberto Villarreal Pérez** | Scrum Master / Dev | 27 | 9 | **27** |
-| **Aozmar Azael García Candela** | Desarrollador Backend | 20 | 7 | **20** |
-| **Juan Antonio Deras Durón** | Desarrollador Frontend | 19 | 6 | **19** |
-| **José Elías Galarza Pedroza** | Desarrollador Backend | 18 | 5 | **18** |
-| **Sebastián Rodríguez** | Product Owner | 1 | — | *Supervisión y validaciones* |
+| **José Elías Galarza Pedroza** | Desarrollador Backend | 20 | 11 | **20** |
+| **Juan Antonio Deras Durón** | Desarrollador Frontend | 18 | 4 | **18** |
+| **Aozmar Azael García Candela** | Desarrollador Backend | 17 | 2 | **17** |
+| **Jesús Alberto Villarreal Pérez** | Scrum Master / Dev | 17 | 4 | **17** |
+| **Sebastián Rodríguez** | Product Owner | 14 | 12 | **14** |
 
-*Nota de reparto:* Jesús concentra la coordinación, las tareas de QA y las de infraestructura, y además las 5 issues de saneamiento de la documentación (`docs#11`-`#15`), que se cierran en la primera semana y no son carga sostenida.
+*Nota de reparto:* Sebastián aparece en 12 tareas, casi todas en pareja, por su rol de validación. Elías concentra el backend de datos (lecturas, evaluación y vocabulario) y Juan el frontend, que es el cuello de botella del plan. Las 5 issues de saneamiento de la documentación (`docs#11`-`#15`) están entregadas en `develop`.
 
 ### 
 
-## **13\. Cronograma de actividades** {#13.-cronograma-de-actividades}
+## **13\. Cronograma de actividades**
 
 [*Referencia visual*](https://github.com/orgs/DolyLanguagesORG/projects/1/views/3)
 
-### **13.1. Hitos del proyecto** {#13.1.-hitos-del-proyecto}
+### **13.1. Hitos del proyecto**
 
-* **Sprint 1 (05/Oct – 18/Oct/2026):** Configuración del repositorio y cimientos. *Cerrado con retraso: se completó el 19/Oct/2026.*  
-* **Sprint 2 (19/Oct – 01/Nov/2026):** Fundamentos: autenticación, perfil y base del frontend.  
+* **Sprint 1 (05/Oct – 08/Nov/2026):** Configuración del repositorio y cimientos. *Venció el 18-Oct y se amplió al 08-Nov para cerrar la documentación pendiente.*  
+* **Sprint 2 (19/Oct – 22/Nov/2026):** Fundamentos: autenticación, perfil y base del frontend. *Venció el 01-Nov y se amplió al 22-Nov para que quepan las tres migraciones de schema y la base del frontend.*  
 * **Sprint 3 (02/Nov – 15/Nov/2026):** Lecturas con IA.  
 * **Sprint 4 (16/Nov – 29/Nov/2026):** Vocabulario, TTS, evaluación y progreso.  
 * **Sprint 5 (30/Nov – 06/Dic/2026):** Calidad, integración y release v1.0.0. Del **07 al 10/Dic/2026**: entrega del *release*, capturas y presentación del proyecto.
 
-### **13.2. Tabla de asignación de tareas y cronograma** {#13.2.-tabla-de-asignación-de-tareas-y-cronograma}
-
-> **Referencia de issues.** Al separar el monorepo en cuatro repos, cada tarea es un issue en su repositorio. El identificador `back#N`, `front#N`, `infra#N` o `docs#N` indica el repo (`dolynation-atl-back`, `dolynation-tonatiuh-front`, `dolynation-tlalli-infra`, `dolynation-ehecatl-docs`) y el número del issue.
+### **13.2. Tabla de asignación de tareas y cronograma**
 
 > **Referencia de issues.** Al separar el monorepo en cuatro repositorios, cada tarea es un issue en su repositorio. El identificador `back#N`, `front#N`, `infra#N` o `docs#N` indica el repo (`dolynation-atl-back`, `dolynation-tonatiuh-front`, `dolynation-tlalli-infra`, `dolynation-ehecatl-docs`) y el número del issue. El tablero con el estado, las fechas y los responsables en vivo está en [el Project de la organización](https://github.com/orgs/DolyLanguagesORG/projects/1/views/3).
 
-> **Referencia de issues.** Al separar el monorepo en cuatro repositorios, cada tarea es un issue en su repositorio. El identificador `back#N`, `front#N`, `infra#N` o `docs#N` indica el repo (`dolynation-atl-back`, `dolynation-tonatiuh-front`, `dolynation-tlalli-infra`, `dolynation-ehecatl-docs`) y el número del issue. El tablero con el estado, las fechas y los responsables en vivo está en [el Project de la organización](https://github.com/orgs/DolyLanguagesORG/projects/1/views/3).
-
-> **Alcance de la entrega.** El desarrollo termina el **06 de diciembre de 2026**; del **07 al 10 de diciembre** se reserva para el *release* `v1.0.0`, las capturas y la presentación.
+> **Alcance de la entrega.** El desarrollo termina el **06 de diciembre de 2026**; del **07 al 10 de diciembre** se reserva para el *release* `v1.0.0`, las capturas y la presentación. El **10 de diciembre es el límite literal** de la entrega; el 06 de diciembre es el corte interno que deja cuatro días de margen.
 
 #### **Sprint 1: Configuración del repositorio y cimientos**
 
@@ -601,14 +597,14 @@ La columna «Asignaciones» cuenta una vez por persona cada issue que tiene asig
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
-| **back#2** | Setup de arquitectura NestJS, conexión a PostgreSQL (Drizzle ORM) y entidad User | Azael | 5 Oct 2026 2026 | 8 Oct 2026 2026 |
-| **back#3** | Servicio de hash criptográfico (Argon2id) y estrategia de autenticación JWT en NestJS | Azael | 9 Oct 2026 2026 | 12 Oct 2026 2026 |
-| **docs#6** | docs(repo): onboarding de Elías, CODEOWNERS y reglas de revisión | Sebastián | 12 Oct 2026 2026 | 15 Oct 2026 2026 |
-| **docs#11** | Sanear el anteproyecto: corregir contradicciones con el código y desajustes de formato | Jesús | 19 Oct 2026 2026 | 19 Oct 2026 2026 |
-| **docs#12** | Revisar los diagramas y corregir los que contradicen el código | Jesús | 19 Oct 2026 2026 | 20 Oct 2026 2026 |
-| **docs#13** | Completar el registro de decisiones (ADR) y documentar las decisiones pendientes | Jesús | 20 Oct 2026 2026 | 20 Oct 2026 2026 |
-| **docs#14** | Unificar el contrato API y alinear las convenciones al código real | Jesús | 20 Oct 2026 2026 | 20 Oct 2026 2026 |
-| **docs#15** | Saneamiento de la configuración de GitHub: milestones, tablero, rulesets e higiene de los repos | Jesús | 20 Oct 2026 2026 | 20 Oct 2026 2026 |
+| **back#2** | Setup de arquitectura NestJS, conexión a PostgreSQL (Drizzle ORM) y entidad User | Azael | 5 Oct 2026 | 8 Oct 2026 |
+| **back#3** | Servicio de hash criptográfico (Argon2id) y estrategia de autenticación JWT en NestJS | Azael | 9 Oct 2026 | 12 Oct 2026 |
+| **docs#6** | docs(repo): onboarding de Elías, CODEOWNERS y reglas de revisión | Sebastián | 12 Oct 2026 | 15 Oct 2026 |
+| **docs#11** | Sanear el anteproyecto: corregir contradicciones con el código y desajustes de formato | Jesús | 19 Oct 2026 | 19 Oct 2026 |
+| **docs#12** | Revisar los diagramas y corregir los que contradicen el código | Jesús | 19 Oct 2026 | 20 Oct 2026 |
+| **docs#13** | Completar el registro de decisiones (ADR) y documentar las decisiones pendientes | Jesús | 20 Oct 2026 | 20 Oct 2026 |
+| **docs#14** | Unificar el contrato API y alinear las convenciones al código real | Jesús | 20 Oct 2026 | 20 Oct 2026 |
+| **docs#15** | Saneamiento de la configuración de GitHub: milestones, tablero, rulesets e higiene de los repos | Jesús | 20 Oct 2026 | 20 Oct 2026 |
 
 #### **Sprint 2: Fundamentos: autenticación, perfil y base del frontend**
 
@@ -616,23 +612,23 @@ La columna «Asignaciones» cuenta una vez por persona cada issue que tiene asig
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
-| **back#4** | DTOs de validación y endpoints de autenticación (/auth/register, /auth/login, /auth/refresh, /auth/logout, /auth/me) | Azael | 19 Oct 2026 2026 | 21 Oct 2026 2026 |
-| **front#2** | Setup de proyecto Next.js con Tailwind CSS, layout base y temas de la interfaz | Juan | 19 Oct 2026 2026 | 24 Oct 2026 2026 |
-| **infra#24** | Runner de migraciones con tabla schema_migrations | Jesús | 19 Oct 2026 2026 | 21 Oct 2026 2026 |
-| **back#19** | Cliente IA: adaptador MiniMax-M3 configurable (interfaz para otros proveedores) | Elías | 21 Oct 2026 2026 | 22 Oct 2026 2026 |
-| **back#7** | Módulo de servicios en NestJS para integración con la API de IA (MiniMax-M3) y arquitectura de prompts | Azael | 22 Oct 2026 2026 | 24 Oct 2026 2026 |
-| **infra#20** | Migración S2: preferencias, categorías, idioma y caché de lecturas | Jesús | 22 Oct 2026 2026 | 24 Oct 2026 2026 |
-| **back#5** | Endpoints para consultar y actualizar el perfil de usuario (/user/profile) | Elías | 23 Oct 2026 2026 | 25 Oct 2026 2026 |
-| **back#20** | Arquitectura de prompts versionados por idioma, categoría, dificultad y longitud | Azael | 25 Oct 2026 2026 | 27 Oct 2026 2026 |
-| **front#22** | Base de i18n con next-intl y diccionarios en inglés, francés, español e italiano | Juan | 25 Oct 2026 2026 | 26 Oct 2026 2026 |
-| **infra#6** | Definir entornos (dev/staging/prod), secretos y acceso SSH | Jesús | 25 Oct 2026 2026 | 26 Oct 2026 2026 |
-| **back#6** | Pruebas de integración del Sprint 1, corrección de bugs y revisión de PRs hacia develop | Elías + Sebastián | 26 Oct 2026 2026 | 28 Oct 2026 2026 |
-| **front#24** | Sistema de diseño: tokens de marca, componentes base y Flowbite | Juan | 27 Oct 2026 2026 | 29 Oct 2026 2026 |
-| **back#8** | Endpoints para selección y guardado de categorías e idiomas (/settings/categories, /settings/languages) | Azael | 28 Oct 2026 2026 | 30 Oct 2026 2026 |
-| **back#46** | /health/ready debe validar la conexión real con PostgreSQL | Elías | 29 Oct 2026 2026 | 29 Oct 2026 2026 |
-| **back#47** | Separar test:unit de test:e2e para que npm run verify no exija base de datos | Elías | 30 Oct 2026 2026 | 30 Oct 2026 2026 |
-| **front#3** | Maquetado e integración de vistas de login y registro en Next.js | Juan | 30 Oct 2026 2026 | 1 Nov 2026 2026 |
-| **back#41** | Verificar y completar la documentación OpenAPI/Scalar del Sprint 1 | Azael | 31 Oct 2026 2026 | 31 Oct 2026 2026 |
+| **back#4** | DTOs de validación y endpoints de autenticación (/auth/register, /auth/login, /auth/refresh, /auth/logout, /auth/me) | Azael | 19 Oct 2026 | 21 Oct 2026 |
+| **front#2** | Setup de proyecto Next.js con Tailwind CSS, layout base y temas de la interfaz | Juan | 19 Oct 2026 | 24 Oct 2026 |
+| **infra#24** | Runner de migraciones con tabla schema_migrations | Jesús | 19 Oct 2026 | 21 Oct 2026 |
+| **back#19** | Cliente IA: adaptador MiniMax-M3 configurable (interfaz para otros proveedores) | Elías | 21 Oct 2026 | 22 Oct 2026 |
+| **back#7** | Módulo de servicios en NestJS para integración con la API de IA (MiniMax-M3) y arquitectura de prompts | Azael | 22 Oct 2026 | 24 Oct 2026 |
+| **infra#20** | Migración S2: preferencias, categorías, idioma y caché de lecturas | Jesús | 22 Oct 2026 | 24 Oct 2026 |
+| **back#5** | Endpoints para consultar y actualizar el perfil de usuario (/user/profile) | Elías | 23 Oct 2026 | 25 Oct 2026 |
+| **back#20** | Arquitectura de prompts versionados por idioma, categoría, dificultad y longitud | Azael | 25 Oct 2026 | 27 Oct 2026 |
+| **front#22** | Base de i18n con next-intl y diccionarios en inglés, francés, español e italiano | Juan | 25 Oct 2026 | 26 Oct 2026 |
+| **infra#6** | Definir entornos (dev/staging/prod), secretos y acceso SSH | Jesús | 25 Oct 2026 | 26 Oct 2026 |
+| **back#6** | Pruebas de integración del Sprint 1, corrección de bugs y revisión de PRs hacia develop | Elías + Sebastián | 26 Oct 2026 | 28 Oct 2026 |
+| **front#24** | Sistema de diseño: tokens de marca, componentes base y Flowbite | Juan | 27 Oct 2026 | 29 Oct 2026 |
+| **back#8** | Endpoints para selección y guardado de categorías e idiomas (/settings/categories, /settings/languages) | Azael | 28 Oct 2026 | 30 Oct 2026 |
+| **back#46** | /health/ready debe validar la conexión real con PostgreSQL | Elías | 29 Oct 2026 | 29 Oct 2026 |
+| **back#47** | Separar test:unit de test:e2e para que npm run verify no exija base de datos | Elías | 30 Oct 2026 | 30 Oct 2026 |
+| **front#3** | Maquetado e integración de vistas de login y registro en Next.js | Juan | 30 Oct 2026 | 1 Nov 2026 |
+| **back#41** | Verificar y completar la documentación OpenAPI/Scalar del Sprint 1 | Azael | 31 Oct 2026 | 31 Oct 2026 |
 
 #### **Sprint 3: Lecturas con IA**
 
@@ -640,16 +636,16 @@ La columna «Asignaciones» cuenta una vez por persona cada issue que tiene asig
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
-| **back#9** | Servicio de caché para respuestas de lectura con parámetros equivalentes (RNF-04) | Elías | 2 Nov 2026 2026 | 4 Nov 2026 2026 |
-| **front#4** | Vista del perfil de usuario e integración con el estado de sesión en Next.js | Juan | 2 Nov 2026 2026 | 3 Nov 2026 2026 |
-| **front#5** | Formulario de selección de parámetros de estudio (idioma, categoría, dificultad, longitud) en Next.js | Juan | 4 Nov 2026 2026 | 6 Nov 2026 2026 |
-| **back#21** | Manejo de errores, timeouts y modo degradado del proveedor IA (implementación) | Azael | 5 Nov 2026 2026 | 6 Nov 2026 2026 |
-| **back#43** | Adaptador de TTS con MiniMax y sus variables de entorno | Azael | 7 Nov 2026 2026 | 8 Nov 2026 2026 |
-| **front#6** | Visor inmersivo de lectura (diseño enfocado en la legibilidad) en Next.js | Juan | 7 Nov 2026 2026 | 10 Nov 2026 2026 |
-| **back#10** | Endpoint de generación de lectura (POST /readings) basado en parámetros | Elías + Azael | 9 Nov 2026 2026 | 11 Nov 2026 2026 |
-| **back#45** | Protección contra prompt injection en generación y evaluación | Azael | 12 Nov 2026 2026 | 13 Nov 2026 2026 |
-| **front#7** | Conexión del flujo completo: formulario de parámetros → generación IA → visor | Elías + Sebastián + Juan | 12 Nov 2026 2026 | 14 Nov 2026 2026 |
-| **front#23** | Base de pruebas del frontend: Vitest, Playwright y jobs de CI | Juan | 15 Nov 2026 2026 | 15 Nov 2026 2026 |
+| **back#9** | Servicio de caché para respuestas de lectura con parámetros equivalentes (RNF-04) | Elías | 2 Nov 2026 | 4 Nov 2026 |
+| **front#4** | Vista del perfil de usuario e integración con el estado de sesión en Next.js | Juan | 2 Nov 2026 | 3 Nov 2026 |
+| **front#5** | Formulario de selección de parámetros de estudio (idioma, categoría, dificultad, longitud) en Next.js | Juan | 4 Nov 2026 | 6 Nov 2026 |
+| **back#21** | Manejo de errores, timeouts y modo degradado del proveedor IA (implementación) | Azael | 5 Nov 2026 | 6 Nov 2026 |
+| **back#43** | Adaptador de TTS con MiniMax y sus variables de entorno | Azael | 7 Nov 2026 | 8 Nov 2026 |
+| **front#6** | Visor inmersivo de lectura (diseño enfocado en la legibilidad) en Next.js | Juan | 7 Nov 2026 | 10 Nov 2026 |
+| **back#10** | Endpoint de generación de lectura (POST /readings) basado en parámetros | Elías + Azael | 9 Nov 2026 | 11 Nov 2026 |
+| **back#45** | Protección contra prompt injection en generación y evaluación | Azael | 12 Nov 2026 | 13 Nov 2026 |
+| **front#7** | Conexión del flujo completo: formulario de parámetros → generación IA → visor | Elías + Sebastián + Juan | 12 Nov 2026 | 14 Nov 2026 |
+| **front#23** | Base de pruebas del frontend: Vitest, Playwright y jobs de CI | Juan | 15 Nov 2026 | 15 Nov 2026 |
 
 #### **Sprint 4: Vocabulario, TTS, evaluación y progreso**
 
@@ -657,23 +653,23 @@ La columna «Asignaciones» cuenta una vez por persona cada issue que tiene asig
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
-| **back#11** | Endpoint de vocabulario contextual (significado, definición, ejemplos, oración original) y TTS | Azael | 16 Nov 2026 2026 | 17 Nov 2026 2026 |
-| **front#8** | Captura e interacción de selección de texto dentro del visor de lectura en Next.js | Juan | 16 Nov 2026 2026 | 18 Nov 2026 2026 |
-| **infra#21** | Migración S3: evaluaciones y vocabulario contextual | Jesús | 16 Nov 2026 2026 | 18 Nov 2026 2026 |
-| **back#12** | Servicio de evaluación y calificación por PNL en NestJS (cobertura, precisión, coherencia) con feedback | Azael | 18 Nov 2026 2026 | 20 Nov 2026 2026 |
-| **infra#22** | Migración S4: rol de administrador en users | Jesús | 19 Nov 2026 2026 | 20 Nov 2026 2026 |
-| **back#13** | Endpoint de evaluación de resumen (POST /readings/{id}/evaluate) | Azael | 21 Nov 2026 2026 | 22 Nov 2026 2026 |
-| **infra#26** | Endurecer docker-compose.prod.yml: red interna, healthchecks, proxy TLS y límites | Jesús | 21 Nov 2026 2026 | 23 Nov 2026 2026 |
-| **back#17** | Endpoints administrativos de categorías globales y supervisión de usuarios (/admin/categories, /admin/users) | Elías | 23 Nov 2026 2026 | 24 Nov 2026 2026 |
-| **back#22** | Motor de puntuación por cobertura y precisión semántica | Azael | 23 Nov 2026 2026 | 24 Nov 2026 2026 |
-| **front#10** | Componente de área de redacción libre de resumen y envío de evaluación en Next.js | Elías + Sebastián + Juan | 23 Nov 2026 2026 | 25 Nov 2026 2026 |
-| **infra#27** | Pipeline de build de imágenes y despliegue por SHA con rollback | Jesús | 24 Nov 2026 2026 | 26 Nov 2026 2026 |
-| **back#15** | Lógica de cálculo de racha diaria (días consecutivos de actividad) y asignación de puntos en NestJS | Elías | 25 Nov 2026 2026 | 26 Nov 2026 2026 |
-| **back#23** | Cálculo de coherencia y construcción del feedback | Elías | 25 Nov 2026 2026 | 25 Nov 2026 2026 |
-| **back#44** | Endpoint de TTS: audio corto de palabra o frase seleccionada | Azael | 26 Nov 2026 2026 | 27 Nov 2026 2026 |
-| **front#12** | Vista del panel administrativo básico en Next.js | Elías + Sebastián + Juan | 26 Nov 2026 2026 | 27 Nov 2026 2026 |
-| **back#16** | Endpoints de consulta de historial de actividades (lecturas, palabras consultadas, calificaciones) | Elías | 27 Nov 2026 2026 | 28 Nov 2026 2026 |
-| **front#9** | Componente emergente (pop-up) de diccionario contextual e integración de audio corto (TTS) | Juan | 28 Nov 2026 2026 | 29 Nov 2026 2026 |
+| **back#11** | Endpoint de vocabulario contextual (significado, definición, ejemplos, oración original) y TTS | Azael | 16 Nov 2026 | 17 Nov 2026 |
+| **front#8** | Captura e interacción de selección de texto dentro del visor de lectura en Next.js | Juan | 16 Nov 2026 | 18 Nov 2026 |
+| **infra#21** | Migración S3: evaluaciones y vocabulario contextual | Jesús | 16 Nov 2026 | 18 Nov 2026 |
+| **back#12** | Servicio de evaluación y calificación por PNL en NestJS (cobertura, precisión, coherencia) con feedback | Azael | 18 Nov 2026 | 20 Nov 2026 |
+| **infra#22** | Migración S4: rol de administrador en users | Jesús | 19 Nov 2026 | 20 Nov 2026 |
+| **back#13** | Endpoint de evaluación de resumen (POST /readings/{id}/evaluate) | Azael | 21 Nov 2026 | 22 Nov 2026 |
+| **infra#26** | Endurecer docker-compose.prod.yml: red interna, healthchecks, proxy TLS y límites | Jesús | 21 Nov 2026 | 23 Nov 2026 |
+| **back#17** | Endpoints administrativos de categorías globales y supervisión de usuarios (/admin/categories, /admin/users) | Elías | 23 Nov 2026 | 24 Nov 2026 |
+| **back#22** | Motor de puntuación por cobertura y precisión semántica | Azael | 23 Nov 2026 | 24 Nov 2026 |
+| **front#10** | Componente de área de redacción libre de resumen y envío de evaluación en Next.js | Elías + Sebastián + Juan | 23 Nov 2026 | 25 Nov 2026 |
+| **infra#27** | Pipeline de build de imágenes y despliegue por SHA con rollback | Jesús | 24 Nov 2026 | 26 Nov 2026 |
+| **back#15** | Lógica de cálculo de racha diaria (días consecutivos de actividad) y asignación de puntos en NestJS | Elías | 25 Nov 2026 | 26 Nov 2026 |
+| **back#23** | Cálculo de coherencia y construcción del feedback | Elías | 25 Nov 2026 | 25 Nov 2026 |
+| **back#44** | Endpoint de TTS: audio corto de palabra o frase seleccionada | Azael | 26 Nov 2026 | 27 Nov 2026 |
+| **front#12** | Vista del panel administrativo básico en Next.js | Elías + Sebastián + Juan | 26 Nov 2026 | 27 Nov 2026 |
+| **back#16** | Endpoints de consulta de historial de actividades (lecturas, palabras consultadas, calificaciones) | Elías | 27 Nov 2026 | 28 Nov 2026 |
+| **front#9** | Componente emergente (pop-up) de diccionario contextual e integración de audio corto (TTS) | Juan | 28 Nov 2026 | 29 Nov 2026 |
 
 #### **Sprint 5: Calidad, integración y release v1.0.0**
 
@@ -681,24 +677,24 @@ La columna «Asignaciones» cuenta una vez por persona cada issue que tiene asig
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
-| **back#14** | Pruebas del módulo de vocabulario y evaluación de resúmenes por PNL | Elías + Sebastián | 30 Nov 2026 2026 | 1 Dic 2026 2026 |
-| **infra#9** | Auditoría de seguridad: dependencias, secretos y protección de ramas | Sebastián + Jesús | 30 Nov 2026 2026 | 1 Dic 2026 2026 |
-| **back#18** | Pruebas de rendimiento, manejo de errores de la API de IA (modo degradado) y validación de seguridad | Elías + Sebastián | 2 Dic 2026 2026 | 3 Dic 2026 2026 |
-| **back#24** | Pruebas unitarias del motor de evaluación PNL | Elías + Sebastián | 2 Dic 2026 2026 | 2 Dic 2026 2026 |
-| **front#11** | Dashboard de usuario en Next.js (métricas, contador de racha, historial y gráfica de puntos) | Juan | 2 Dic 2026 2026 | 3 Dic 2026 2026 |
-| **infra#25** | Test de paridad entre el schema de Drizzle y el SQL de PostgreSQL | Jesús | 2 Dic 2026 2026 | 2 Dic 2026 2026 |
-| **back#27** | Validación de seguridad (auth, validación de entrada, rate limiting) | Elías + Sebastián | 4 Dic 2026 2026 | 5 Dic 2026 2026 |
-| **front#13** | Pruebas de usabilidad y revisión de diseño responsivo (móvil/desktop) | Sebastián + Juan | 4 Dic 2026 2026 | 4 Dic 2026 2026 |
-| **front#14** | Tarjetas de métricas y contador de racha en el dashboard | Juan | 4 Dic 2026 2026 | 4 Dic 2026 2026 |
-| **infra#3** | Revisión general de código, limpieza de endpoints y merge a develop | Sebastián + Jesús | 4 Dic 2026 2026 | 5 Dic 2026 2026 |
-| **front#15** | Gráfica de puntos por día | Juan | 5 Dic 2026 2026 | 5 Dic 2026 2026 |
-| **back#25** | Pruebas de carga y latencia de endpoints críticos | Elías + Jesús | 6 Dic 2026 2026 | 6 Dic 2026 2026 |
-| **back#26** | Verificación E2E del modo degradado ante fallos de la API de IA | Elías + Azael | 6 Dic 2026 2026 | 6 Dic 2026 2026 |
-| **front#16** | Tabla de historial de actividad con paginación | Juan | 6 Dic 2026 2026 | 6 Dic 2026 2026 |
-| **infra#4** | Creación del pull request final de develop hacia main, tagging v1.0.0 y verificación de CI/CD | Sebastián + Jesús | 7 Dic 2026 2026 | 7 Dic 2026 2026 |
-| **docs#3** | Preparación de la documentación final del repositorio, capturas del sistema y presentación del proyecto | Sebastián | 8 Dic 2026 2026 | 10 Dic 2026 2026 |
+| **back#14** | Pruebas del módulo de vocabulario y evaluación de resúmenes por PNL | Elías + Sebastián | 30 Nov 2026 | 1 Dic 2026 |
+| **infra#9** | Auditoría de seguridad: dependencias, secretos y protección de ramas | Sebastián + Jesús | 30 Nov 2026 | 1 Dic 2026 |
+| **back#18** | Pruebas de rendimiento, manejo de errores de la API de IA (modo degradado) y validación de seguridad | Elías + Sebastián | 2 Dic 2026 | 3 Dic 2026 |
+| **back#24** | Pruebas unitarias del motor de evaluación PNL | Elías + Sebastián | 2 Dic 2026 | 2 Dic 2026 |
+| **front#11** | Dashboard de usuario en Next.js (métricas, contador de racha, historial y gráfica de puntos) | Juan | 2 Dic 2026 | 3 Dic 2026 |
+| **infra#25** | Test de paridad entre el schema de Drizzle y el SQL de PostgreSQL | Jesús | 2 Dic 2026 | 2 Dic 2026 |
+| **back#27** | Validación de seguridad (auth, validación de entrada, rate limiting) | Elías + Sebastián | 4 Dic 2026 | 5 Dic 2026 |
+| **front#13** | Pruebas de usabilidad y revisión de diseño responsivo (móvil/desktop) | Sebastián + Juan | 4 Dic 2026 | 4 Dic 2026 |
+| **front#14** | Tarjetas de métricas y contador de racha en el dashboard | Juan | 4 Dic 2026 | 4 Dic 2026 |
+| **infra#3** | Revisión general de código, limpieza de endpoints y merge a develop | Sebastián + Jesús | 4 Dic 2026 | 5 Dic 2026 |
+| **front#15** | Gráfica de puntos por día | Juan | 5 Dic 2026 | 5 Dic 2026 |
+| **back#25** | Pruebas de carga y latencia de endpoints críticos | Elías + Jesús | 6 Dic 2026 | 6 Dic 2026 |
+| **back#26** | Verificación E2E del modo degradado ante fallos de la API de IA | Elías + Azael | 6 Dic 2026 | 6 Dic 2026 |
+| **front#16** | Tabla de historial de actividad con paginación | Juan | 6 Dic 2026 | 6 Dic 2026 |
+| **infra#4** | Creación del pull request final de develop hacia main, tagging v1.0.0 y verificación de CI/CD | Sebastián + Jesús | 7 Dic 2026 | 7 Dic 2026 |
+| **docs#3** | Preparación de la documentación final del repositorio, capturas del sistema y presentación del proyecto | Sebastián | 8 Dic 2026 | 10 Dic 2026 |
 
-# **14\. Elección de estructura web y tecnologías.** {#14.-elección-de-estructura-web-y-tecnologías.}
+# **14\. Elección de estructura web y tecnologías.**
 
 Para cumplir con la arquitectura cliente-servidor modular descrita en el proyecto, se ha seleccionado un stack tecnológico moderno, robusto y altamente tipado (TypeScript de extremo a extremo), optimizado para un entorno de despliegue propio (**Self-host**):
 
@@ -713,11 +709,11 @@ Para cumplir con la arquitectura cliente-servidor modular descrita en el proyect
 * **Infraestructura de Despliegue:** **Self-host**  
   * *Justificación:* Entorno autohospedado (mediante contenedores y un servidor dedicado) que otorga control total sobre la seguridad, el rendimiento y la optimización de los costos operativos del sistema..
 
-# **16\. Selección de patrones de diseño.** {#16.-selección-de-patrones-de-diseño.}
+# **16\. Selección de patrones de diseño.**
 
 Para garantizar la mantenibilidad, escalabilidad y una correcta separación de responsabilidades a nivel de código, el desarrollo del sistema se apoyará en los patrones de diseño nativos implementados por los frameworks seleccionados (NestJS y Next.js):
 
-#### **Patrones de Diseño en el Backend (NestJS)** {#patrones-de-diseño-en-el-backend-(nestjs)}
+#### **Patrones de Diseño en el Backend (NestJS)**
 
 NestJS implementa de forma nativa patrones de diseño orientados a la arquitectura de software empresarial y modular:
 
@@ -725,7 +721,7 @@ NestJS implementa de forma nativa patrones de diseño orientados a la arquitectu
 * **Patrón Módulo (Module Pattern):** Organiza el código fuente en bloques lógicos autónomos (como el módulo de usuarios, contenidos y evaluaciones), encapsulando sus respectivos controladores y proveedores de forma independiente.  
 * **Patrón Controlador-Servicio (Controller-Service / Arquitectura en Capas):** Separa claramente las responsabilidades donde los *Controllers* manejan exclusivamente el flujo de peticiones HTTP y los *Services* concentran la lógica de negocio y las reglas de procesamiento.
 
-#### **Patrones de Diseño en el Frontend (Next.js)** {#patrones-de-diseño-en-el-frontend-(next.js)}
+#### **Patrones de Diseño en el Frontend (Next.js)**
 
 Next.js estructura la interfaz de usuario bajo patrones modernos de desarrollo web basados en componentes de React:
 
@@ -735,7 +731,7 @@ Next.js estructura la interfaz de usuario bajo patrones modernos de desarrollo w
 
 ## 
 
-## **16\.1. Diagramas del sistema** {#16.1.-diagramas-del-sistema}
+## **16\.1. Diagramas del sistema**
 
 Los diagramas del sistema están en [`../diagrams/`](../diagrams/README.md),
 escritos en **Mermaid** para que se rendericen de forma nativa en GitHub:
@@ -751,11 +747,7 @@ escritos en **Mermaid** para que se rendericen de forma nativa en GitHub:
 El detalle campo por campo del modelo de datos está en el
 [diccionario de datos](../diagrams/diccionario-de-datos.md).
 
-El índice de evidencias de la Unidad 2 —con el archivo que respalda cada
-criterio de la rúbrica— está en
-[`plan/RUBRICA-UNIDAD-2.md`](../plan/RUBRICA-UNIDAD-2.md).
-
-## **17\. Wireframes.** {#17.-wireframes.}
+## **17\. Wireframes.**
 
 El prototipo y los wireframes se diseñaron en **Figma**:
 
@@ -831,7 +823,7 @@ integración —de dónde sale la imagen, cómo se re-exporta y cómo se mantien
 tokens de diseño— está en
 [`operations/PROTOTIPO-FIGMA.md`](../operations/PROTOTIPO-FIGMA.md).
 
-## **18\. Fuentes.** {#18.-fuentes.}
+## **18\. Fuentes.**
 
 * *Amazon Web Services. (s. f.). Precios de Amazon Polly. [https\://aws.amazon.com/polly/pricing/](https://aws.amazon.com/polly/pricing/)*  
 * *AssemblyAI. (s. f.). AssemblyAI pricing. [https\://www\.assemblyai.com/pricing](https://www.assemblyai.com/pricing)*  
