@@ -730,7 +730,8 @@ NestJS implementa de forma nativa patrones de diseño orientados a la arquitectu
 Next.js estructura la interfaz de usuario bajo patrones modernos de desarrollo web basados en componentes de React:
 
 * **Patrón de Componentes Reutilizables y Composición:** Divide la interfaz visual en piezas modulares, independientes y jerárquicas (botones, tarjetas, vistas de lectura), promoviendo la reutilización del código.  
-* **Patrón de Renderizado Híbrido (Server / Client Components):** Separa la lógica de renderizado en el servidor (para optimizar la carga inicial y el rendimiento) de la interactividad en el cliente (para acciones dinámicas como la selección de texto o envíos de formularios).
+* **Patrón de Renderizado Híbrido (Server / Client Components):** Separa la lógica de renderizado en el servidor (para optimizar la carga inicial y el rendimiento) de la interactividad en el cliente (para acciones dinámicas como la selección de texto o envíos de formularios).  
+* **Patrón Proxy de API (BFF en Next.js):** El navegador **nunca** habla directamente con el backend. Todas las peticiones van al proxy del propio servidor de Next.js (`/api/v1/...`), que las reenvía al backend usando una variable **de servidor** (`BACKEND_INTERNAL_URL`, sin el prefijo `NEXT_PUBLIC_`). Esto evita que la dirección y el puerto del backend se filtren en el bundle de JavaScript, elimina la necesidad de CORS y permite anadir la sesión en el servidor más adelante. Es la razón principal de elegir Next.js frente a un SPA: con el proxy, el backend es un detalle de implementación del servidor.
 
 ## 
 
