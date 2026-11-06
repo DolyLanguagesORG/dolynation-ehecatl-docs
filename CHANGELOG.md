@@ -9,6 +9,17 @@ La **versión se declara en `version.txt`**: el bot de release-please la sube
 junto con la sección del changelog, y publica el tag al mergear su PR de
 release.
 
+## [0.1.1](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/compare/v0.1.0...v0.1.1) (2026-11-06)
+
+
+### Bug Fixes
+
+* **ci:** eximir a Dependabot de la validacion de rama y titulo ([#26](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/26)) ([e66140b](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/e66140ba9f8b2a37deb47d7bf2f1010fe36e05aa))
+* **ci:** eximir el PR de release-please por nombre de rama ([9578935](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/95789352e03efd00b3faf031d604c871c5cbf3fc)), closes [#4](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/4)
+* **diagramas:** quitar el punto y coma que rompia el render de Mermaid en GitHub ([#20](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/20)) ([00d0f01](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/00d0f01a5f78af1a1aa44b55c7f90d0415c73de2))
+* **release:** activar el auto-merge aunque el PR de release ya exista ([24ce465](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/24ce4652cc1a7636c3e2ab3fd89a12ae33e711e2)), closes [#4](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/4)
+* **release:** localizar el PR de release por etiqueta para el auto-merge ([ba6ec82](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/ba6ec823b78bb7cfabcc86f7e11ae4c69ea62eb0)), closes [#4](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/4)
+
 ## [No publicado]
 
 ### Añadido
