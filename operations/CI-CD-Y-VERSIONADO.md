@@ -36,11 +36,10 @@ no está implementado:
 | Componente | Hoy | Objetivo |
 | --- | --- | --- |
 | Checks de CI | Implementados en los 4 repos (`ci-*.yml`, `pr-title`, `pr-labels`) | Igual |
-| Versionado | Script propio en `release.yml` que corre en `push` a `main` | **release-please** con PR acumulativo en `develop` (`infra#7`, fuera de la entrega) |
-| Tag / Release | Se crea al llegar a `main`, **solo si la versión declarada en el repo coincide** | Se crea al mergear el PR de release |
-| Manifiesto | `versions.yml` en infra, con la versión de cada repositorio | Automático |
-| Entornos (desarrollo, staging, producción) | Planificado; issues `infra#6`-`infra#9` | Deploy por SSH a 3 entornos; `rc-*` es rama efímera |
-| Manifiesto `versions.yml` | Planificado (`infra#7`) | Fuente de verdad de versiones en `infra` |
+| Versionado | **release-please** con PR acumulativo en `develop` | Igual |
+| Tag / Release | Se crea al mergear el PR de release, en `develop` | Igual |
+| Manifiesto | `versions.yml` en infra, actualizado por el bot y validado contra los tags reales | Igual |
+| Entornos (desarrollo, staging, producción) | Desarrollo funcionando; staging y producción planificados (issues `infra#6`-`infra#9`) | Deploy por SSH a 3 entornos; `rc-*` es rama efímera |
 | Cascada `infra → front/back` | Planificado (`infra#8`) | PRs automáticos vía PAT |
 
 ---
@@ -67,16 +66,21 @@ manuales por SSH.
 1. **Flujo de trabajo:** los desarrolladores crean ramas de características y
    abren Pull Requests hacia `develop` en los repos de código (*frontend* y
    *backend*).
-2. **Versionado automático:** el mechanism vigente es el workflow `release.yml`,
-   que se dispara al llegar a `main`: calcula la versión a partir del último
-   tag y de los commits mergeados, crea el **tag anotado** y publica el GitHub
-   Release con las notas. El variante con
-   [release-please](https://github.com/googleapis/release-please) (un PR de
-   release acumulativo contra `develop`) está diseñado en `infra#7` y quedó
-   fuera de la entrega: ver la sección 8.
+2. **Versionado automático:** cada repositorio corre
+   [release-please](https://github.com/googleapis/release-please) con el
+   workflow `release-please.yml`, que se dispara en cada `push` a `develop`:
+   calcula la versión a partir del último tag y de **todos** los commits del
+   ciclo, mantiene un **PR de release acumulativo** con la versión ya subida en
+   los archivos del repo y el changelog, y al mergearse ese PR crea el **tag
+   anotado** y publica la GitHub Release con las notas. El PR lleva
+   auto-merge: se mergea solo cuando los checks están en verde.
 3. **Despliegues de desarrollo:** se compilan contenedores temporales para
    habilitar un entorno de desarrollo en la nube en tiempo real, sin saturar el
    registro con versiones estables prematuras.
+
+> **Nota:** el tag nace en `develop`, no en `main`. Así el número de versión se
+> ve subir mientras se trabaja. `main` sigue siendo producción y recibe los
+> merges de `develop`.
 
 Detalle de las reglas de bump en
 [conventions/versioning.md](../conventions/versioning.md).
@@ -155,27 +159,29 @@ Trust (nadie hace push directo a las ramas protegidas):
 
 ## 7.1. El pull request de la release
 
-Antes de mergear `develop` → `main`, el pull request de release sube la versión
-en los repositorios afectados:
+Cada repositorio mantiene un **PR de release acumulativo** contra `develop`,
+que el bot (release-please) va actualizando con cada merge. El PR sube la
+versión en los archivos del repositorio:
 
 1. `package.json` → `version` (backend y frontend) y el `package-lock.json`.
-2. `CHANGELOG.md` → una sección `## [X.Y.Z]` con lo que trae la release.
-3. `dolynation-tlalli-infra/versions.yml` → la versión de cada repositorio.
+2. `version.txt` → la versión (infra y docs, que no tienen `package.json`).
+3. `CHANGELOG.md` → una sección `## [X.Y.Z]` con lo que trae la release.
+4. `dolynation-tlalli-infra/versions.yml` → la versión de cada repositorio.
 
-El workflow `release.yml` **verifica** esos tres puntos antes de crear el tag:
-si la versión del `package.json` o la sección del changelog no coinciden con la
-que ha calculado, la release **no sale** y el error dice qué archivo corregir.
+Al mergear ese PR se crea el tag anotado `vX.Y.Z` y la GitHub Release con las
+notas. El PR lleva **auto-merge**: se mergea solo cuando los checks están en
+verde, así que el versionado avanza sin que nadie tenga que intervenir.
 
 Después del merge, `GET /api/v1/health/live` del backend devuelve la **versión**
 y el **commit** del build en ejecución, de modo que se puede confirmar en el
-servidor qué se acaba de desplegar.
+servidor qué se acaba de desplegar. La raíz de la API y el documento OpenAPI
+reportan la misma versión.
 
 ## 8. Versionado automático
 
 - La fuente es **Conventional Commits**; con squash, **un PR = un bump**.
-- Hoy el bump lo calcula el script de `release.yml` al llegar a `main`; el
-  variante con *release-please* (PR de release acumulativo) está en `infra#7`,
-  fuera de la entrega, y la tabla de bumps de abajo aplica a ambos.
+- El bump lo calcula release-please recorriendo **todos** los commits del
+  ciclo, no solo el último.
 - El crecimiento de la versión no es un problema (`v0.43.253` es válido); el
   minor resetea el patch.
 

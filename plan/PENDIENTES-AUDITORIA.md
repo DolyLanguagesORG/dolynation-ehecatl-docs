@@ -76,12 +76,18 @@ fechas ya se actualizó para que coincida con el cronograma.
 
 ## 4. Fix del versionado: aprobar los tres PRs
 
-**Estado:** PRs abiertos, checks en verde, esperando aprobación · **Prioridad:** alta
+**Estado:** resuelto con release-please (PRs #68, #42, #42 y #29) · **Prioridad:** alta
 
-El cálculo del bump en `release.yml` mira **solo el último commit** del ciclo,
-así que una funcionalidad puede publicarse como `patch`. El fix ya estaba
-escrito desde el 20-oct en las ramas `fix/issue-*-bump-commits`, pero nunca se
-abrió PR.
+El cálculo del bump en `release.yml` miraba **solo el último commit** del
+ciclo, así que una funcionalidad podía publicarse como `patch`. El fix ya
+estaba escrito desde el 20-oct en las ramas `fix/issue-*-bump-commits`, pero
+nunca se abrió PR.
+
+**Resuelto con release-please**: el versionado pasó a ser automático en
+`develop`, con un PR de release acumulativo por repositorio. El bot calcula el
+salto recorriendo todos los commits del ciclo, así que el defecto del bump
+desaparece por construcción. Los PRs #59 (backend), #33 (frontend) y #32
+(infra) quedan redundantes.
 
 | Repo | PR |
 | --- | --- |
@@ -126,12 +132,10 @@ Lo que se hizo:
 
 **Para la entrega del 10-dic**, el orden es:
 
-1. En cada repo: subir la versión (`npm version 1.0.0 --no-git-tag-version` en
-   backend y frontend; sección `## [1.0.0]` en el `CHANGELOG.md` de infra y
-   docs) **y** `versions.yml` con los cuatro tags en 1.0.0.
-2. Mergear `develop` → `main` en los cuatro repos.
-3. Si el cálculo no dio `v1.0.0`, forzar la versión exacta:
-   `gh workflow run release.yml -f version=1.0.0`.
+1. En cada repo: un commit que fija la versión exacta:
+   `git commit --allow-empty -m "Release-As: 1.0.0"`.
+2. Mergear el PR de release que el bot deja listo, en los cuatro repos.
+3. Mergear `develop` → `main` en los cuatro repos.
 
 Los cuatro tags **no se crean a la vez**: hay que comprobar los cuatro al
 terminar.

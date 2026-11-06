@@ -187,15 +187,13 @@ Queda **preparado** para el 06-dic. Son cuatro pasos, y el primero es el que
 más se olvida:
 
 ```bash
-# 1. En cada repositorio, subir la versión en el PR de release:
-#    backend y frontend:  npm version 1.0.0 --no-git-tag-version
-#    infra y docs:         sección "## [1.0.0] - 2026-12-10" en CHANGELOG.md
-#    infra:                versions.yml con los cuatro tags en 1.0.0
+# 1. En cada repositorio, fijar la versión exacta con un commit:
+git commit --allow-empty -m "Release-As: 1.0.0"
+git push origin develop
 
-# 2. Mergear develop -> main en los cuatro repositorios.
+# 2. Mergear el PR de release que el bot deja listo, en los cuatro repos.
 
-# 3. Si el cálculo no dio v1.0.0, forzar la versión exacta:
-gh workflow run release.yml -f version=1.0.0
+# 3. Mergear develop -> main en los cuatro repositorios.
 
 # 4. Comprobar los cuatro tags y que versions.yml los refleje.
 ```
@@ -203,10 +201,9 @@ gh workflow run release.yml -f version=1.0.0
 Tres cosas que hay que tener presentes:
 
 - **Los cuatro tags no se crean a la vez.** Cada repo tiene su propio
-  `release.yml`. Hay que comprobar los cuatro al terminar.
-- **`versions.yml` lo sube una persona**, en el PR de la release: ningún
-  workflow puede escribir en una rama protegida. Es el primer paso, no el
-  último, porque es lo que dice qué versión va en cada repositorio.
+  release-please. Hay que comprobar los cuatro al terminar.
+- **`versions.yml` lo actualiza el bot**, en su PR de release. El workflow
+  `versions-manifest.yml` lo valida contra los tags reales.
 - **El bump se calcula con todos los commits del ciclo**, no solo con el
   último. Por eso una funcionalidad no puede salir como `patch` si el último
   PR fue un `chore`.

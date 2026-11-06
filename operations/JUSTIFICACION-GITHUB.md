@@ -45,7 +45,7 @@ inventario real, verificado en los cuatro repositorios.
 | `openapi-guard.yml` | 4 guardas de OpenAPI | Impide que el contrato de la API se rompa sin que se note |
 | `schema-sql` (en `ci-infra.yml`) | Aplica `01-init.sql` y `updates/*.sql` sobre Postgres limpio | Un SQL roto falla en el PR, no en el servidor |
 | `deploy-dev.yml` | Autodespliegue al mergear a `develop` | El entorno de desarrollo se actualiza solo |
-| `release.yml` | Tag anotado + GitHub Release al llegar a `main` | La `v1.0.0` sale de un merge, no de un comando manual |
+| `release-please.yml` | Versionado automático: PR de release + tag anotado + GitHub Release en `develop` | La `v1.0.0` sale de un merge, no de un comando manual |
 | `dependabot.yml` (4 repos) | Actualizaciones semanales de npm y de las actions | Las dependencias no se quedan rancias |
 | Secret scanning + push protection (4 repos) | Activos | Ningún secreto llega a la historia del repositorio |
 

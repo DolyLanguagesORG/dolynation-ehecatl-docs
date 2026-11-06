@@ -245,10 +245,10 @@ label `area:infra`) que cierran el pipeline descrito en
 El árbol `infra#10-#17` se fusionó en P2-P5 e `infra#4`; los issues quedaron cerrados como duplicados.
 
 **P3 y P4 quedan fuera de la entrega** (1-10 dic 2026): el cierre usa la
-versión exacta `v1.0.0` de `release.yml` (input `version`) y el despliegue por
-SHA con rollback (`infra#27`). Ambos issues están **abiertos** y visibles en el
-milestone «Fuera de alcance (post-entrega)», que existe en los cuatro repos con
-cierre el 31-ene-2027.
+versión exacta `v1.0.0` (commit `Release-As: 1.0.0` en cada repo) y el
+despliegue por SHA con rollback (`infra#27`). Ambos issues están **abiertos** y
+visibles en el milestone «Fuera de alcance (post-entrega)», que existe en los
+cuatro repos con cierre el 31-ene-2027.
 
 ## Prerrequisitos de schema
 
@@ -272,14 +272,16 @@ Cada tarea del cronograma se entrega con un pull request:
    Ejemplo: `feat/issue-12-auth-login-page`. También se acepta el formato
    `<n>-<detalle>` que genera el botón *Create a branch* del issue.
 2. El PR va hacia `develop`; el promote a `main` (producción) es un PR aparte.
-   Al llegar a `main`, el workflow `release.yml` crea el tag y la release.
+   Al llegar a `develop`, el bot mantiene el PR de release; al mergearlo, se
+   crea el tag y la release.
 3. El título del PR es un Conventional Commit **en español**; el check
    `pr-title` lo valida.
 4. Se requieren los checks del repo en verde (ver
    [FLUJO-DE-TRABAJO.md](../operations/FLUJO-DE-TRABAJO.md)) y una aprobación antes de
    fusionar.
-5. Al mergear a `main`, `release.yml` calcula la versión, crea el tag anotado
-   y publica la GitHub Release automáticamente.
+5. El versionado es automático: el bot (release-please) calcula el salto según
+   los commits del ciclo, sube la versión en los archivos del repo y publica el
+   tag anotado y la GitHub Release al mergear su PR de release.
 
 El detalle completo está en [git-workflow.md](../conventions/git-workflow.md)
 y [versioning.md](../conventions/versioning.md).

@@ -35,26 +35,26 @@ Para el paso a paso de abrir un PR, ve a
                           ┌──────▼──────────┐
                           │    develop      │  integración diaria
                           └──────┬──────────┘
-                                 │  PR + checks + 2 aprobaciones
+                                 │  el bot mantiene el PR de release
                           ┌──────▼──────────┐
-                          │     main        │  producción
+                          │ PR de release   │  chore(release): v0.x.y
+                          │ auto-merge      │  (version + changelog)
                           └──────┬──────────┘
                                  │  se dispara
                           ┌──────▼──────────┐
-                          │  release.yml    │  tag + GitHub Release
+                          │ release-please  │  tag + GitHub Release
                           │  v0.x.y         │
                           └─────────────────┘
 ```
 
-> **Aprobaciones:** 1 en `develop` y en las ramas de trabajo; **2** en `main` (es
-> el PR de release).
+> **Aprobaciones:** 1 en `develop` y en las ramas de trabajo; **2** en `main`.
 
 ## Las tres ramas
 
 | Rama | Qué es | Recibe PR de | Qué pasa al mergear |
 | --- | --- | --- | --- |
-| `develop` | **Integración diaria.** Aquí vive el trabajo del día. | `tipo/issue-*` o el formato `<n>-<detalle>` | Nada. Se acumula. |
-| `main` | **Producción.** Estable entre releases. | Solo `develop` o `hotfix/*` | **Dispara `release.yml`**: tag y GitHub Release |
+| `develop` | **Integración diaria.** Aquí vive el trabajo del día. | `tipo/issue-*` o el formato `<n>-<detalle>` | El bot actualiza el PR de release. |
+| `main` | **Producción.** Estable entre releases. | Solo `develop` o `hotfix/*` | Se despliega a producción |
 | `hotfix/*` | Corrección urgente sobre producción. | — | Sale de `main`, luego se lleva a `develop` |
 
 `main` es la única que genera releases. Ese es el motivo de que esté tan
@@ -76,14 +76,12 @@ coincide con la rama de trabajo**.
 | **Workflows con `schedule` o `workflow_dispatch`** | Solo se activan si el archivo del workflow existe en la default. |
 
 Por eso se invirtió. `develop` es el tronco real del proyecto: es donde se
-integra el trabajo y donde siempre se puede construir. `main` es un artefacto
-de release, y para eso ya tiene su propio disparador (`release.yml`), que no
-depende de la default.
+integra el trabajo, donde siempre se puede construir y **donde se versiona**
+(el workflow `release-please.yml` vive ahí y no depende de la default).
 
 **El único costo:** el PR de release `develop` → `main` apunta a una rama que
 ya no es la default, así que ahí la palabra clave se ignora. Ese PR debe usar
-`Refs #N`, nunca `Closes #N`. Y el release sigue disparándose igual, porque
-`release.yml` filtra por `push` a `main` de forma explícita.
+`Refs #N`, nunca `Closes #N`.
 
 > ¿Por qué la convención de GitHub es que la default sea `main`? Porque su
 > modelo de trabajo ([GitHub Flow](https://docs.github.com/en/get-started/using-github/github-flow))
@@ -185,8 +183,8 @@ Cada sprint cierra con una tarea de integración (por ejemplo los issues
 ### 6. Se libera
 
 `v1.0.0` es la entrega de cierre (issue **infra#4**). Consiste en mergear el PR
-de `develop` a `main`: el workflow `release.yml` crea el tag anotado y publica
-la GitHub Release con las notas.
+de `develop` a `main` y desplegar. El tag anotado y la GitHub Release ya se
+publicaron en `develop`, cuando se mergeó el PR de release del bot.
 
 ## CODEOWNERS
 
@@ -266,7 +264,7 @@ tareas que se tocan sin depender.
 
 ## Releases y versionado
 
-`release.yml` corre cuando algo llega a `main`. El **título del PR** decide el
+`release-please` corre en cada `push` a `develop`. El **título del PR** decide el
 salto de versión (ver [conventions/versioning.md](../conventions/versioning.md)):
 
 | Título del PR | Salto | Ejemplo |

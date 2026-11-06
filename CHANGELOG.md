@@ -5,12 +5,18 @@ Todas las novedades relevantes de este repositorio se registran aquí.
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y el
 versionado es [SemVer](https://semver.org/lang/es/).
 
-La **versión se declara en el `CHANGELOG.md`**: el workflow `release.yml` exige
-que exista la sección de la versión que se va a publicar antes de crear el tag.
+La **versión se declara en `version.txt`**: el bot de release-please la sube
+junto con la sección del changelog, y publica el tag al mergear su PR de
+release.
 
 ## [No publicado]
 
 ### Añadido
+- Versionado **automático en `develop`**: cada repositorio corre release-please
+  con un PR de release acumulativo que sube la versión y el changelog, y al
+  mergearse publica el tag y la GitHub Release. El PR lleva auto-merge.
+- `version.txt`: archivo de versión de los repositorios sin `package.json`
+  (infra y documentación).
 - Reorganización de la documentación en `anteproyecto/`, `plan/`, `operations/`,
   `architecture/`, `conventions/`, `onboarding/` y `decisions/`.
 - Diagramas migrados a **Mermaid**, que GitHub renderiza de forma nativa.
@@ -26,6 +32,11 @@ que exista la sección de la versión que se va a publicar antes de crear el tag
   corregida, el índice navegable y el cronograma 19-oct → 10-dic.
 
 ### Cambiado
+- El versionado se calcula con **todos** los commits del ciclo, no solo con el
+  último: una funcionalidad ya no puede publicarse como `patch` porque el
+  último PR fusionado fuera un `chore`.
+- La versión se declara en `version.txt` (en vez de la sección del `CHANGELOG.md`)
+  en los repositorios sin `package.json`.
 - Los milestones de los cuatro repos quedan alineados con el cierre de cada
   sprint del cronograma: 18-oct, 01-nov, 15-nov, 29-nov y 10-dic.
 
