@@ -209,10 +209,14 @@ ruta tiene **dos owners como mínimo**, para que ninguna PR se quede sin
 
 **Lo importante: la revisión de otra persona sí es obligatoria.**
 
-Los cuatro repositorios exigen **1 aprobación** en `develop` (**2** en `main`)
-de cualquier persona con acceso al repositorio, y que todos los comentarios
-del PR estén resueltos. Los `CODEOWNERS` se **solicitan automáticamente**, pero
-**no son obligatorios** (`require_code_owner_review: false`).
+Los cuatro repositorios exigen **1 aprobación** en `develop` de cualquier
+persona con acceso al repositorio, y que todos los comentarios del PR estén
+resueltos. Los `CODEOWNERS` se **solicitan automáticamente**, pero **no son
+obligatorios** (`require_code_owner_review: false`).
+
+`main` **hoy no tiene ruleset**: es la única rama sin protección, así que
+ninguna aprobación bloquea un merge hacia ella. Crear el ruleset de `main` es
+la issue `infra#46`.
 
 Además, `require_last_push_approval: true` garantiza que **quien abrió el PR
 no pueda aprobarlo**: si haces un push nuevo, la aprobación anterior se
@@ -223,7 +227,7 @@ En otras palabras:
 | Pregunta | Respuesta |
 | --- | --- |
 | ¿GitHub pide revisión al owner? | Sí, automáticamente, como sugerencia |
-| ¿El merge se bloquea sin aprobación? | **Sí**: hacen falta 1 aprobación (2 en `main`) |
+| ¿El merge se bloquea sin aprobación? | **Sí** en `develop`: hace falta 1 aprobación. En `main` hoy no, porque `main` aún no tiene ruleset (`infra#46`) |
 | ¿A quién puede aprobar? | A cualquier persona con acceso al repositorio, **excepto quien abrió el PR** |
 | ¿El owner tiene que aprobar? | No, pero se le avisa y su opinión es la que conviene pedir |
 
@@ -231,9 +235,18 @@ En otras palabras:
 ruta**, así que siempre hay alguien del equipo que puede revisar la ruta
 tocada, y se le avisa automáticamente. Pero la regla de *una aprobación de
 otra persona* es la que garantiza que **nadie se apruebe a sí mismo** — ni
-siquiera cuando es code owner de la ruta. Los rulesets no declaran *bypass
-actors*: nadie puede saltarse la revisión, tampoco quien administra el
-repositorio.
+siquiera cuando es code owner de la ruta.
+
+**Salvedad: sí hay un bypass actor.** Los rulesets de `develop` declaran a
+`@XxjesusalbertoxX` como *bypass actor* con `bypass_mode: always`, así que esa
+cuenta puede mergear sin aprobación ni checks. No es un descuido: es lo que
+permite que la maquinaria de versionado (el bot de release-please) pueda
+mergear sus propios PR de release, que de otro modo se quedarían bloqueados
+esperando una aprobación. El resto del equipo no puede saltarse nada.
+
+Los rulesets de `develop` son los únicos que existen: **uno por repositorio**,
+y solo sobre `refs/heads/develop`. `main` y `rc-*` todavía no tienen ninguno
+(`infra#46`).
 
 **Estado.** Elías (soporte de backend) está incorporado como
 `@EliasGalarza333`: owner por defecto en el backend y revisor de los módulos
@@ -305,7 +318,7 @@ Esto es lo que tienes que saber para no confiar de más en las herramientas.
 ninguna vía):
 
 - los checks de CI del repo en verde
-- 1 aprobación de otra persona (2 en `main`)
+- 1 aprobación de otra persona (en `develop`)
 - Toda conversación del PR resuelta
 - Nada de force-push, nada de borrar ramas, nada de merge commits
 - Solo squash-merge
@@ -321,10 +334,12 @@ ninguna vía):
 | **Que la rama esté al día** | `develop` no exige estar al día con la base. Puedes mergear con la rama atrasada. |
 | **El checklist de la plantilla** | Es un recordatorio, no un gate. |
 
-**Y una advertencia concreta**: la protección de ramas vive en *rulesets*, y
-ninguno de ellos declara `bypass_actors`. La revisión del code owner es
-obligatoria para todo el equipo, sin atajos, y tampoco es posible hacer push
-directo a `develop` o `main`: todo cambio entra por un pull request.
+**Y dos advertencias concretas**: la protección de ramas vive en *rulesets*, y
+el de `develop` **sí** declara un *bypass actor* (`@XxjesusalbertoxX`, con
+`bypass_mode: always`) para que la maquinaria de versionado pueda mergear sus
+propios PR de release. El resto del equipo no tiene atajos. Y `main` **no tiene
+ruleset todavía**: es la única rama sin protección, y por eso se pide crear el
+ suyo en `infra#46`.
 
 ## Dónde vive cada cosa
 
