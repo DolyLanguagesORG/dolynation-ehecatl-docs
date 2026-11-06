@@ -66,7 +66,7 @@ en este repositorio:
 
 | Elemento | Dónde |
 | --- | --- |
-| Reglas de protección, checks obligatorios y aprobaciones | *Rulesets* de la organización (3 por repositorio) |
+| Reglas de protección, checks obligatorios y aprobaciones | *Rulesets* de la organización (1 por repositorio, sobre `develop`) |
 | Quién revisa cada ruta | `.github/CODEOWNERS` de los cuatro repositorios |
 | Archivos excluidos | `.gitignore` de los cuatro repositorios |
 | Credenciales y reporte de fallos | `SECURITY.md` + secret scanning y push protection activos |

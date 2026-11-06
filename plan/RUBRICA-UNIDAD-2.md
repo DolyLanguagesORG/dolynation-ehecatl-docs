@@ -94,8 +94,8 @@ de seguridad, verificados en los cuatro repositorios.
 | Evidencia | Dónde |
 | --- | --- |
 | Archivos de exclusión | `.gitignore` en los 4 repositorios |
-| Control de accesos | 12 *rulesets* (3 por repositorio): `develop`, `main`, `rc-*` |
-| Revisión obligatoria | `require_code_owner_reviews: true`, 1 aprobación en `develop` y 2 en `main`, **sin bypass** |
+| Control de accesos | 4 *rulesets* (1 por repositorio), todos sobre `develop`. Los de `main` y `rc-*` están pendientes (`infra#46`) |
+| Revisión obligatoria | `require_code_owner_reviews: false` (los `CODEOWNERS` se solicitan pero no bloquean), **1 aprobación** en `develop`, y un *bypass actor* (`@XxjesusalbertoxX`) para que el bot de versionado pueda mergear sus PR de release |
 | Quién revisa cada ruta | `.github/CODEOWNERS` (mínimo 2 owners por ruta) |
 | Credenciales y reporte | `SECURITY.md` en los 4 repositorios + secret scanning y push protection activos |
 | Permisos mínimos | `permissions:` declarados en todos los workflows |
