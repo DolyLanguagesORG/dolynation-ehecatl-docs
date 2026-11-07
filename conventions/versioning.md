@@ -1,238 +1,206 @@
 # Versionado
 
 El proyecto usa [Semantic Versioning](https://semver.org/lang/es/) (`vX.Y.Z`) y
-**versionado automático en `develop`**: los Conventional Commits determinan la
-próxima versión.
+**versionado automático**: los Conventional Commits determinan la versión y
+**nadie la escribe a mano**.
 
-**La versión se declara en el repositorio, no solo en el tag.** En el backend y
-el frontend vive en el campo `version` del `package.json`; en el repositorio de
-infraestructura y en el de documentación, en `version.txt`. El changelog lleva
-la sección `## [X.Y.Z]` de cada versión. Así el número que se ve en el código,
-en el changelog, en el tag y en `/health` es siempre el mismo, y nadie tiene
-que confiar en la memoria.
+El mecanismo es [release-please](https://github.com/googleapis/release-please):
+cada repositorio mantiene **un pull request de release acumulativo** contra
+`develop`. Al mergear ese PR, la versión sube sola, el changelog se escribe
+solo, y se crean el **tag anotado** y la **GitHub Release**.
 
-## Cómo funciona
+## El ciclo, de punta a punta
 
-Cada repositorio corre
-[release-please](https://github.com/googleapis/release-please) con el workflow
-`.github/workflows/release-please.yml` de su repo, que se dispara en cada
-`push` a `develop` (y también a mano con `workflow_dispatch`) y hace lo
-siguiente:
+```
+PRs de trabajo  ->  develop
+                       |
+        release-please mantiene UN PR
+        "chore(release): vX.Y.Z"
+                       |  (merge)
+                       v
+   version + changelog + tag vX.Y.Z + GitHub Release
+```
 
-1. Calcula la versión siguiente a partir del **último tag `vX.Y.Z`** y de
-   **todos** los commits del ciclo, no solo del último (`feat` bumpea *minor*,
-   `fix` bumpea *patch*; `BREAKING CHANGE` bumpea *major*).
-2. Mantiene un **pull request de release** con la versión ya subida en los
-   archivos del repositorio y la sección del changelog correspondiente.
-3. Al mergear ese PR, crea un **tag anotado** `vX.Y.Z` y publica la **GitHub
-   Release** con las notas generadas entre el tag anterior y `HEAD`.
+Mientras el PR de release está abierto, **acumula** todos los cambios que
+entran a `develop`. Mergearlo es un acto deliberado: es el momento en que se
+publica una versión.
 
-El PR de release tiene **auto-merge activado**: se mergea solo cuando los
-checks están en verde.
+## Reglas de bump
 
-> **Nota:** el tag nace **en `develop`**, no en `main`. Así el número de versión
-> se ve subir mientras se trabaja, en lugar de quedarse congelado hasta la
-> entrega. `main` sigue siendo producción y recibe los merges de `develop`.
+Como los merges son squash, el **título del PR** es el que decide el salto.
+release-please mira los commits de todo el ciclo, no solo el último.
 
-`main` solo recibe merges de `develop` (y `hotfix/*`). El detalle del pipeline
-está en [CI-CD-Y-VERSIONADO.md](../operations/CI-CD-Y-VERSIONADO.md).
+| Tipo del commit                                  | Bump   | Resultado             |
+| ------------------------------------------------ | ------ | --------------------- |
+| `feat(scope):`                                   | minor  | `v0.1.0` → `v0.2.0`   |
+| `feat(scope)!:` o `BREAKING CHANGE:`             | major  | `v0.1.0` → `v1.0.0`   |
+| `fix(scope):`                                    | patch  | `v0.1.0` → `v0.1.1`   |
+| `refactor` `chore` `docs` `ci` `test` `perf` `style` | —    | **no genera versión** |
+
+Los últimos seis tipos están **ocultos** en el changelog por defecto: si un
+ciclo solo trae commits de esos tipos, **no se abre PR de release**. Es decir:
+**el código genera versiones; la documentación, los refactors y los cambios de
+CI no.**
+
+> **El número no cuenta PRs.** Comunica riesgo de compatibilidad. Si entran 5
+> PRs juntos, forman **una** release: `v0.2.0` no significa "dos features",
+> significa "hay features nuevas y sigue siendo compatible con `0.1.x`". El
+> detalle exacto de cada PR queda en el `CHANGELOG.md` de esa release y en el
+> commit al que apunta el tag. **Nada se pierde.**
+
+El título del PR lo valida el check `pr-title` de CI **antes** de poder
+mergear, así que un título inválido nunca llega a la release.
 
 ## Dónde vive cada versión
 
 | Repositorio | Dónde se declara | Quién la sube |
 | --- | --- | --- |
-| `dolynation-atl-back` | `package.json` → `version` | El bot (release-please) |
-| `dolynation-tonatiuh-front` | `package.json` → `version` | El bot (release-please) |
-| `dolynation-tlalli-infra` | `version.txt` | El bot (release-please) |
-| `dolynation-ehecatl-docs` | `version.txt` | El bot (release-please) |
-| **Manifiesto del proyecto** | `dolynation-tlalli-infra/versions.yml` | El bot (release-please) |
+| `dolynation-atl-back` | `package.json` → `version` | El PR de release (release-please) |
+| `dolynation-tonatiuh-front` | `package.json` → `version` | El PR de release (release-please) |
+| `dolynation-tlalli-infra` | `version.txt` | El PR de release (release-please) |
+| `dolynation-ehecatl-docs` | `version.txt` | El PR de release (release-please) |
+| **Manifiesto del proyecto** | `dolynation-tlalli-infra/versions.yml` | release-please (su propia fila) + el workflow `sync-versions` (las demás) |
 
-`versions.yml` es el **manifiesto**: una tabla con la versión publicada de cada
-repositorio y la fecha de la entrega. Sirve para saber de un vistazo si los
-cuatro repos van juntos o si uno se quedó atrás.
+El tag, el `CHANGELOG.md` y la versión del repositorio **siempre coinciden**:
+los tres los escribe el mismo PR.
 
-> **El manifiesto lo actualiza el bot**, en su PR de release: el workflow
-> `versions-manifest.yml` lo valida contra los tags reales y avisa si algún
-> repositorio se quedó atrás.
+## El manifiesto del proyecto
 
-## El pull request de la release
+`dolynation-tlalli-infra/versions.yml` es la fuente de verdad de **qué versión
+de cada componente compone la aplicación publicada**.
 
-El versionado es **automático en `develop`**: cada repositorio corre
-[release-please](https://github.com/googleapis/release-please), que mantiene un
-**pull request de release acumulativo** contra `develop`.
-
+```yaml
+project: dolynation
+app_version: 0.2.0        # la versión ÚNICA de la aplicación
+updated: '2026-11-06'
+repositories:
+  dolynation-atl-back:
+    version: 0.2.1
+    tag: v0.2.1
+    commit: a8525a278b81eb37b19f9f289e5b87128f9079fc
+  dolynation-tonatiuh-front:
+    version: 0.2.1
+    tag: v0.2.1
+    commit: 161a96847dce3352bcc9beb097de0c5d3d986722
+  dolynation-tlalli-infra:
+    version: 0.2.1
+    tag: v0.2.1
+    commit: aca29ce9f7bc8b080ca4aee834e0141cdeccc79b
+  dolynation-ehecatl-docs:
+    version: 0.1.2
+    tag: v0.1.2
+    commit: bc17498f97664bd50174ec6eb72c2df8320c4f37
+release:
+  target: 1.0.0
+  deadline: '2026-12-10'
 ```
-PR de feature ──► develop ──► el bot actualiza el PR de release
-                                  │
-                                  └──► se mergea ──► tag vX.Y.Z + GitHub Release
-```
 
-El bot calcula el salto a partir de **todos** los commits del ciclo (no solo
-del último), actualiza los archivos de versión y el changelog, y deja el PR
-listo para mergearse. Al mergearlo se publica el tag y la Release.
-
-Los archivos que toca, por repositorio:
-
-| Repositorio | Archivos que actualiza el bot |
+| Campo | Qué significa |
 | --- | --- |
-| `dolynation-atl-back` | `package.json`, `package-lock.json`, `CHANGELOG.md` |
-| `dolynation-tonatiuh-front` | `package.json`, `package-lock.json`, `CHANGELOG.md` |
-| `dolynation-tlalli-infra` | `version.txt`, `CHANGELOG.md`, `versions.yml` |
-| `dolynation-ehecatl-docs` | `version.txt`, `CHANGELOG.md` |
+| `app_version` | La versión de la **aplicación** (el tren de release). Es la que ve el usuario final. |
+| `repositories.<repo>.version` | La versión de **ese** repositorio. |
+| `repositories.<repo>.tag` | El tag exacto que se publicó. |
+| `repositories.<repo>.commit` | El commit exacto. Con esto se puede hacer rollback a un estado anterior. |
 
-El bot usa un **PAT** (`RELEASE_PLEASE_TOKEN`), no el `GITHUB_TOKEN` del
-workflow: el `GITHUB_TOKEN` no dispara otros workflows, así que los checks
-requeridos nunca correrían en el PR del bot y el merge se quedaría bloqueado.
+**Cómo se mantiene solo.** Cada repositorio, al publicar su tag, avisa a
+`dolynation-tlalli-infra` con un `repository_dispatch`. El workflow
+`sync-versions.yml` actualiza la fila correspondiente y **abre el PR** con el
+cambio (nunca un push directo: `develop` está protegido).
 
-> **Nota:** `develop` es la rama donde vive el trabajo y es la que se despliega
-> al servidor. El tag nace **en `develop`**, no en `main`: así el número de
-> versión se ve subir mientras se trabaja, en lugar de quedarse congelado
-> durante semanas. `main` sigue siendo producción y recibe los merges de
-> `develop`.
+> **Dos formatos, dos versiones.** La **aplicación** tiene una versión
+> (`app_version`). Cada **componente** tiene la suya. La API expone las dos:
+> `GET /api/v1/version` devuelve `appVersion` y `version` por separado.
 
-### Versiones independientes
+## Prerelease y release oficial
 
-Cada repositorio **escala por su cuenta**: `atl-back` puede estar en `0.3.0`
-mientras `tlalli-infra` está en `0.2.0`, según lo que cambió en cada uno. Nadie
-bloquea a nadie.
+Con `"prerelease": true` en la configuración de release-please:
 
-`versions.yml` (en `dolynation-tlalli-infra`) es el **manifiesto** que dice
-dónde está cada repositorio, y lo mantiene actualizado el propio bot. El
-workflow `versions-manifest.yml` lo valida contra los tags reales: si un
-repositorio se queda atrás, avisa.
+- Toda versión **0.x** se publica como **Pre-release** en GitHub.
+- La **`v1.0.0`** se publica como **release oficial** (sin la marca).
 
-### Del `develop` a producción
+Es el mecanismo de *beta/prerelease → release estable* sin ensuciar el número
+con sufijos.
 
-`main` recibe los merges de `develop` y es la rama que se despliega a
-producción. Cuando se acuerda una versión concreta para salir, se toman los
-tags de `versions.yml` y se despliega la aplicación completa con esa
-combinación de versiones.
+### Fijar una versión exacta
 
-## Reglas de bump
-
-Como el merge es squash, el subject del commit resultante es el **título del
-PR**. Ese título es el que decide el bump:
-
-| Patrón en el título del PR                       | Bump   | Resultado             |
-| ------------------------------------------------ | ------ | --------------------- |
-| `fix(scope): ...`                                | patch  | `v0.1.0` → `v0.1.1`   |
-| `refactor(scope): ...`, `chore(...)`, `docs(...)`| patch  | `v0.1.0` → `v0.1.1`   |
-| `feat(scope): ...`                               | minor  | `v0.1.0` → `v0.2.0`   |
-| `feat(scope)!: ...` (bang)                       | major  | `v0.1.0` → `v1.0.0`   |
-| Cualquier tipo con `BREAKING CHANGE:` en el body | major | `v0.1.0` → `v1.0.0`   |
-
-La lista de tipos es la misma de [commits.md](./commits.md). El título del PR
-lo valida el check `pr-title` de CI **antes** de poder mergear, así que un
-título inválido nunca llega a la release.
-
-> **El bump se calcula con TODOS los commits del ciclo, no solo con el último.**
-> Como los merges son squash, el subject de cada commit es el título de su PR.
-> Si un ciclo incluye un `feat` y el **último** PR fusionado fue un `chore`, una
-> funcionalidad quedaría numerada como un ajuste menor. release-please recorre
-> el ciclo completo, así que no ocurre.
-
-## Línea de tiempo del proyecto
-
-| Versión  | Significado                                                        |
-| -------- | ------------------------------------------------------------------ |
-| `v0.1.0` | Primer release.                                                      |
-| `v0.x.y` | Iteración durante el desarrollo. Cada merge a `main` bumpea.         |
-| `v1.0.0` | Release final del entregable de diciembre.                          |
-
-## Publicar una versión exacta
-
-A veces hace falta publicar una versión concreta y no la que saldría del
-cálculo: el caso claro es la **entrega final**, donde los cuatro repositorios
-tienen que pasar a `v1.0.0` el mismo día.
-
-## Publicar una versión exacta
-
-A veces hace falta publicar una versión concreta y no la que saldría del
-cálculo: el caso claro es la **entrega final**, donde los cuatro repositorios
-tienen que pasar a `v1.0.0` el mismo día.
-
-Con release-please eso se hace con un commit `Release-As: X.Y.Z`, que fija la
-próxima versión sin calcular el bump:
+Cuando haya que publicar una versión concreta (por ejemplo, la promoción final),
+se usa el trailer `RELEASE AS` en el commit:
 
 ```bash
-# En cada repositorio: un commit vacío con el mensaje "Release-As: 1.0.0"
-git commit --allow-empty -m "Release-As: 1.0.0"
-git push origin develop
+git commit -m "feat(release): preparar la entrega final
+
+RELEASE AS: 1.0.0"
 ```
 
-El bot toma ese número tal cual, lo sube en los archivos de versión y deja el
-PR de release listo para mergearse.
+release-please lo respeta de forma nativa y publica exactamente esa versión.
 
-> **Los cuatro repositorios no se versionan a la vez.** Cada uno tiene su propio
-> release-please y su propio tag. Para la entrega hay que hacer el commit
-> `Release-As` en los cuatro y comprobar que `versions.yml` refleja los cuatro
-> tags.
+## Los tags
 
-## Ejemplo de flujo completo
+release-please crea el tag **lightweight** (apunta al commit, sin objeto de
+tag). La convención del equipo es que sean **anotados**, para que `git describe`
+y el historial conserven la fecha y el mensaje. El paso *"Convertir el tag en
+anotado"* del workflow `release-please.yml` lo resuelve después de crearse,
+sin cambiar a qué commit apunta.
+
+## Qué NO se hace
+
+- **No se sube la versión a mano.** Si alguien la edita, el tag y el
+  `package.json` dejan de coincidir.
+- **No se edita `versions.yml` a mano.** El workflow `sync-versions` lo hace.
+- **No se crea el tag a mano.** Los tags salen del PR de release.
+
+## Forzar un bump
+
+Si el título no refleja el cambio real (por ejemplo, un `chore` que rompe la
+API), se fuerza con el trailer `RELEASE AS`:
 
 ```bash
-# 1. Trabajo normal en una rama
-git checkout -b feat/issue-8-settings
-npm run verify    # en el repo correspondiente (atl-back / tonatiuh-front)
-git commit -m "feat(users): persist study preferences in user_preferences"
-git push -u origin feat/issue-8-settings
+git commit -m "fix(api): corregir el contrato
 
-# 2. PR con título Conventional Commits hacia develop
-gh pr create --base develop \
-  --title "feat(users): persist study preferences in user_preferences" \
-  --body "Closes #8"
-
-# 3. Merge a develop. El bot actualiza el PR de release con la nueva versión
-#    (0.1.0 -> 0.2.0, porque el ciclo incluye un feat) y lo deja con
-#    auto-merge: se mergea solo cuando los checks están en verde.
-
-# 4. Al mergear el PR de release: tag v0.2.0 y GitHub Release.
+RELEASE AS: 0.3.0"
 ```
 
-Al llegar el merge a `develop`, el bot ya dejó la versión declarada en el
-repositorio (package.json o version.txt), en el changelog y en el manifiesto.
-Al mergearse su PR de release, publica el tag anotado y la GitHub Release con
-las notas.
-
-### La entrega final (`v1.0.0`)
-
-La entrega es el caso en que la versión no sale del cálculo, sino que se
-indica a mano. En los cuatro repositorios:
+## Verificar que todo cuadra
 
 ```bash
-# 1. En cada repo, subir la versión y la sección del changelog
-#    backend y frontend:  npm version 1.0.0 --no-git-tag-version
-#    infra y docs:         añadir "## [1.0.0] - 2026-12-10" al CHANGELOG.md
-#    infra:                versions.yml con los cuatro tags en 1.0.0
+# La versión del repositorio
+cat version.txt            # en infra y docs
+node -p "require('./package.json').version"   # en back y front
 
-### La entrega final (`v1.0.0`)
+# El tag y a qué commit apunta
+git show v0.2.1 --no-patch
 
-La entrega es el caso en que la versión no sale del cálculo, sino que se
-indica a mano. En los cuatro repositorios:
-
-```bash
-# 1. En cada repo, un commit que fija la versión exacta
-git commit --allow-empty -m "Release-As: 1.0.0"
-git push origin develop
-
-# 2. Mergear el PR de release que el bot deja listo (un PR por repositorio)
-
-# 3. Mergear develop -> main (un PR por repositorio)
+# Lo que está corriendo en el servidor
+curl -s https://devapi.yacaterkos.tech/api/v1/health/live
 ```
 
-El bot sube la versión en los archivos de cada repositorio y en el manifiesto
-(`versions.yml` en infra), que es lo que dice qué versión va en cada uno.
+La respuesta del healthcheck trae la `version` y el `commit` del build en
+ejecución: si coinciden con el tag, lo que corre en el servidor es
+exactamente lo publicado.
 
-> Los cuatro repositorios **no se versionan a la vez**: cada uno crea su tag
-> en su propio run. Hay que comprobar los cuatro al terminar.
+## Un dry-run antes de tocar nada
 
-## Notas
+release-please se puede ejecutar en local, **sin escribir nada en GitHub**:
 
-- Los tags son anotados (`git tag -a`), no lightweight, para que `git describe`
-  y el historial conserven la fecha y el mensaje.
-- El bot solo crea un tag cuando hay cambios que lo ameritan: si un ciclo no
-  tiene commits que bumpeen versión, no genera un PR de release vacío.
-- El backend expone la **versión y el commit** en `GET /api/v1/health/live` y
-  `GET /api/v1/health/ready`, así que en el servidor se puede comprobar qué
-  build está corriendo. La raíz de la API y el documento OpenAPI reportan la
-  misma versión.
+```bash
+git clone --branch develop https://github.com/DolyLanguagesORG/dolynation-atl-back.git /tmp/prueba
+cd /tmp/prueba
+export GH_TOKEN=$(gh auth token)
+npx release-please@17 release-pr \
+  --dry-run --local --local-path . \
+  --repo-url DolyLanguagesORG/dolynation-atl-back \
+  --target-branch develop \
+  --config-file release-please-config.json \
+  --manifest-file .release-please-manifest.json \
+  --token "$GH_TOKEN"
+```
+
+Imprime el bump, el changelog completo y qué archivos cambiaría. Es la forma
+rápida de comprobar una configuración antes de publicarla.
+
+## Documentos relacionados
+
+- [`operations/CI-CD-Y-VERSIONADO.md`](../operations/CI-CD-Y-VERSIONADO.md) — el
+  pipeline completo y los tres ambientes.
+- [`operations/FLUJO-DE-TRABAJO.md`](../operations/FLUJO-DE-TRABAJO.md) — ramas,
+  PR y qué reglas bloquean de verdad.
