@@ -72,25 +72,61 @@ cada merge a `develop`.
 
 Para staging y producción se trabaja con **imágenes**, no con build en el server:
 
-- `atl-back` y `tonatiuh-front` construyen y **publican su imagen**.
-- `tlalli-infra` **jala la imagen** y despliega el stack.
-- **Registry propuesto: GHCR** (`ghcr.io/dolylanguagesorg/...`), con la etiqueta
-  ligada a la versión de la `rc-*` (staging) y de `main` (producción).
+- `atl-back` y `tonatiuh-front` construyen y **publican su imagen** en GHCR
+  (`ghcr.io/dolylanguagesorg/...`), con dos etiquetas: el **SHA** del commit
+  y la **versión**.
+- `tlalli-infra` **jala la imagen** y despliega el stack con
+  `scripts/deploy-env.sh`, que lee `versions.yml` y despliega exactamente las
+  versiones declaradas.
 
-> Nota: el `docker-compose.prod.yml` actual de `infra` **no incluye el
-> frontend** y usa `build:` (compila el backend). Para staging/producción habrá
-> que añadir el servicio de frontend y pasar a `image:`.
+> **El servidor nunca compila.** Si dos máquinas compilaran el mismo commit,
+> no serían el mismo binario. Una imagen es inmutable: se sabe exactamente qué
+> corre y se puede volver atrás.
+
+**El backend se despliega por SHA** (inmutable: es lo que corre y lo que
+permite el rollback) y **el frontend por versión**.
+
+### El ambiente de simulación
+
+`rehearsal` es un tercer ambiente, en el mismo servidor y con el mismo camino
+de código que staging y producción, pero en otro directorio (`/srv/doly/rehearsal`)
+y otros puertos (`5704x`). No sale a internet.
+
+Existe para **probar el tren completo sin tocar staging ni producción**:
+`develop` → `rc-<version>` → despliegue → healthcheck → smoke test. Es el
+mismo `docker-compose.env.yml` con otros puertos, así que lo que se prueba
+allí es exactamente lo que irá a producción.
+
+| Ambiente | Directorio | Puertos | Sale a internet |
+| --- | --- | --- | --- |
+| Desarrollo | `/srv/doly/dev` | 57010-57012 | sí (`devweb`, `devapi`) |
+| Rehearsal | `/srv/doly/rehearsal` | 57040-57042 | no |
+| Staging | `/srv/doly/staging` | 57020-57022 | sí (`stagingweb`) |
+| Producción | `/srv/doly/prod` | 57030-57032 | sí (`yacaterkos.tech`, `www`) |
+
+### Verificación del despliegue
+
+`scripts/smoke-test.sh` comprueba que el ambiente cumple el contrato (la API
+responde, la versión es la del manifiesto, el login funciona, el frontend
+sirve y su proxy llega al backend) y **falla** si algo no cuadra. Un smoke
+test que no puede fallar no sirve de nada.
+
+Lo que no se puede automatizar (que la lectura generada tenga sentido, que el
+diseño se vea bien) lo verifica una persona con el checklist de salida.
 
 ## Entornos y puertos
 
 | Entorno | Directorio (server) | DB | Back | Front |
 | --- | --- | --: | --: | --: |
 | Desarrollo | `/srv/doly/dev` | 57010 | 57011 | 57012 |
+| Rehearsal | `/srv/doly/rehearsal` | 57040 | 57041 | 57042 |
 | Staging | `/srv/doly/staging` | 57020 | 57021 | 57022 |
 | Producción | `/srv/doly/prod` | 57030 | 57031 | 57032 |
 
-Los puertos actuales de producción en `docker-compose.prod.yml` (57000 y 57001)
-se uniformarían a los de esta tabla.
+Staging, producción y rehearsal comparten el mismo
+`docker-compose.env.yml` de `infra`; lo que cambia son los puertos y el
+nombre del proyecto. Todos escuchan **solo en `127.0.0.1`**: el único que
+llega a los contenedores es el proxy (nginx) de este servidor.
 
 ## Secretos por Environment
 
@@ -107,12 +143,25 @@ Cada entorno define sus propios secretos (nada compartido en el repo):
 
 Los **Environments** se configuran en los repos que despliegan:
 
-- `atl-back` → `desarrollo`
-- `tonatiuh-front` → `desarrollo`
-- `tlalli-infra` → `desarrollo`, `staging`, `produccion`
+- `atl-back` → `desarrollo`, `staging`, `produccion`, `rehearsal`
+- `tonatiuh-front` → `desarrollo`, `staging`, `produccion`, `rehearsal`
+- `tlalli-infra` → `desarrollo`, `staging`, `produccion`, `rehearsal`
 
-Sin *required reviewers* en `desarrollo` (automático). En `staging` y
-`produccion` queda por definir si se exige aprobación.
+| Environment | Required reviewers | Self-review | Uso |
+| --- | --- | --- | --- |
+| `desarrollo` | ninguno | — | autodespliegue en cada merge a `develop` |
+| `rehearsal` | ninguno | — | la simulación: el tren completo, sin salir a internet |
+| `staging` | ninguno | — | despliegue de la `rc-<version>`, automático |
+| `produccion` | **2** (Azael y Elías) | **bloqueado** | promoción a producción |
+
+> **Un Environment con required reviewers no es lo mismo que "2 aprobaciones
+> en el PR".** El PR con 2 aprobaciones dice "el código está bien revisado".
+> El Environment dice "**alguien decide que esto sale a producción ahora**".
+> Para producción se quiere las dos cosas.
+
+`POSTGRES_PASSWORD`, `DB_PASSWORD` y `JWT_SECRET` son **propios de cada
+ambiente**: un token de staging no tiene que valer en producción. La llave
+SSH sí es la misma (`ddeploy` sirve para los tres).
 
 ## Healthcheck
 
@@ -138,11 +187,20 @@ servidor, en `infra`.
 
 ## Pendientes (decisiones abiertas)
 
-1. **Registry** definitivo (propuesta: GHCR).
-2. **Modelo de desarrollo**: compose por-repo con red externa (propuesto) vs. un
-   `docker-compose.dev.yml` central en `infra`.
-3. **Renumerar** producción (57000/57001 → 57030/57031) para uniformar.
-4. **Reencuadre de issues**: crear los issues de dev-deploy en `back`/`front` y
-   ajustar `infra#12`.
-5. **Aprobaciones** en `staging`/`produccion` (¿quiénes aprueban?).
-6. Implementación de staging/producción con imágenes y `versions.yml`.
+1. **Rollback de un comando**: falta registrar automáticamente el SHA
+   desplegado anterior y un job que lo restaure. Hoy el rollback es cambiar
+   `IMAGE_TAG` y volver a desplegar (`infra#27`).
+2. **Los registros DNS** de `stagingweb` (los crea el SM).
+3. **El primer despliegue real** a staging y a producción, cuando se autorice.
+4. **Publicar las imágenes en GHCR** de verdad: las de prueba se construyeron
+   en local, no se publicaron.
+
+## Decisiones ya tomadas
+
+| Decisión | Valor |
+| --- | --- |
+| Registry | **GHCR** (`ghcr.io/dolylanguagesorg/...`) |
+| Modelo de desarrollo | un `docker-compose.dev.yml` central en `infra` que monta los otros dos repos |
+| Puertos | 5701x dev, 5702x staging, 5703x producción, 5704x rehearsal |
+| Aprobaciones | `produccion` con 2 required reviewers y sin self-review; los demás, automáticos |
+| Etiqueta de imagen | **SHA** para el backend (inmutable, la del rollback) y **versión** para el frontend |
