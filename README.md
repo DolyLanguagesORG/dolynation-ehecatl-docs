@@ -54,7 +54,8 @@ en este repositorio:
 | **[Cómo hacer un Pull Request](./operations/COMO-HACER-UN-PR.md)** | Paso a paso: rama, checks, `Closes #N` y troubleshooting |
 | **[CI/CD y versionado](./operations/CI-CD-Y-VERSIONADO.md)** | Entornos, `rc`, cascada de releases, versionado y deploy |
 | **[Justificación de la plataforma](./operations/JUSTIFICACION-GITHUB.md)** | Por qué **Git** y **GitHub**: criterios, alternativas descartadas y límites reales |
-| **[Plan de despliegue](./operations/PLAN-DE-DESPLIEGUE.md)** | Los 3 entornos, puertos, secretos y flujo de despliegue |
+| **[Flujo de release](./operations/FLUJO-DE-RELEASE.md)** | El mapa del proyecto: de un PR a producción, los ambientes, las `rc-*` y los frenos |
+| **[Plan de despliegue](./operations/PLAN-DE-DESPLIEGUE.md)** | Los ambientes, puertos, secretos y flujo de despliegue |
 
 ### Índice de evidencias de la Unidad 2
 
