@@ -9,6 +9,13 @@ La **versión se declara en `version.txt`**: el bot de release-please la sube
 junto con la sección del changelog, y publica el tag al mergear su PR de
 release.
 
+## [0.1.3](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/compare/v0.1.2...v0.1.3) (2026-11-08)
+
+
+### Bug Fixes
+
+* **ci:** enviar el nombre del repositorio en el aviso al manifiesto ([#40](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/40)) ([aa5e759](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/aa5e7598e5f825aeb81fdc2cd9c8a90444c6e64a))
+
 ## [0.1.2](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/compare/v0.1.1...v0.1.2) (2026-11-06)
 
 
