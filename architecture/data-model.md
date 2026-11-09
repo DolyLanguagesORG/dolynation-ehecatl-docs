@@ -6,19 +6,32 @@ las tablas para type-safety.
 
 ## Estado actual vs. planificado
 
-| Tabla / cambio | Estado | Issue |
-| --- | --- | --- |
-| `users` | Existe | — |
-| `auth_access_tokens` | Existe (refresh tokens) | — |
-| `readings` | Existe | — |
-| `prompt_logs` | Existe | — |
-| `categories` | Planificado S2 | `infra#20` |
-| `user_preferences` | Planificado S2 | `infra#20` |
-| `user_selected_categories` | Planificado S2 | `infra#20` |
-| `readings.category_id`, `language`, `length_type`, `prompt_hash` | Planificado S2 | `infra#20` |
-| `evaluations` | Planificado S3 | `infra#21` |
-| `vocabulary_logs` | Planificado S3 | `infra#21` |
-| `users.role` | Planificado S4 | `infra#22` |
+| Tabla / cambio | Estado | Dónde | Issue |
+| --- | --- | --- | --- |
+| `users` | **Existe** | `01-init.sql` | — |
+| `auth_access_tokens` | **Existe** (refresh tokens) | `01-init.sql` | — |
+| `readings` | **Existe** | `01-init.sql` | — |
+| `prompt_logs` | **Existe** | `01-init.sql` | — |
+| `user_settings` | **Existe** (idioma de superficie + categorías elegidas) | `updates/06-user-settings.sql` | `infra#22` |
+| `admins` | **Existe** (membresía de administrador) | `updates/05-admin-table.sql` | `infra#22` |
+| `categories` | Planificado S2 (hoy el catálogo vive **en el código**: `catalog.constants.ts`) | — | `infra#20` |
+| `readings.category_id`, `language`, `length_type`, `prompt_hash` | Planificado S2 | — | `infra#20` |
+| `evaluations` | Planificado S3 | — | `infra#21` |
+| `vocabulary_logs` | Planificado S3 | — | `infra#21` |
+| `word_lookups` | Planificado (lo necesita `/history`: hoy `wordsLookedUp` devuelve 0) | — | por crear |
+
+> **Dos disenos cambian respecto al plan original:**
+>
+> - `user_preferences` + `user_selected_categories` se sustituyeron por **una**
+>   tabla, `user_settings`, con `preferred_language` y `preferred_categories`
+>   (jsonb). Es lo que implementa el backend.
+> - `users.role` (`STUDENT`/`ADMIN`) se sustituyó por la tabla aparte
+>   `admins`: los SELECTs sobre `users` no cambian y el guardia de admin
+>   consulta `admins`. El cambio de rol dentro de `users` sigue pendiente.
+
+Las seis tablas que existen hoy se crean con `01-init.sql` (base nueva) y
+tienen su script idempotente en `database/postgres/updates/`. Los cambios
+de schema se hacen **en `dolynation-tlalli-infra`**, nunca en el backend.
 
 ## `users`
 

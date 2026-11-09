@@ -73,16 +73,27 @@ una sola vez.
 | `auth_access_tokens` | Refresh tokens persistidos con hash |
 | `readings` | Lecturas generadas, estado y columnas legacy de evaluación |
 | `prompt_logs` | Auditoría de prompts y errores del proveedor |
+| `user_settings` | Preferencias por usuario: idioma de superficie y categorías elegidas |
+| `admins` | Membresía de administrador (tabla aparte, no una columna en `users`) |
 
 ### Planificadas
 
 | Tabla / cambio | Sprint | Issue |
 | --- | --- | --- |
-| `categories`, `user_preferences`, `user_selected_categories` | S2 | `infra#20` |
+| `categories` (hoy el catálogo vive en el código) | S2 | `infra#20` |
 | `readings.category_id`, `language`, `length_type`, `prompt_hash` | S2 | `infra#20` |
 | `evaluations` | S3 | `infra#21` |
 | `vocabulary_logs` | S3 | `infra#21` |
-| `users.role` (`STUDENT`/`ADMIN`) | S4 | `infra#22` |
+| `word_lookups` (lo necesita `/history`) | — | por crear |
+
+> `user_preferences` y `user_selected_categories` se sustituyeron por una sola
+> tabla, `user_settings`; y `users.role` por la tabla `admins`. El detalle
+> esta en [`architecture/data-model.md`](../architecture/data-model.md).
+
+> **Ojo con las bases que ya existen**: los scripts de
+> `database/postgres/updates/` solo se aplican hoy a bases **nuevas** (el
+> compose los monta en `/docker-entrypoint-initdb.d`). Para una base que ya
+> existe hay que aplicarlos a mano con `psql`.
 
 Detalle de columnas, tipos y relaciones en
 [`architecture/data-model.md`](../architecture/data-model.md).
