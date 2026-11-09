@@ -1,10 +1,17 @@
 # Diccionario de datos
 
-Modelo objetivo de la base PostgreSQL. La fuente de verdad del DDL es
+Modelo de la base PostgreSQL. La fuente de verdad del DDL es
 `dolynation-tlalli-infra` (`01-init.sql` + `updates/`). Ver también
 [`../architecture/data-model.md`](../architecture/data-model.md).
 
-## 1. `users`
+**Cómo leerlo:** cada tabla dice si **existe hoy** o si está **planificada**.
+
+| Estado | Tablas |
+| --- | --- |
+| ✅ Existen | `users`, `auth_access_tokens`, `readings`, `prompt_logs`, `user_settings`, `admins` |
+| 🕓 Planificadas | `categories`, `evaluations`, `vocabulary_logs` |
+
+## 1. `users` ✅ existe
 
 | Campo | Tipo | Restricciones | Descripción |
 | --- | --- | --- | --- |
@@ -12,14 +19,13 @@ Modelo objetivo de la base PostgreSQL. La fuente de verdad del DDL es
 | `email` | `VARCHAR(254)` | `NOT NULL, UNIQUE` | Correo de acceso. |
 | `password` | `VARCHAR(255)` | `NOT NULL` | Hash Argon2id; nunca texto plano. |
 | `full_name` | `VARCHAR(255)` | `NULL` | Nombre completo. |
-| `role` | `VARCHAR(20)` | `NOT NULL, DEFAULT 'STUDENT'` | `STUDENT` o `ADMIN`. |
 | `current_streak` | `INTEGER` | `NOT NULL, DEFAULT 0` | Días consecutivos de actividad. |
 | `last_streak_date` | `DATE` | `NULL` | Última actividad registrada. |
 | `created_at` | `TIMESTAMP` | `NOT NULL` | Fecha de creación. |
 | `updated_at` | `TIMESTAMP` | `NULL` | Última modificación. |
 | `deleted_at` | `TIMESTAMP` | `NULL` | Soft delete. |
 
-## 2. `auth_access_tokens`
+## 2. `auth_access_tokens` ✅ existe
 
 | Campo | Tipo | Restricciones | Descripción |
 | --- | --- | --- | --- |
@@ -35,7 +41,35 @@ Modelo objetivo de la base PostgreSQL. La fuente de verdad del DDL es
 | `expires_at` | `TIMESTAMP` | `NULL` | Expiración. |
 | `deleted_at` | `TIMESTAMP` | `NULL` | Revocación / soft delete. |
 
-## 3. `categories`
+## 3. `user_settings` ✅ existe
+
+Preferencias de estudio de cada usuario.
+
+| Campo | Tipo | Restricciones | Descripción |
+| --- | --- | --- | --- |
+| `user_id` | `INTEGER` | PK, FK `users.id`, `ON DELETE CASCADE` | Usuario dueño de las preferencias. |
+| `preferred_language` | `VARCHAR(10)` | `NOT NULL, DEFAULT 'en'` | Idioma de superficie. |
+| `preferred_categories` | `JSONB` | `NOT NULL, DEFAULT '[]'` | Categorías elegidas (arreglo de slugs). |
+| `created_at` | `TIMESTAMP` | `NOT NULL, DEFAULT CURRENT_TIMESTAMP` | Creación. |
+| `updated_at` | `TIMESTAMP` | `NULL` | Última modificación. |
+
+> Antes se planeaban dos tablas (`user_preferences` y
+> `user_selected_categories`); se sustituyeron por esta.
+
+## 4. `admins` ✅ existe
+
+Membresía de administrador. Va **aparte** de `users` a propósito: los
+SELECTs sobre `users` no cambian.
+
+| Campo | Tipo | Restricciones | Descripción |
+| --- | --- | --- | --- |
+| `user_id` | `INTEGER` | PK, FK `users.id`, `ON DELETE CASCADE` | Usuario administrador. |
+| `granted_at` | `TIMESTAMP` | `NOT NULL, DEFAULT NOW()` | Cuándo se le concedió. |
+
+> El plan original era una columna `users.role` (`STUDENT`/`ADMIN`). Ese
+> cambio de rol dentro de `users` sigue pendiente.
+
+## 5. `categories` 🕓 planificada
 
 | Campo | Tipo | Restricciones | Descripción |
 | --- | --- | --- | --- |
@@ -47,7 +81,7 @@ Modelo objetivo de la base PostgreSQL. La fuente de verdad del DDL es
 | `created_by_user_id` | `INTEGER` | `NULL, FK users.id` | Dueño si es categoría propia. |
 | `created_at` | `TIMESTAMP` | `NOT NULL` | Creación. |
 
-## 4. `user_preferences`
+## 6. `user_preferences` 🕓 no se creó
 
 | Campo | Tipo | Restricciones | Descripción |
 | --- | --- | --- | --- |
@@ -57,24 +91,24 @@ Modelo objetivo de la base PostgreSQL. La fuente de verdad del DDL es
 | `default_length` | `VARCHAR(20)` | `NOT NULL, DEFAULT 'medium'` | `short`, `medium` o `long`. |
 | `updated_at` | `TIMESTAMP` | `NOT NULL` | Última modificación. |
 
-## 5. `user_selected_categories`
+## 7. `user_selected_categories` 🕓 no se creó
 
 | Campo | Tipo | Restricciones | Descripción |
 | --- | --- | --- | --- |
 | `user_id` | `INTEGER` | PK, FK users.id | Usuario. |
 | `category_id` | `INTEGER` | PK, FK categories.id | Categoría seleccionada. |
 
-## 6. `readings`
+## 8. `readings` ✅ existe
 
 | Campo | Tipo | Restricciones | Descripción |
 | --- | --- | --- | --- |
 | `id` | `SERIAL` | PK | Identificador de la lectura. |
 | `user_id` | `INTEGER` | `NOT NULL, FK users.id` | Usuario que la generó. |
 | `category` | `VARCHAR(50)` | `NOT NULL, DEFAULT 'technology'` | **Deprecada**; usar `category_id`. |
-| `category_id` | `INTEGER` | `NULL, FK categories.id` | Categoría normalizada. |
-| `language` | `VARCHAR(10)` | `NOT NULL, DEFAULT 'en'` | Idioma del texto. |
-| `length_type` | `VARCHAR(20)` | `NOT NULL, DEFAULT 'medium'` | Longitud configurada. |
-| `prompt_hash` | `VARCHAR(64)` | `NULL` | Hash para caché. |
+| `category_id` | `INTEGER` | `NULL, FK categories.id` | 🕓 Categoría normalizada (aún no existe). |
+| `language` | `VARCHAR(10)` | `NOT NULL, DEFAULT 'en'` | 🕓 Idioma del texto (aún no existe). |
+| `length_type` | `VARCHAR(20)` | `NOT NULL, DEFAULT 'medium'` | 🕓 Longitud configurada (aún no existe). |
+| `prompt_hash` | `VARCHAR(64)` | `NULL` | 🕓 Hash para caché (aún no existe). |
 | `title` | `VARCHAR(255)` | `NOT NULL` | Título. |
 | `description` | `TEXT` | `NOT NULL` | Descripción corta. |
 | `content` | `TEXT` | `NOT NULL` | Contenido completo. |
@@ -89,7 +123,7 @@ Modelo objetivo de la base PostgreSQL. La fuente de verdad del DDL es
 | `updated_at` | `TIMESTAMP` | `NULL` | Modificación. |
 | `deleted_at` | `TIMESTAMP` | `NULL` | Soft delete. |
 
-## 7. `evaluations`
+## 9. `evaluations` 🕓 planificada
 
 | Campo | Tipo | Restricciones | Descripción |
 | --- | --- | --- | --- |
@@ -103,7 +137,7 @@ Modelo objetivo de la base PostgreSQL. La fuente de verdad del DDL es
 | `main_ideas_coverage` | `TEXT` | `NULL` | Cobertura de ideas. |
 | `created_at` | `TIMESTAMP` | `NOT NULL` | Fecha de evaluación. |
 
-## 8. `vocabulary_logs`
+## 10. `vocabulary_logs` 🕓 planificada
 
 | Campo | Tipo | Restricciones | Descripción |
 | --- | --- | --- | --- |
@@ -116,7 +150,7 @@ Modelo objetivo de la base PostgreSQL. La fuente de verdad del DDL es
 | `contextual_example` | `TEXT` | `NULL` | Ejemplo contextual. |
 | `created_at` | `TIMESTAMP` | `NOT NULL` | Fecha de consulta. |
 
-## 9. `prompt_logs`
+## 11. `prompt_logs` ✅ existe
 
 | Campo | Tipo | Restricciones | Descripción |
 | --- | --- | --- | --- |
