@@ -7,204 +7,281 @@ ambientes.
 Es el mapa de referencia del proyecto: cuando algo no esté claro, se empieza
 por aquí.
 
----
-
-## El recorrido completo
-
-```
-1. CREAR
-   PR de feature en el repo que toque, con título Conventional Commits.
-        |
-        v
-2. REVISAR
-   CI en verde (unit, e2e, build, guards) + 1 aprobación + code owner.
-        |
-        v
-3. MERGEAR A DEVELOP
-   Merge squash a develop.
-        |
-        v
-4. VERSIONAR  (automatico)
-   release-please calcula el salto con TODOS los commits del ciclo y abre
-   (o actualiza) el PR "chore(release): v0.3.0", que sube:
-     - package.json / version.txt  (la versión del repo)
-     - CHANGELOG.md               (lo que trae la versión)
-     - versions.yml               (la fila de este repo en el manifiesto)
-        |
-        v
-5. MERGEAR EL PR DE RELEASE  (1 aprobación)
-   -> tag v0.3.0 + GitHub Release
-   -> autodespliegue a DESARROLLO
-        |
-        v
-6. DESARROLLAR A STAGING
-   La rc-<version> dispara build-images -> GHCR -> deploy-staging.
-        |
-        v
-7. VERIFICAR STAGING
-   a) smoke test automatico (falla el deploy si algo no cuadra)
-   b) checklist de salida, firmado por una persona
-        |
-        v
-8. PROMOCIONAR
-   PR rc -> main: 2 aprobaciones + code owner + el gate de staging en verde.
-        |
-        v
-9. PRODUCCION
-   La cascada abre los PRs develop -> main en back y front. Al mergearse,
-   alguien dispara deploy-prod a mano y el environment "produccion" (2
-   revisores, sin self-review) lo aprueba antes de tocar el servidor.
-```
+Todo lo que está descrito aquí **se ha ejecutado de verdad** al menos una
+vez. Donde algo es manual, está dicho como manual.
 
 ---
 
-## Que es automatico y que no
+## 1. El mapa de un vistazo
 
-| Paso | Automatico | Quien decide |
+```
+   PR de feature  ──►  develop  ──►  PR "chore(release)"  ──►  tag vX.Y.Z
+   (1 aprobación)      (CI verde)     (merge automático)       + manifiesto
+                                                                   │
+                                                                   v
+                                    rc-<app_version> en los 4 repos
+                                    (una sola a la vez: el guard)
+                                                                   │
+             ┌─────────────────────────────────────────────────────┤
+             v                                                     v
+   REHEARSAL (simulación)                                  STAGING (preproducción)
+   se despliega solo                                        se despliega SOLO si el
+   smoke test 8/8                                           smoke de rehearsal pasó
+             │                                                     │
+             └──────────────────────► smoke test 8/8 ◄────────────┘
+                                           │
+                                           v
+                              PR rc -> main  (2 aprobaciones + code owner
+                              + gate de staging en verde)
+                                           │
+                                           v
+                              cascada: PRs rc -> main en back y front
+                                           │
+                                           v
+                              PRODUCCIÓN: se dispara a mano y lo aprueban
+                              2 revisores (sin self-review)
+```
+
+**Lo importante de este mapa:** nada llega a producción sin haber pasado por
+rehearsal **y** por staging. El gate de `main` lo impone GitHub de forma
+nativa: si no hay un deployment exitoso del environment `staging` para ese
+commit, el PR a `main` no se puede mergear.
+
+---
+
+## 2. La máquina de versionado: qué es `chore(release): v0.3.2`
+
+Es el PR que `release-please` abre (o actualiza) **solo**, en cada
+repositorio, cuando algo entra a `develop`.
+
+### De dónde sale el número
+
+`release-please` lee los mensajes de commit (Conventional Commits) de todo
+lo que se fusionó a `develop` desde la última release y decide el salto:
+
+| Tipo de commit | Salto | Ejemplo |
 | --- | --- | --- |
-| Calcular la version | si | el bot |
-| Subir la version a los archivos | si | el bot (en su PR) |
-| Publicar el tag y la Release | si | el bot, al mergear su PR |
-| Desplegar a desarrollo | si | el bot |
-| Construir la imagen y publicarla | si | el bot |
-| Desplegar a staging | si | el bot |
-| Verificar el contrato (smoke test) | si | el bot |
-| **Promover a `main`** | **no** | **2 personas** |
-| **Desplegar a produccion** | **no** | **2 personas mas** |
+| `fix: ...` | patch (0.3.1 → 0.3.2) | corrige un error |
+| `feat: ...` | minor (0.3.2 → 0.4.0) | agrega algo |
+| `feat!: ...` | major (0.4.0 → 1.0.0) | rompe la API |
+| `docs:`, `chore:`, `ci:`, `test:` | no cuentan | no cambian el número |
 
-Es decir: **nada llega a producción sin que alguien lo decida dos veces.**
+La decisión se puede forzar con un commit `Release-As: 1.0.0` en el PR de
+release: el número que digas es el que sale.
+
+### Qué lleva dentro
+
+- `package.json` / `version.txt`: la versión de **ese** repositorio.
+- `CHANGELOG.md`: el resumen de lo que trae la versión.
+- `versions.yml`: la fila de ese repositorio en el manifiesto (versión, tag
+  y commit exacto).
+
+### Cada cuánto sale
+
+**En cada merge a `develop`.** No hay que pedirlo ni escribir nada: si hubo
+un `fix`, sale `v0.3.2`; si hubo un `feat`, sale `v0.4.0`.
+
+### Qué pasa al mergearlo
+
+1. Se publica el **tag** `v0.3.2` y la GitHub Release.
+2. Se dispara `build-images` con ese tag: la imagen se construye **por
+   architecturas** (`amd64` y `arm64`) y se publica en GHCR con dos
+   etiquetas: el **SHA** del commit (inmutable, la que se despliega) y la
+   **versión** (cómoda de leer).
+3. Se dispara `sync-versions`: actualiza la fila de ese repositorio en
+   `versions.yml` con versión, tag y commit, y abre un PR con ese cambio.
+
+### El manifiesto `versions.yml`
+
+Es el único punto donde se coordinan los repositorios. Cada repositorio
+versiona por su cuenta, y el manifiesto dice **exactamente qué versión está
+publicada en cada uno**:
+
+```yaml
+project: dolynation
+app_version: 0.3.1        # la versión de la app (backend y frontend)
+repositories:
+  dolynation-atl-back:
+    version: 0.3.1
+    tag: v0.3.1
+    commit: 6733505cfcd31c385d46dd587e263080be6334bf
+  dolynation-tonatiuh-front:
+    version: 0.3.1
+    tag: v0.3.1
+    commit: ca2f039cd01bb511e149dfa55c6256c3682fcceb
+  dolynation-tlalli-infra:
+    version: 0.3.3
+    tag: v0.3.3
+    commit: a7b11f9be540c569008e49d77c4a5bfc010e048f
+  dolynation-ehecatl-docs:
+    version: 0.1.4
+    tag: v0.1.4
+    commit: a91262a8d7b973abc641bf86f5d1014c420e2c3d
+```
+
+`app_version` es **la versión de la aplicación** y sigue a la más alta entre
+backend y frontend (los dos componentes que ve el usuario). Infra y docs
+versionan su propio software, pero no mandan en la versión de la app.
 
 ---
 
-## Los cuatro ambientes
+## 3. Las cuatro ramas y los tres ambientes
 
-| Ambiente | Puertos | Sale a internet | Quien lo despliega | Para que sirve |
-| --- | --- | --- | --- | --- |
-| **Desarrollo** | 57010-57012 | si (`devweb`, `devapi`) | automatico en cada merge a `develop` | trabajar |
-| **Rehearsal** | 57040-57042 | **no** | automatico | **probar el tren completo sin riesgo** |
-| **Staging** | 57020-57022 | si (`stagingweb`) | automatico | probar lo que va a producción |
-| **Produccion** | 57030-57032 | si (`yacaterkos.tech`, `www`) | manual + 2 revisores | producción |
+### Ramas
 
-### Por que rehearsal
+| Rama | Qué es | Quién entra |
+| --- | --- | --- |
+| `develop` | donde se trabaja | cualquier PR de feature |
+| `rc-<app_version>` | la combinación de versiones candidata | se corta al liberar |
+| `main` | lo que está en producción | solo desde `develop` o una `rc` |
+| `hotfix/*` | una urgencia en producción | directo a `main` |
 
-Staging y producción se despliegan **por imagen**: el servidor nunca compila, y
-la imagen es inmutable, así que se sabe exactamente qué corre y se puede
-volver atrás. Un staging así es lo que hace que servir de algo: si staging
-corriera por código y producción por imagen, el bug más común (la imagen no
-trae un archivo, el schema está desfasado) solo aparecería en producción.
+### Ambientes
 
-El problema es que **no se puede probar el mecanismo sin tocar producción**.
-Rehearsal es un tercer ambiente **con el mismo camino de código** que staging
-y producción — el mismo compose, el mismo script de despliegue, el mismo smoke
-test — pero con otro directorio (`/srv/doly/rehearsal`), otros puertos
-(5704x) y **sin salir a internet**.
+| Ambiente | Puertos | Se despliega | Para qué sirve |
+| --- | --- | --- | --- |
+| desarrollo | 57010-57012 | merge a `develop` | el día a día del equipo |
+| **rehearsal** | 57040-57042 | al empujar una `rc` | simulación: el tren completo sin tocar staging ni producción |
+| **staging** | 57020-57022 | al empujar una `rc`, **después** de que rehearsal pase su smoke test | preproducción con datos de prueba |
+| producción | 57030-57032 | **a mano**, con 2 revisores | usuarios reales |
 
-Es donde se recorre el tren entero (`develop` → `rc` → despliegue → verificación)
-antes de tocar nada real. Sin él, habría que descubrir los fallos del
-mecanismo en staging, o peor, en producción.
+Rehearsal y staging comparten el mismo `docker-compose.env.yml`; se
+distinguen por `COMPOSE_PROJECT_NAME` y por los puertos. El servidor nunca
+compila: baja imágenes de GHCR.
 
-### Por qué cuatro y no dos
+---
 
-| Si solo existieran... | El fallo aparecería en... |
+## 4. La `rc`: una sola a la vez
+
+La `rc-<app_version>` es la combinación de versiones que se va a promover.
+Se corta en **los cuatro repositorios**, en el commit de la release
+correspondiente (el del tag `vX.Y.Z`).
+
+El **guard single-flight** (`release-guard`) revisa, en los cuatro repos,
+que no exista otra `rc` con otro nombre. Si la hay, el workflow falla con un
+mensaje claro y el despliegue no se dispara.
+
+> Por qué importa: si hubiera dos rc a la vez, dos combinaciones distintas
+> de versiones podrían llegar a producción sin que nadie lo notara.
+
+El guard corre en el runner de GitHub (consulta las ramas públicas con
+`git ls-remote`), sin SSH ni credenciales, y por eso funciona igual en los
+cuatro repos, incluido el de documentación.
+
+---
+
+## 5. Qué pasa cuando se empuja la `rc`
+
+Un solo push a `rc-0.3.1` dispara, en paralelo:
+
+| Workflow | Qué hace |
 | --- | --- |
-| desarrollo y producción | producción, con usuarios viendo el fallo |
-| desarrollo, staging y producción | staging: se pierde el tiempo del equipo probando en un ambiente que no se parece a producción |
-| los cuatro | nada: rehearsal lo encuentra antes |
+| `release-guard` (en los 4 repos) | verifica que no haya otra rc |
+| `build-images` (back y front) | construye la imagen (amd64 + arm64) y la publica en GHCR con el SHA y la versión |
+| `deploy-rehearsal` (infra) | despliega el ambiente de simulación con las versiones del manifiesto |
+| `promote-rc` (infra) | abre el PR `rc -> main` (no lo mergea) |
+| `deploy-staging` (infra) | **espera** a que el smoke de rehearsal esté en verde y solo entonces despliega a staging |
+| `smoke-test` (infra) | se dispara solo cuando un deploy terminó bien: 8 comprobaciones contra el ambiente |
+
+El **smoke test** verifica, contra el ambiente recién desplegado:
+
+1. que la versión desplegada sea la del manifiesto;
+2. que la cabecera `X-App-Version` venga bien;
+3. que el login devuelva un token;
+4. que `GET /auth/me` responda con ese token;
+5. que el frontend cargue;
+6. que el proxy del frontend al backend funcione;
+7. que el healthcheck de la base de datos responda;
+8. que la versión declarada y la que reporta la app coincidan.
+
+Si algo no cuadra, **el smoke falla** y el ambiente se queda con la versión
+anterior: no se promueve nada.
 
 ---
 
-## Las ramas `rc-<version>`
+## 6. Las cuatro formas de frenar una versión
 
-Una `rc` es **la combinación de versiones que se va a promover**. Por ejemplo
-`rc-1.0.0` significa: el backend en `0.4.0`, el frontend en `0.3.1`, la
-infraestructura en `0.2.0` y la documentación en `0.2.1`.
+1. **En el PR de release**: "Request changes" o cerrarlo. El bot lo vuelve
+   a abrir en el siguiente push a `develop`; para detenerlo de verdad, un
+   commit `Release-As: <otra-version>`.
+2. **En el deploy**: si falla el healthcheck o el smoke, el ambiente se
+   queda con la versión anterior y no se promueve.
+3. **En el checklist de salida** (`operations/CHECKLIST-SALIDA-STAGING.md`):
+   una persona lo recorre y lo firma. Si algo no está bien, no se firma y no
+   se abre el PR a `main`.
+4. **En el PR a `main`**: 2 aprobaciones + code owner + el gate de staging.
 
-**No es un entorno**: es una etiqueta de estado, como una `rc` de una
-distribución Linux.
-
-Por qué hace falta:
-
-- Los repos escalan **por su cuenta**. El backend puede estar en `0.4.0`
-  mientras la documentación va en `0.2.1`. No tiene sentido forzar que
-  coincidan.
-- Pero **producir** sí necesita una combinación concreta. La rc la fija.
-- Solo puede haber **una** a la vez: si hubiera dos, dos combinaciones
-  distintas podrían llegar a producción sin que nadie lo notara. De eso se
-  encarga el **guard single-flight**, que falla con un mensaje claro.
-
-La `rc` se crea en los cuatro repos con el **mismo número** (no la misma
-versión: cada repo va en la suya, la que dice `versions.yml`).
+Y el último freno, en producción: el environment `prod` tiene **2 revisores
+y no permite auto-aprobación**. GitHub pausa el workflow antes de tocar el
+servidor.
 
 ---
 
-## Los cinco frenos
+## 7. Quién puede hacer qué (las reglas del repo)
 
-Un cambio puede detenerse en cinco sitios, y cada uno tiene su mecanismo:
+| Regla | Alcance |
+| --- | --- |
+| 1 aprobación + CI en verde | `develop` |
+| Bypass del scrum master | **solo `develop`** (`can_bypass: always`) |
+| 2 aprobaciones + code owner | `main` |
+| Gate de staging en `main` | `main` (required deployment del environment `staging`) |
+| Sin bypass | `main` (`can_bypass: never`) |
+| 2 revisores, sin self-review | environment `prod` |
 
-### 1. En el PR de release
-
-El bot abre el PR `chore(release): v0.3.0` en `develop`.
-
-- **Pedir cambios**: se puede. El PR no se mergea y el bot lo vuelve a
-  actualizar en el siguiente push.
-- **Rechazar la versión entera**: cerrar el PR. El bot lo **vuelve a abrir**
-  con el mismo contenido. Para detenerlo de verdad: un commit
-  `Release-As: <otra-version>`.
-
-### 2. En el despliegue a staging
-
-Si falla el **healthcheck**, el deploy falla y el stack no se queda a medias.
-Si falla el **smoke test**, ese job falla.
-
-En los dos casos **staging se queda con la versión anterior**, y nadie promovió
-la nueva: la promoción es manual.
-
-### 3. En el checklist de salida
-
-Una persona recorre la aplicación en staging y **lo firma**. Cubre lo que la
-máquina no puede juzgar: que el texto de la IA se lea bien, que el feedback
-sea útil, que el diseño se vea bien.
-
-Es la capa que el smoke test no puede sustituir.
-
-### 4. En el PR hacia `main`
-
-- **2 aprobaciones** obligatorias.
-- **Code owner review**: quien toca el archivo tiene que aprobar.
-- **Gate de ambiente**: GitHub no deja mergear hasta que el environment
-  `staging` tenga un deployment exitoso.
-
-### 5. En el despliegue a producción
-
-El environment `produccion` tiene **2 required reviewers** y **sin
-self-review**: GitHub **pausa el workflow** antes de tocar el servidor.
+El bypass de `develop` existe porque el scrum master es quien aprueba y
+mergea; el de `main` **no** existe: los releases a producción se miran entre
+dos.
 
 ---
 
-## Los numeros de version
+## 8. Rollback
 
-| Version | Cuando | Gate |
-| --- | --- | --- |
-| `0.x.y` | cada merge a `develop` | automatico (CI en verde) |
-| `v1.0.0` | cuando el sistema sea un **MVP que funcione sin errores** | checklist de staging firmado + 2 aprobaciones en `main` |
-
-Las `0.x.y` **no representan un entregable**: suben con cada merge mientras se
-trabaja. La `v1.0.0` es la del entregable de diciembre, y sale cuando el
-checklist de salida se firma por primera vez con todo funcionando.
-
-Se fija con un commit:
+El backend se despliega por **SHA**, que es inmutable. Para volver atrás:
 
 ```bash
-git commit --allow-empty -m "Release-As: 1.0.0"
+# en el servidor, con ORG_DIR del ambiente
+IMAGE_TAG=<sha-anterior> COMPOSE_PROJECT_NAME=doly-staging \
+  DB_HOST_PORT=57020 BACKEND_HOST_PORT=57021 FRONTEND_HOST_PORT=57022 \
+  bash /srv/doly/staging/dolynation-tlalli-infra/scripts/deploy-env.sh
 ```
+
+El `deploy-env.sh` lee el manifiesto, baja esa imagen exacta y levanta el
+stack. Como la imagen es inmutable, el rollback es exacto: no depende de que
+"la versión 0.3.1" siga siendo la misma.
 
 ---
 
-## Referencias
+## 9. Lo que se hace automático y lo que no
 
-| Documento | Qué contiene |
+| Paso | Automático | Quién decide |
+| --- | --- | --- |
+| Número de versión | sí | release-please, según los commits |
+| PR de release | sí | release-please |
+| Tag y GitHub Release | sí | release-please, al mergear el PR |
+| Imagen en GHCR | sí | `build-images` (push a develop, rc o tag) |
+| Manifiesto `versions.yml` | sí | `sync-versions` |
+| Despliegue a rehearsal | sí | al empujar la `rc` |
+| Smoke test | sí | `workflow_run` tras cada deploy |
+| Despliegue a staging | sí | al empujar la `rc`, si rehearsal pasó |
+| PR `rc -> main` | sí (se abre) | **una persona lo mergea** |
+| Aprobaciones de `main` | no | 2 revisores + code owner |
+| Despliegue a producción | **no** | alguien lo dispara y lo aprueban 2 revisores |
+
+---
+
+## 10. Si algo falla, dónde mirar
+
+| Síntoma | Dónde |
 | --- | --- |
-| [`conventions/versioning.md`](../conventions/versioning.md) | el versionado automático y las reglas de bump |
-| [`operations/CI-CD-Y-VERSIONADO.md`](./CI-CD-Y-VERSIONADO.md) | el pipeline completo, fase por fase |
-| [`operations/PLAN-DE-DESPLIEGUE.md`](./PLAN-DE-DESPLIEGUE.md) | los ambientes, los puertos, los secrets y los gates |
-| `operations/CHECKLIST-SALIDA-STAGING.md` (en `tlalli-infra`) | lo que una persona revisa y firma antes de promover |
+| El PR de release no se mergea solo | el ruleset de `develop` pide 1 aprobación y el PR lo abre la misma cuenta: hay que aprobarlo con otra cuenta o usar el bypass del scrum master |
+| "Permission denied (publickey)" en un deploy | el secret `DEPLOY_SSH_KEY` del environment no corresponde a la llave del servidor |
+| "not found" al bajar una imagen | la imagen no se construyó: el `build-images` del commit del manifiesto no corrió o no se publicó |
+| "exec format error" al arrancar | la imagen no es de la arquitectura del servidor (arm64): el build tiene que ser multi-arquitectura |
+| El smoke test falla con URLs vacías | se disparó sin deploy: el smoke solo corre cuando el deploy terminó bien |
+| El PR a `main` no se puede mergear | falta el deployment de staging de ese commit (gate nativo de GitHub) |
+
+---
+
+Ver también: `CI-CD-Y-VERSIONADO.md` (por qué así), `PLAN-DE-DESPLIEGUE.md`
+(detalle de los ambientes) y `CHECKLIST-SALIDA-STAGING.md` (la lista que
+decide si el MVP está listo).
