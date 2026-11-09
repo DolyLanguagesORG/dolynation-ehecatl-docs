@@ -24,15 +24,16 @@ DolyNation: `dolynation-atl-back` (backend), `dolynation-tonatiuh-front`
 | Manifiesto multirepo (`versions.yml`) | ✅ **Implementado** | `dolynation-tlalli-infra/versions.yml` |
 | Actualización automática del manifiesto | ✅ **Implementado** | `.github/workflows/sync-versions.yml` en infra |
 | Autodespliegue a desarrollo con la versión inyectada | ✅ **Implementado** | `deploy-dev.yml` en back y front |
-| Version visible en la API | 🔶 En curso | `atl-back#69` |
-| Version visible en el frontend | 🔶 En curso | `tonatiuh-front#43` |
-| Ambiente de staging | 🔶 Pendiente | `infra#43` |
-| Deploy a staging desde `rc-<version>` | 🔶 Pendiente | `infra#14`, `infra#8` |
-| Smoke test y checklist de salida de staging | 🔶 Pendiente | `infra#44` |
-| Gate de producción (Environment con revisores) | 🔶 Pendiente | `infra#45` |
-| Rulesets de `main` y `rc-*` | 🔶 Pendiente | `infra#46` |
-| Cascada `infra → back/front` | 🔶 Pendiente | `infra#8` |
-| Prueba de extremo a extremo del tren de release | 🔶 Pendiente | `infra#48` |
+| Version visible en la API | ✅ **Implementado** | `GET /api/v1/version` + cabecera `X-App-Version` |
+| Version visible en el frontend | ✅ **Implementado** | `/version.json` + `VersionBadge` |
+| Ambiente de staging | ✅ **Implementado** | `docker-compose.env.yml` + `deploy-env.sh` |
+| Deploy a staging desde `rc-<version>` | ✅ **Implementado** | `deploy-staging.yml` (solo si rehearsal pasa su smoke) |
+| Smoke test y checklist de salida de staging | ✅ **Implementado** | `scripts/smoke-test.sh` (8 comprobaciones) + checklist |
+| Gate de producción (Environment con revisores) | ✅ **Implementado** | environment `prod` con 2 revisores, sin self-review |
+| Rulesets de `main` y `rc-*` | ✅ **Implementado** | `main`: 2 aprobaciones + code owner + gate de staging |
+| Cascada `infra → back/front` | ✅ **Implementado** | `promote-rc.yml` (PRs `rc → main`) |
+| Guard single-flight de las `rc-*` | ✅ **Implementado** | `scripts/release-guard.sh` |
+| Prueba de extremo a extremo del tren de release | ✅ **Ejecutada** | `rc → build → rehearsal → smoke 8/8 → staging` |
 
 ---
 
@@ -128,8 +129,9 @@ corriendo.
    dispara en cascada la apertura de los PRs hacia `main` en `atl-back` y
    `tonatiuh-front` (ver [§7](#7-disparadores-y-cascada)).
 3. **Gate de producción:** el despliegue a producción usa el GitHub Environment
-   `produccion` con *required reviewers*: **el workflow se pausa y espera a que
-   alguien autorice la salida**. Ninguna promoción es automática.
+   `prod` con *required reviewers*: **el workflow se pausa y espera a que
+   alguien autorice la salida**. Ninguna promoción es automática: `deploy-prod`
+   solo corre cuando alguien lo dispara a mano.
 4. **Despliegue y release oficial:** se actualiza la infraestructura productiva
    y la GitHub Release deja de ser *Pre-release*.
 
@@ -169,7 +171,7 @@ un bot la esquivara vaciaría esa garantía.
 | --- | --- |
 | `atl-back`, `tonatiuh-front` | Al publicar su tag, envían un `repository_dispatch` a infra con su repositorio, versión y commit. |
 | `tlalli-infra` (`sync-versions.yml`) | Actualiza la fila del repositorio en `versions.yml` y abre el PR con el cambio. |
-| `tlalli-infra` (cascada) | Al promover a `main`, abre los PRs `develop → main` en back y front con un PAT. |
+| `tlalli-infra` (cascada) | Al promover a `main`, abre los PRs `rc → main` en back y front con un PAT. |
 
 ---
 
