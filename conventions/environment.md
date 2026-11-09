@@ -44,6 +44,68 @@ hasta que el proveedor esté decidido.
 4. **Diferenciar** dev / staging / prod con archivos separados:
    `.env.development`, `.env.production`, etc.
 
+## Los mismos nombres en todos los ambientes
+
+**El nombre de una variable es el mismo en todos los ambientes**; lo que
+cambia es el **valor**.
+
+| | local | desarrollo | rehearsal | staging | producción |
+| --- | --- | --- | --- | --- | --- |
+| `DB_PASSWORD` | la que sea | de prueba | de prueba | de prueba | **la real** |
+
+Por qué:
+
+- El código lee **un** nombre. Si el nombre cambiara por ambiente, el código
+  necesitaría bifurcaciones ("si es staging lee X, si es prod lee Y"), que es
+  justo donde aparecen los bugs.
+- La seguridad no viene del nombre, viene de: **valores distintos** por
+  ambiente, secrets **por environment** en GitHub, y `prod` con dos revisores
+  y sin auto-aprobación.
+- Regla de oro: **el `.env` de producción nunca se copia a staging**, ni al
+  revés.
+
+## Agregar una variable nueva: los 5 lugares
+
+Una variable no existe en la aplicación hasta que está en **todos** estos
+lugares. Si se olvida uno, el error típico es "la variable no llega" (el
+secret existe en GitHub, pero la aplicación no la ve):
+
+| # | Dónde | Qué se hace |
+| --- | --- | --- |
+| 1 | `atl-back`: `src/config/env.validation.ts` | se declara en el schema Zod (si es requerida, la app **no arranca** sin ella) |
+| 2 | `tlalli-infra`: `docker-compose.env.yml` | se pasa al contenedor que la use |
+| 3 | `tlalli-infra`: los 3 workflows `deploy-*.yml` | **la lista de variables del `.env` está escrita a mano**: si no se agrega ahí, no llega al servidor |
+| 4 | `atl-back`: `.env.example` | la forma para los que trabajan en local |
+| 5 | GitHub **Environments** | un secret por ambiente (`desarrollo`, `rehearsal`, `staging`, `prod`), con valores distintos |
+
+Y el sexto paso, que es de documentación: la tabla de variables de este
+archivo (`conventions/environment.md`).
+
+> Si la variable es **pública** (va al navegador), lleva el prefijo
+> `NEXT_PUBLIC_` y se compila en el bundle. Si es de **servidor**, **no** lleva
+> ese prefijo: así no se filtra al cliente (es el caso de
+> `BACKEND_INTERNAL_URL` en el frontend).
+
+## Variables de correo (SMTP)
+
+Para enviar correo, el backend necesita estas variables (todas **de
+servidor**: nunca al frontend):
+
+| Variable | Requerida | Descripción |
+| --- | --- | --- |
+| `SMTP_HOST` | Sí | Host del servidor SMTP (p. ej. `smtp.example.com`) |
+| `SMTP_PORT` | Sí | Puerto (587 con STARTTLS, 465 con TLS implícito) |
+| `SMTP_USER` | Según proveedor | Usuario de la cuenta |
+| `SMTP_PASSWORD` | Según proveedor | Contraseña o **app password** |
+| `SMTP_FROM` | Sí | Remitente (`no-reply@dominio`) |
+| `SMTP_SECURE` | No | `true` si el puerto es 465 (TLS implícito) |
+
+Y en cada ambiente, con **claves distintas** (en `desarrollo` y `rehearsal`
+pueden ser de un proveedor de pruebas, nunca las de producción).
+
+En local no hace falta una clave real: se puede levantar un *catch-all*
+(Mailpit/MailHog) y ver el correo en el navegador.
+
 ## Validación
 
 Las variables se validan al arrancar con un schema Zod en

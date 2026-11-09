@@ -2,6 +2,29 @@
 
 Cómo levantar el backend de Dolynglish desde cero en tu máquina.
 
+## Si te falta una variable
+
+Las variables de entorno tienen **el mismo nombre en todos los ambientes**;
+lo que cambia es el valor. Si tu trabajo necesita una clave que no tienes
+(local, o de un proveedor nuevo), **pídela** en el issue o en el chat: no la
+busques en el repo ni la pegues en ningún lado.
+
+Para trabajar en local, la forma es:
+
+```bash
+cp .env.example .env     # y rellena lo que tu trabajo necesite
+```
+
+Si la clave es de un tercero (correo, IA, un proveedor), en `desarrollo`
+**no hace falta una clave real**: lo normal es que haya un equivalente de
+pruebas o que la función quede apagada hasta que la necesites.
+
+> Ten en cuenta que una variable nueva hay que **agregarla en 5 lugares**
+> (schema, compose, la lista del `.env` en los workflows, `.env.example` y
+> GitHub Environments). Si agregas una y "no llega", casi siempre falta el
+> paso 3: la lista del `.env` en `deploy-*.yml` está escrita a mano.
+> Está detallado en [`conventions/environment.md`](../conventions/environment.md).
+
 ## Requisitos
 
 - **Node.js ≥ 22.0.0** (recomendado: usar [nvm](https://github.com/nvm-sh/nvm))

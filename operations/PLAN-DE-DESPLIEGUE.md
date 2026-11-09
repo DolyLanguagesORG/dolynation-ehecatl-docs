@@ -83,8 +83,13 @@ Para staging y producción se trabaja con **imágenes**, no con build en el serv
 > no serían el mismo binario. Una imagen es inmutable: se sabe exactamente qué
 > corre y se puede volver atrás.
 
-**El backend se despliega por SHA** (inmutable: es lo que corre y lo que
-permite el rollback) y **el frontend por versión**.
+**Las dos imágenes se despliegan por SHA** (inmutable: es lo que corre y lo
+que permite el rollback). La etiqueta por versión también se publica, pero
+solo para leerla: si el deploy usara esa etiqueta, una reconstrucción
+posterior movería la versión y el rollback dejaría de ser exacto.
+
+Las imágenes se construyen **multi-arquitectura** (`amd64` y `arm64`), porque
+el servidor de despliegue es ARM64.
 
 ### El ambiente de simulación
 
@@ -96,6 +101,12 @@ Existe para **probar el tren completo sin tocar staging ni producción**:
 `develop` → `rc-<version>` → despliegue → healthcheck → smoke test. Es el
 mismo `docker-compose.env.yml` con otros puertos, así que lo que se prueba
 allí es exactamente lo que irá a producción.
+
+**Staging no se despliega hasta que rehearsal pase su smoke test.** El paso
+"Verificar el ambiente de simulación" del deploy a staging corre el mismo
+`smoke-test.sh` contra los puertos de rehearsal y, si algo no cuadra, el
+despliegue a staging no se hace. El orden simulación → staging es automático
+y no depende de que nadie se acuerde.
 
 | Ambiente | Directorio | Puertos | Sale a internet |
 | --- | --- | --- | --- |
@@ -134,25 +145,38 @@ Cada entorno define sus propios secretos (nada compartido en el repo):
 
 | Grupo | Secretos |
 | --- | --- |
-| Conexión SSH | `SSH_HOST`, `SSH_USER`, `SSH_KEY` (privada ed25519), `SSH_PORT`, `DEPLOY_PATH` |
+| Conexión SSH | `DEPLOY_HOST`, `DEPLOY_PORT`, `DEPLOY_USER`, `DEPLOY_SSH_KEY` (privada ed25519), `DEPLOY_SSH_KEY_PASSPHRASE` |
+| Rutas | `ORG_PATH` (directorio del ambiente en el servidor) |
 | Postgres | `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` |
-| Backend DB | `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_DATABASE` |
+| Backend DB | `DB_USER`, `DB_PASSWORD`, `DB_DATABASE` |
 | Auth | `JWT_SECRET` (mín. 32 chars), `JWT_ACCESS_TTL`, `JWT_REFRESH_TTL` |
 | IA | `AI_DEFAULT_PROVIDER`, `MINIMAX_API_KEY`, `MINIMAX_MODEL` |
-| App | `TZ`, `PORT`, `HOST`, `NODE_ENV`, `LOG_LEVEL`, `API_PREFIX` |
+| PAT | `RELEASE_PLEASE_TOKEN` (versionado y cascada entre repos) |
+
+> **Ojo**: la lista de variables que el deploy escribe en el `.env` del
+> servidor está **escrita a mano** en los tres workflows `deploy-*.yml`. Si
+> agregas una variable nueva, hay que añadirla ahí (y en el compose, y en el
+> schema Zod del backend, y en `.env.example`), o **no llega al servidor**.
+> Es el error clásico: el secret existe en GitHub y la variable nunca aparece
+> en la aplicación.
 
 Los **Environments** se configuran en los repos que despliegan:
 
-- `atl-back` → `desarrollo`, `staging`, `produccion`, `rehearsal`
-- `tonatiuh-front` → `desarrollo`, `staging`, `produccion`, `rehearsal`
-- `tlalli-infra` → `desarrollo`, `staging`, `produccion`, `rehearsal`
+- `atl-back` → `desarrollo`, `rehearsal`, `staging`, `prod`
+- `tonatiuh-front` → `desarrollo`, `rehearsal`, `staging`, `prod`
+- `tlalli-infra` → `desarrollo`, `rehearsal`, `staging`, `prod`, `smoke-test`
 
 | Environment | Required reviewers | Self-review | Uso |
 | --- | --- | --- | --- |
 | `desarrollo` | ninguno | — | autodespliegue en cada merge a `develop` |
 | `rehearsal` | ninguno | — | la simulación: el tren completo, sin salir a internet |
 | `staging` | ninguno | — | despliegue de la `rc-<version>`, automático |
-| `produccion` | **2** (Azael y Elías) | **bloqueado** | promoción a producción |
+| `smoke-test` | ninguno | — | environment del **smoke test**, para que su deployment no cuente como uno de staging |
+| `prod` | **2** (Azael y Elías) | **bloqueado** | promoción a producción |
+
+> El environment de producción se llama **`prod`**. Es el que tiene los dos
+> revisores; `deploy-prod.yml` usa ese. Y `deploy-prod.yml` es **manual**
+> (`workflow_dispatch`): empujar una `rc` no publica a producción.
 
 > **Un Environment con required reviewers no es lo mismo que "2 aprobaciones
 > en el PR".** El PR con 2 aprobaciones dice "el código está bien revisado".
@@ -190,10 +214,14 @@ servidor, en `infra`.
 1. **Rollback de un comando**: falta registrar automáticamente el SHA
    desplegado anterior y un job que lo restaure. Hoy el rollback es cambiar
    `IMAGE_TAG` y volver a desplegar (`infra#27`).
-2. **Los registros DNS** de `stagingweb` (los crea el SM).
-3. **El primer despliegue real** a staging y a producción, cuando se autorice.
-4. **Publicar las imágenes en GHCR** de verdad: las de prueba se construyeron
-   en local, no se publicaron.
+2. **El primer despliegue real a producción**, cuando se autorize. Staging ya
+   recibe despliegues reales (con su smoke test en verde).
+3. **Runner de migraciones**: los scripts de `database/postgres/updates/` solo
+   se aplican hoy a bases **nuevas** (el compose los monta en
+   `/docker-entrypoint-initdb.d`). Para una base que ya existe hay que
+   aplicarlos a mano con `psql` y registrar qué se aplicó.
+4. **Limpieza de ramas**: al promover una `rc` se borra; las ramas de
+   feature cerradas también.
 
 ## Decisiones ya tomadas
 
@@ -202,5 +230,7 @@ servidor, en `infra`.
 | Registry | **GHCR** (`ghcr.io/dolylanguagesorg/...`) |
 | Modelo de desarrollo | un `docker-compose.dev.yml` central en `infra` que monta los otros dos repos |
 | Puertos | 5701x dev, 5702x staging, 5703x producción, 5704x rehearsal |
-| Aprobaciones | `produccion` con 2 required reviewers y sin self-review; los demás, automáticos |
+| Aprobaciones | `prod` con 2 required reviewers y sin self-review; los demás, automáticos |
+| `main` | 2 aprobaciones + code owner + **deployment de staging** en verde, sin bypass |
+| `develop` | 1 aprobación, con bypass para el scrum master |
 | Etiqueta de imagen | **SHA** para el backend (inmutable, la del rollback) y **versión** para el frontend |
