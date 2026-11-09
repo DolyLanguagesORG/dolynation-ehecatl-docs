@@ -1,6 +1,10 @@
 # Diagrama entidad-relación
 
-Modelo de datos de PostgreSQL: diez tablas, sus claves y sus relaciones.
+Modelo de datos de PostgreSQL: sus claves y sus relaciones.
+
+**Las entidades con un comentario `%% planificada` (o `%% no se creo`) todavía
+no existen**; las demás sí están en la base de hoy. La fuente de verdad del DDL es
+`dolynation-tlalli-infra`.
 
 ```mermaid
 erDiagram
@@ -31,6 +35,7 @@ erDiagram
         TIMESTAMP deleted_at
     }
 
+    %% planificada (sprint 2)
     categories {
         SERIAL id PK
         VARCHAR slug UK
@@ -41,6 +46,7 @@ erDiagram
         TIMESTAMP created_at
     }
 
+    %% no se creo: se sustituyo por user_settings
     user_preferences {
         INTEGER user_id PK, FK
         VARCHAR target_language
@@ -49,6 +55,7 @@ erDiagram
         TIMESTAMP updated_at
     }
 
+    %% no se creo: se sustituyo por user_settings
     user_selected_categories {
         INTEGER user_id PK, FK
         INTEGER category_id PK, FK
@@ -77,6 +84,7 @@ erDiagram
         TIMESTAMP deleted_at
     }
 
+    %% planificada (sprint 3)
     evaluations {
         SERIAL id PK
         INTEGER reading_id FK, UK
@@ -89,6 +97,7 @@ erDiagram
         TIMESTAMP created_at
     }
 
+    %% planificada (sprint 3)
     vocabulary_logs {
         SERIAL id PK
         INTEGER user_id FK
@@ -117,7 +126,25 @@ erDiagram
         TIMESTAMP created_at
     }
 
-    users ||--o| user_preferences : "tiene preferencias"
+    %% Las dos entidades que existen hoy y no estaban en el plan original:
+    %% user_settings (preferencias) reemplaza a user_preferences +
+    %% user_selected_categories, y admins (membresia de administrador)
+    %% reemplaza a la columna users.role.
+    user_settings {
+        INTEGER user_id PK, FK
+        VARCHAR preferred_language
+        JSONB preferred_categories
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+    }
+
+    admins {
+        INTEGER user_id PK, FK
+        TIMESTAMP granted_at
+    }
+
+    users ||--o| user_settings : "tiene preferencias"
+    users ||--o| admins : "es administrador"
     users ||--o{ auth_access_tokens : "posee tokens"
     users ||--o{ user_selected_categories : "selecciona"
     categories ||--o{ user_selected_categories : "es seleccionada"
@@ -133,5 +160,16 @@ erDiagram
 ```
 
 
-**Estado:** el diagrama muestra el modelo **objetivo**. Hoy existen `users`, `auth_access_tokens`, `readings` y `prompt_logs` (`01-init.sql`); las demás tablas llegan con las migraciones `02`, `03` y `04` (`infra#20`, `infra#21`, `infra#22`). El detalle campo por campo está en [`diccionario-de-datos.md`](./diccionario-de-datos.md).
+**Estado:** el diagrama muestra el modelo **completo**. Hoy existen seis
+tablas: `users`, `auth_access_tokens`, `readings`, `prompt_logs`,
+`user_settings` (`updates/06-user-settings.sql`) y `admins`
+(`updates/05-admin-table.sql`). Las que faltan (`categories`, `evaluations`,
+`vocabulary_logs`) llegan con las migraciones de los sprints 2 y 3
+(`infra#20`, `infra#21`).
+
+Dos cosas del plan original cambiaron: `user_preferences` +
+`user_selected_categories` se sustituyeron por **una** tabla,
+`user_settings`; y la columna `users.role` se sustituyó por la tabla
+`admins`. El detalle campo por campo está en
+[`diccionario-de-datos.md`](./diccionario-de-datos.md).
 

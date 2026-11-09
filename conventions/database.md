@@ -95,6 +95,26 @@ una sola vez.
 > compose los monta en `/docker-entrypoint-initdb.d`). Para una base que ya
 > existe hay que aplicarlos a mano con `psql`.
 
+## Idea pendiente: que las migraciones se apliquen solas
+
+**Hoy el paso 4 es manual**: si agregas una columna, el SQL llega a la
+release (va en el PR de infra), pero aplicarlo a las bases que ya existen
+(staging, producción, la de desarrollo) hay que hacerlo a mano con `psql`.
+
+La idea es que el deploy lo haga solo:
+
+1. `scripts/deploy-env.sh`, antes de levantar el stack, aplica los `.sql`
+   pendientes **en orden numérico**.
+2. Cada script aplicado se registra en una tabla `schema_migrations`
+   (`version`, `applied_at`, `checksum`), para no reaplicar lo que ya está.
+3. Si un script falla, el deploy **falla** (no se levanta el stack con el
+   schema a medias).
+
+Con eso, el flujo de un cambio de schema sería: **PR en infra → merge → el
+siguiente deploy actualiza la base**. Sin.psql a mano.
+
+Está trackeado en el issue de infra (`runner de migraciones`).
+
 Detalle de columnas, tipos y relaciones en
 [`architecture/data-model.md`](../architecture/data-model.md).
 
