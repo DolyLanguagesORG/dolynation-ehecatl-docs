@@ -170,7 +170,53 @@ cuatro repos, incluido el de documentación.
 
 ---
 
-## 5. Qué pasa cuando se empuja la `rc`
+## 5. El ciclo de vida de la `rc`
+
+La `rc` es **una candidata**, no una publicación. Entender eso evita la
+confusión más común del flujo.
+
+| Momento | Qué es la `rc` |
+| --- | --- |
+| Se corta (al liberar) | La combinación de versiones que se quiere **probar** |
+| Se prueba | La que está corriendo en rehearsal y staging |
+| Se promueve (PR a `main`) | La que **queda registrada** en `main` |
+| Se publica | La que tú **decides** desplegar a producción (`deploy-prod`, a mano, con 2 revisores) |
+
+**Fusionar el PR a `main` NO publica nada.** El deploy a producción es un acto
+aparte: `deploy-prod` es `workflow_dispatch` y espera los 2 revisores del
+environment `prod`. Eso significa que `main` puede recibir **varias
+promociones seguidas** (0.4.0, luego 0.5.0, …) y que **la que llega a
+producción sea la que tú elijas desplegar**, no la última.
+
+### Reglas de la rama
+
+| Regla | Alcance |
+| --- | --- |
+| No force-push | `rc-*` en los 4 repos |
+| Historial lineal | `rc-*` en los 4 repos |
+| **No se borra sin que lo haga el scrum master** | `rc-*` (regla `deletion` + bypass del SM) |
+
+### Si la candidata se abandona
+
+1. **Cierra el PR** a `main` (la rama puede quedarse).
+2. **Borra la rama `rc-*`**: el PR se cierra solo y **se libera el slot** del
+   single-flight para poder cortar la siguiente rc.
+
+> **Borrar la rc no revierte nada**: el ambiente de staging sigue con la
+> versión que tenía desplegada hasta el próximo deploy. Y los deployments
+> registrados (los que satisfacen el gate de `main`) no desaparecen: son
+> registros históricos.
+
+### Cerrar o rechazar el PR a `main`
+
+- **Request changes**: el PR sigue abierto y no se puede mergear hasta que se
+  resuelva. La rc sigue ocupando el slot.
+- **Cerrarlo**: la rc sigue existiendo (slot tomado) y `promote-rc` **vuelve a
+  abrir el PR** en el siguiente push a la rc.
+- **La cascada no se dispara** al cerrar: solo corre cuando el PR se
+  **mergea**.
+
+## 6. Qué pasa cuando se empuja la `rc`
 
 Un solo push a `rc-0.3.1` dispara, en paralelo:
 
@@ -199,7 +245,7 @@ anterior: no se promueve nada.
 
 ---
 
-## 6. Las cuatro formas de frenar una versión
+## 7. Las cuatro formas de frenar una versión
 
 1. **En el PR de release**: "Request changes" o cerrarlo. El bot lo vuelve
    a abrir en el siguiente push a `develop`; para detenerlo de verdad, un
@@ -217,7 +263,7 @@ servidor.
 
 ---
 
-## 7. Quién puede hacer qué (las reglas del repo)
+## 8. Quién puede hacer qué (las reglas del repo)
 
 | Regla | Alcance |
 | --- | --- |
@@ -227,6 +273,8 @@ servidor.
 | Gate de staging en `main` | `main` (required deployment del environment `staging`) |
 | Sin bypass | `main` (`can_bypass: never`) |
 | 2 revisores, sin self-review | environment `prod` |
+| No force-push, historial lineal | `rc-*` |
+| No se borra sin el scrum master | `rc-*` (regla `deletion` + bypass del SM) |
 
 El bypass de `develop` existe porque el scrum master es quien aprueba y
 mergea; el de `main` **no** existe: los releases a producción se miran entre
@@ -234,7 +282,7 @@ dos.
 
 ---
 
-## 8. Rollback
+## 9. Rollback
 
 El backend se despliega por **SHA**, que es inmutable. Para volver atrás:
 
@@ -251,7 +299,7 @@ stack. Como la imagen es inmutable, el rollback es exacto: no depende de que
 
 ---
 
-## 9. Lo que se hace automático y lo que no
+## 10. Lo que se hace automático y lo que no
 
 | Paso | Automático | Quién decide |
 | --- | --- | --- |
@@ -269,7 +317,7 @@ stack. Como la imagen es inmutable, el rollback es exacto: no depende de que
 
 ---
 
-## 10. Si algo falla, dónde mirar
+## 11. Si algo falla, dónde mirar
 
 | Síntoma | Dónde |
 | --- | --- |
