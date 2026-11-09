@@ -9,6 +9,13 @@ La **versión se declara en `version.txt`**: el bot de release-please la sube
 junto con la sección del changelog, y publica el tag al mergear su PR de
 release.
 
+## [0.1.4](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/compare/v0.1.3...v0.1.4) (2026-11-09)
+
+
+### Bug Fixes
+
+* **ci:** el guard de rc-* sin SSH y rc-* permitida hacia main ([#47](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/47)) ([326dffe](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/326dffed2e83b6bdd93c04c1dcfddbf4f2e6031d)), closes [#44](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/44)
+
 ## [0.1.3](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/compare/v0.1.2...v0.1.3) (2026-11-08)
 
 
