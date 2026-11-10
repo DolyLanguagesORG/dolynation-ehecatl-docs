@@ -111,6 +111,43 @@ cambio (nunca un push directo: `develop` está protegido).
 > (`app_version`). Cada **componente** tiene la suya. La API expone las dos:
 > `GET /api/v1/version` devuelve `appVersion` y `version` por separado.
 
+## La `rc-<version>`: la candidata
+
+La version que se publica es una cosa; la combinacion de versiones que se
+**prueba** es otra. Para eso esta la `rc`.
+
+```
+develop  --(release-please)-->  tag vX.Y.Z + versions.yml actualizado
+                                      |
+                                      v
+                        rc-<app_version> en los 4 repos
+                                      |  (push)
+                                      v
+              rehearsal -> smoke -> staging -> smoke
+                                      |
+                                      v
+                            PR rc -> main  (2 aprobaciones + code owner)
+                                      |
+                                      v
+                        cascada: PR rc -> main en back, front y docs
+                                      |
+                                      v
+                     deploy-prod  (A MANO, con 2 revisores)
+```
+
+Reglas:
+
+| Regla | Por que |
+| --- | --- |
+| La `rc` se corta en los **cuatro** repos, en el commit de su tag | Todos despliegan la misma combinacion |
+| Solo puede existir **una** `rc` a la vez | Si hubiera dos, dos combinaciones distintas podrian llegar a produccion sin que nadie lo notara (lo vigila `scripts/release-guard.sh`) |
+| La `rc` **no es un ambiente**: es una rama efimera | Los ambientes son dev, rehearsal, staging y produccion |
+| **Fusionar el PR a `main` no publica nada** | `deploy-prod` es manual y espera los 2 revisores del environment `prod`. `main` puede recibir varias promociones seguidas y la que se publica es la que se decide desplegar |
+| Al abandonar una candidata: **cerrar el PR y borrar la rama** | Borrarla libera el slot del single-flight. Ojo: **borrar la rc no revierte staging** |
+
+El ciclo completo, con comandos y criterios, esta en
+[`operations/FLUJO-DE-RELEASE.md`](../operations/FLUJO-DE-RELEASE.md).
+
 ## Prerelease y release oficial
 
 Con `"prerelease": true` en la configuración de release-please:
@@ -148,6 +185,10 @@ sin cambiar a qué commit apunta.
   `package.json` dejan de coincidir.
 - **No se edita `versions.yml` a mano.** El workflow `sync-versions` lo hace.
 - **No se crea el tag a mano.** Los tags salen del PR de release.
+- **No se corta una `rc` a mano si ya hay otra.** El guard lo impide: primero
+  se consolida la anterior.
+- **No se borra una `rc` sin querer.** La rama esta protegida (regla
+  `deletion` + bypass solo del scrum master).
 
 ## Forzar un bump
 
