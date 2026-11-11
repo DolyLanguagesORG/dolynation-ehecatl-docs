@@ -93,15 +93,35 @@ servidor**: nunca al frontend):
 
 | Variable | Requerida | Descripción |
 | --- | --- | --- |
-| `SMTP_HOST` | Sí | Host del servidor SMTP (p. ej. `smtp.example.com`) |
-| `SMTP_PORT` | Sí | Puerto (587 con STARTTLS, 465 con TLS implícito) |
-| `SMTP_USER` | Según proveedor | Usuario de la cuenta |
-| `SMTP_PASSWORD` | Según proveedor | Contraseña o **app password** |
-| `SMTP_FROM` | Sí | Remitente (`no-reply@dominio`) |
-| `SMTP_SECURE` | No | `true` si el puerto es 465 (TLS implícito) |
+| `SMTP_HOST` | No | Host del servidor SMTP |
+| `SMTP_PORT` | No | Puerto (587 con STARTTLS, 465 con TLS implícito) |
+| `SMTP_USER` | No | Usuario de la cuenta |
+| `SMTP_PASSWORD` | No | Clave SMTP de la cuenta |
+| `SMTP_FROM` | No | Remitente (`Nombre <correo@dominio>`) |
+| `SMTP_FROM_NAME` | No | Nombre del remitente, si se quiere separado |
+| `SMTP_SECURE` | No | `true` solo si el cifrado es implícito (465) |
 
-Y en cada ambiente, con **claves distintas** (en `desarrollo` y `rehearsal`
-pueden ser de un proveedor de pruebas, nunca las de producción).
+**Son opcionales a propósito**: si fueran obligatorias, un ambiente sin
+SMTP no arrancaría. El servicio de correo falla con un mensaje claro
+("falta SMTP_HOST/SMTP_USER") cuando se usa sin configurar.
+
+### El servidor de correo que hay hoy
+
+| | Valor |
+| --- | --- |
+| Host | `smtp-relay.brevo.com` |
+| Puerto | `587` (STARTTLS) |
+| Usuario | la cuenta del ambiente |
+| Clave | **una distinta por ambiente**, en los GitHub Environments |
+
+Los valores de cada ambiente los pone el scrum master como secrets del
+Environment correspondiente: el deploy escribe el `.env` del servidor con
+ellos, así que **nadie tiene que saber el servidor de correo de ningún
+ambiente para trabajar en su código**. En local, cada quien usa los suyos o
+un catcher local (Mailpit/MailHog).
+
+Detalle en la issue del backend (SMTP) y en
+[`operations/FLUJO-DE-RELEASE.md`](../operations/FLUJO-DE-RELEASE.md).
 
 En local no hace falta una clave real: se puede levantar un *catch-all*
 (Mailpit/MailHog) y ver el correo en el navegador.
