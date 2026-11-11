@@ -8,6 +8,36 @@ La planificación vive en el
 
 - **Issues:** un issue por entregable, repartido entre los cuatro repos (se
   referencian como `back#2`, `front#2`, `infra#2`, `docs#3`, etc.).
+- **Un solo tablero para la organizacion.** No hay un tablero por repo: al
+  abrir un repo se ve el mismo project de la org, con sus issues. Eso es lo
+  que permite ver el sprint completo en un solo lugar.
+
+### El `Status` se mueve solo
+
+El tablero tiene cuatro estados: **Todo**, **In Progress**, **In Review** y
+**Done**. GitHub solo actualiza los campos que el mismo gestiona ("Linked
+pull requests", "Sub-issues progress"); el `Status` hay que moverlo a mano,
+y por eso se quedaba en "Todo" con el PR ya abierto.
+
+Ahora hay un workflow `kanban.yml` **en cada repo** que lo mueve:
+
+| Suceso | Estado destino |
+| --- | --- |
+| PR abierto que referencia la issue | **In Review** |
+| PR mergeado | **Done** |
+| PR cerrado sin mergear | **Todo** (vuelve a la cola) |
+| Issue cerrada | **Done** |
+| Issue reabierta | **Todo** |
+
+Se puede correr a mano (`workflow_dispatch`): con `issue` sincroniza esa
+issue; sin `issue`, sincroniza todas las del repo.
+
+Dos detalles que hacen que funcione:
+- Los PRs y las issues **comparten numeracion**: el workflow verifica que el
+  numero sea de una issue y no de un PR antes de tocar el tablero.
+- Los PRs de **release-please se excluyen**: su changelog menciona los
+  issues de la release anterior (`closes [#43]`) y eso ponia issues en
+  "In Review" sin que hubiera trabajo en ellas.
 - **Milestones:** uno por sprint, replicado en cada repo.
 - **Standup diario:** cada dev publica su avance al cierre de jornada
   (límite 23:59 CST).
