@@ -87,6 +87,12 @@ verifica exhaustividad.
 | `RESOURCE_FORBIDDEN`                | 403  | Usuario autenticado pero sin permiso                         |
 | `READING_PENDING_LIMIT_REACHED`     | 400  | Demasiadas lecturas pendientes, completar antes de generar    |
 | `READING_ALREADY_EVALUATED`         | 409  | La lectura ya fue evaluada, no se puede re-evaluar           |
+| `READING_DAILY_LIMIT_REACHED`       | 429  | Límite diario de generación de lecturas alcanzado            |
+| `EXPLANATION_DAILY_LIMIT_REACHED`   | 429  | Límite diario de preguntas de lectura alcanzado              |
+| `SUBSCRIPTION_REQUIRED`             | 403  | Acción requiere suscripción activa; usuario debe elegir plan |
+| `SUBSCRIPTION_INVALID_TIER`         | 400  | Plan no válido (válidos: dolly, dolly_plus, dolly_pro)       |
+| `SUBSCRIPTION_CATEGORY_LIMIT_EXCEEDED` | 400 | Excede el límite de categorías permitido por la suscripción  |
+| `SUBSCRIPTION_LANGUAGE_NOT_ALLOWED` | 403 | Idioma no permitido para el plan de suscripción actual       |
 | `VALIDATION_ERROR`                  | 400  | Falló class-validator; `details.fields` es un array de `{ field, message }` |
 | `INTERNAL_ERROR`                    | 500  | Error no controlado; el cliente no recibe detalles internos  |
 | `SERVICE_UNAVAILABLE`               | 503  | Dependencia externa (DB, AI provider) caída                  |
