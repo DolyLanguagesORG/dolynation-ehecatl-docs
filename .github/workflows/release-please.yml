@@ -57,7 +57,7 @@ jobs:
       # convierte sin cambiar a qué commit apunta.
       - name: Preparar el repositorio
         if: steps.release.outputs.release_created == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           fetch-tags: true
