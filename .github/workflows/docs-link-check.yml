@@ -27,9 +27,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Validar los workflows del repo
-        uses: docker://rhysd/actionlint:latest
+        uses: rhysd/actionlint@v1
         with:
-          args: -color .github/workflows/*.yml
+          args: -color
   link-check:
     name: link-check
     runs-on: ubuntu-latest
