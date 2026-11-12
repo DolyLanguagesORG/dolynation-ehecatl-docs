@@ -71,6 +71,36 @@ release con el tag: sin release, el PR queda con la etiqueta
 El **número no cuenta PRs**: comunica riesgo de compatibilidad. El detalle de
 cada PR queda en el changelog y en el commit al que apunta el tag.
 
+### La release se publica sola
+
+El PR de release **se mergea solo** cuando sus checks requeridos están en
+verde. El auto-merge nativo de GitHub no sirve aquí: espera a que se cumplan
+las reglas de la rama y `develop` pide 1 aprobación, que nadie puede dar
+sobre el PR que abre el propio bot. Por eso el workflow espera a los checks
+y mergea con privilegio de admin. **Si un check falla, no se mergea**: el PR
+queda abierto para revisión.
+
+Las **PRs de feature siguen exigiendo 1 aprobación** (el bypass del scrum
+master es solo para `develop`).
+
+### Dependabot
+
+| Tipo | Tratamiento |
+| --- | --- |
+| patch / minor | **auto-merge** (el CI es el filtro) |
+| major | **revisión humana** (puede romper un workflow sin avisar) |
+
+Las majors de NestJS, ESLint y TypeScript ya están ignoradas en
+`.github/dependabot.yml`. Los PRs del bot están exentos de `pr-title` y
+`pr-target`.
+
+### La `rc` no se deja colgada
+
+Solo puede existir **una** `rc` a la vez (lo vigila `release-guard`). Al
+abandonar una candidata: **cerrar el PR y borrar la rama**; si no, bloquea
+la siguiente y ocupa una rama para siempre. Los **tags no se tocan**: son el
+historial de releases y no estorban.
+
 ### El manifiesto del proyecto
 
 `dolynation-tlalli-infra/versions.yml` dice, por repositorio, la versión, el
