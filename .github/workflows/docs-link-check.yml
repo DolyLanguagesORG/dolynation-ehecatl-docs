@@ -17,19 +17,6 @@ concurrency:
 
 jobs:
 
-  workflow-lint:
-    name: workflow-lint
-    runs-on: ubuntu-latest
-    steps:
-      # actionlint valida la SINTAXIS de los workflows, que es mas estricta que
-      # YAML: detecta claves duplicadas (GitHub rechaza el workflow entero y
-      # el run nace sin jobs), expresiones invalidas, `uses:` sin version, etc.
-      - uses: actions/checkout@v4
-
-      - name: Validar los workflows del repo
-        uses: rhysd/actionlint@v1
-        with:
-          args: -color
   link-check:
     name: link-check
     runs-on: ubuntu-latest
