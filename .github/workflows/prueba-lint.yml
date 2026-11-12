@@ -14,6 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: actionlint
-        uses: docker://rhysd/actionlint:latest
+        uses: rhysd/actionlint@v1
         with:
           args: -color
