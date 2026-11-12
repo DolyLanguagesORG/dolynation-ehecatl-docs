@@ -21,7 +21,7 @@ jobs:
     name: workflow-lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # `actionlint` NO es una action de GitHub (no trae action.yaml) y las
       # imagenes de Docker Hub estan bloqueadas para Actions, asi que se
