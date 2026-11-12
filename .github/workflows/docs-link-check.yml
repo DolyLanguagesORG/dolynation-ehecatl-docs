@@ -17,6 +17,16 @@ concurrency:
 
 jobs:
 
+  workflow-lint:
+    name: workflow-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validar los workflows del repo
+        uses: rhysd/actionlint@v1
+        with:
+          args: -color
+
   link-check:
     name: link-check
     runs-on: ubuntu-latest
