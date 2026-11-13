@@ -98,7 +98,10 @@ servidor**: nunca al frontend):
 | `SMTP_USER` | Según proveedor | Usuario de la cuenta |
 | `SMTP_PASSWORD` | Según proveedor | Contraseña o **app password** |
 | `SMTP_FROM` | Sí | Remitente (`no-reply@dominio`) |
+| `SMTP_FROM_NAME` | No | Nombre visible del remitente (default `DolyNation`) |
 | `SMTP_SECURE` | No | `true` si el puerto es 465 (TLS implícito) |
+| `FRONTEND_BASE_URL` | No | URL pública del frontend para construir enlaces firmados (default `http://localhost:3000`) |
+| `EMAIL_VERIFICATION_REQUIRED` | No | `true` para exigir correo confirmado al registrarse / iniciar sesión (default `false`) |
 
 Y en cada ambiente, con **claves distintas** (en `desarrollo` y `rehearsal`
 pueden ser de un proveedor de pruebas, nunca las de producción).
