@@ -141,17 +141,19 @@ cliente solo recibe un código estable + mensaje seguro.
 
 | Método y ruta | Estado | Issue |
 | --- | --- | --- |
-| `POST /api/v1/auth/register`, `/login`, `/refresh`, `/logout`; `GET /api/v1/auth/me` | Implementado (el refresh aún no persiste ni rota) | `back#4` |
-| `GET/PATCH /api/v1/user/profile` | En PR (#34), listo para revisión | `back#5` |
+| `POST /api/v1/auth/register`, `/login`, `/refresh`, `/logout`, `/verify-email`, `/resend-verification`, `/forgot-password`, `/reset-password`; `GET /api/v1/auth/me` | Implementado (`/verify-email` emite tokens de sesión y redirige a selección de plan) | `back#4` |
+| `GET/PATCH /api/v1/user/profile` | Implementado | `back#5` |
+| `GET /api/v1/subscriptions/plans`; `GET/POST /api/v1/user/subscription` | Implementado (`dolly`, `dolly_plus`, `dolly_pro`) | — |
 | `GET /api/v1/user/streak` | Implementado (la racha aún se simula) | `back#15` |
 | `GET /api/v1/user/points` | Planificado S4 (aún no está en el alcance de `back#15`) | `back#15` |
 | `GET /api/v1/readings/options` | Implementado | `back#10` |
 | `POST /api/v1/readings` | Implementado; falta `language`, caché y `prompt_hash` | `back#10` |
 | `GET /api/v1/readings/pending`, `/completed`, `/{id}`; `DELETE /{id}` | Implementado | `back#10` |
 | `POST /api/v1/readings/{id}/evaluate` | Implementado (sin tabla `evaluations` ni cobertura) | `back#13` |
-| `POST /api/v1/readings/{id}/explanations` | Implementado (respuesta simple, sin `vocabulary_logs`) | `back#11` |
+| `POST /api/v1/readings/{id}/explanations` | Implementado (caché por lectura, desglose palabra por palabra, sentido literal vs. contextual, alternativas y otros contextos; persistido en `reading_explanations`) | `back#11` |
+| `GET /api/v1/readings/{id}/explanations`, `GET /api/v1/readings/glossary`, `PATCH /api/v1/readings/explanations/{explanationId}/glossary` | Implementado (consulta de ayudas por lectura y glosario personal persistente) | `back#11` |
 | `GET /api/v1/readings/{id}/tts` | Planificado S3 | `back#44` |
-| `GET/PUT /api/v1/settings/languages`; `GET/PUT/POST /api/v1/settings/categories` | Planificado S2 (bloqueado por `infra#20`) | `back#8` |
+| `GET/PUT /api/v1/settings/languages`; `GET/PUT /api/v1/settings/categories` | Implementado (requiere suscripción; `categories` exige mínimo 3 categorías únicas para guardar y generar lecturas) | `back#8` |
 | `GET /api/v1/history`, `/history/scores` | Planificado S4 (PR #38 en Draft, sin paginación) | `back#16` |
 | `GET/POST/PATCH/DELETE /api/v1/admin/categories`; `GET /admin/users`; `PATCH /admin/users/{id}/role` | Planificado S4 (bloqueado por `infra#22`) | `back#17` |
 | `GET /api/v1/health/live`, `/health/ready` | Implementado | — |
