@@ -155,6 +155,10 @@ Seed inicial: `technology`, `history`, `education`, `programming`, `culture`,
 | `contextual_example` | `TEXT` | Ejemplo |
 | `created_at` | `TIMESTAMP` | `NOT NULL` |
 
+## `reading_explanations` (glosario y ayuda contextual)
+
+Almacena explicaciones estructuradas de palabras y oraciones seleccionadas dentro de una lectura (`01-init.sql` + `updates/12-reading-explanations-glossary.sql`): `word` (`TEXT`), `normalized_word`, `entry_type` (`word` | `phrase`), `language`, `difficulty`, `context`, `literal_meaning`, `explanation`, `word_breakdown` (`JSONB`), `other_ways_to_say` (`JSONB`), `other_contexts` (`JSONB`), `is_saved`, `saved_at`, `created_at` y `updated_at`. También alimenta la cuota diaria por suscripción, la caché por `(user_id, reading_id, normalized_word)` y el contador `wordsLookedUp` en `/history`.
+
 ## `prompt_logs`
 
 Auditoría de generación: `level`, `event`, `message`, `seed`, `user_id`,
@@ -168,6 +172,7 @@ Auditoría de generación: `level`, `event`, `message`, `seed`, `user_id`,
 | `updates/02-sprint2-study-config.sql` | S2 | preferencias, categorías, idioma, longitud y caché |
 | `updates/03-sprint3-evaluations-vocabulary.sql` | S3 | evaluaciones y vocabulario |
 | `updates/04-sprint4-admin-role.sql` | S4 | `users.role` |
+| `updates/12-reading-explanations-glossary.sql` | Glosario / Ayuda | Desglose estructurado, caché y glosario en `reading_explanations` |
 
 Regla: cada cambio actualiza `01-init.sql` **y** agrega el script idempotente en
 `updates/`. Ver [`../conventions/database.md`](../conventions/database.md).
