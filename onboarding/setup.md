@@ -175,7 +175,13 @@ O paso a paso:
 npm run typecheck     # tsc --noEmit
 npm run lint:check    # ESLint
 npm run format:check  # Prettier
-npm run test          # Jest (unit + e2e)
+npm run test          # Jest (solo unitarias)
+```
+
+Las end-to-end son aparte: necesitan un PostgreSQL real y su propio comando.
+
+```bash
+npm run test:e2e      # Jest end-to-end (requiere la base de datos arriba)
 ```
 
 ## Solución de problemas
@@ -201,10 +207,22 @@ cd dolynation-tlalli-infra && docker compose -f docker-compose.test.yml up -d
 Verifica que `01-init.sql` se aplicó:
 
 ```bash
-docker exec -it dolynglish_postgres psql -U postgres -d dolynglish -c "\dt"
+docker exec -it dolynglish_postgres psql -U dolynglish_user -d dolynglish_test -c "\dt"
 ```
 
-Deberías ver las 4 tablas base: `users`, `auth_access_tokens`, `readings` y `prompt_logs`. Al aplicar las migraciones `02`, `03` y `04` se agregan `categories`, `user_preferences`, `user_selected_categories`, `evaluations`, `vocabulary_logs` y `users.role`.
+El usuario y la base salen de las variables `DB_USER` y `DB_DATABASE` del
+`.env` de `dolynation-tlalli-infra` (no de `postgres`/`dolynglish`): el compose
+de test las usa tal cual.
+
+Deberías ver las 10 tablas del schema actual:
+
+`users`, `user_settings`, `admins`, `auth_access_tokens`,
+`auth_email_tokens`, `readings`, `reading_explanations`, `prompt_logs`,
+`moderated_categories` y `category_daily_usage`.
+
+`01-init.sql` ya trae el schema completo: una base nueva no necesita los
+scripts incrementales de `database/postgres/updates/`, que solo son para bases
+que ya existían (producción, staging o una de desarrollo con datos).
 
 Si faltan, recrea el contenedor:
 
