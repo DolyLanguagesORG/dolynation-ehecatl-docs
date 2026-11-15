@@ -9,6 +9,13 @@ La **versión se declara en `version.txt`**: el bot de release-please la sube
 junto con la sección del changelog, y publica el tag al mergear su PR de
 release.
 
+## [0.2.1](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/compare/v0.2.0...v0.2.1) (2026-11-15)
+
+
+### Bug Fixes
+
+* **kanban:** detecta si un numero es issue o pull request ([#80](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/80)) ([5d3c45e](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/5d3c45e9aacaca6f044c6c9281a0eec83c48f862)), closes [#66](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/66)
+
 ## [0.2.0](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/compare/v0.1.4...v0.2.0) (2026-11-12)
 
 
