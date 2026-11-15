@@ -252,10 +252,13 @@ servidor, en `infra`.
    `IMAGE_TAG` y volver a desplegar (`infra#27`).
 2. **El primer despliegue real a producción**, cuando se autorize. Staging ya
    recibe despliegues reales (con su smoke test en verde).
-3. **Runner de migraciones**: los scripts de `database/postgres/updates/` solo
-   se aplican hoy a bases **nuevas** (el compose los monta en
-   `/docker-entrypoint-initdb.d`). Para una base que ya existe hay que
-   aplicarlos a mano con `psql` y registrar qué se aplicó.
+3. **Migraciones incrementales (fase 2)**: el runner del schema ya existe
+   (`scripts/apply-schema.sh` en `tlalli-infra`): compara el hash de
+   `01-init.sql` con el guardado en la base y, si cambió, la recrea **si no
+   tiene datos**. Cuando producción tenga datos reales, ese runner tiene que
+   pasar a aplicar scripts incrementales en
+   `database/postgres/updates/NN-<nombre>.sql` en lugar de recrear la base
+   (`infra#112`).
 4. **Limpieza de ramas**: al promover una `rc` se borra; las ramas de
    feature cerradas también.
 

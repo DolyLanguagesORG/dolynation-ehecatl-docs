@@ -1,7 +1,7 @@
 # Diccionario de datos
 
 Modelo de la base PostgreSQL. La fuente de verdad del DDL es
-`dolynation-tlalli-infra` (`01-init.sql` + `updates/`). Ver también
+`dolynation-tlalli-infra` (`01-init.sql`). Ver también
 [`../architecture/data-model.md`](../architecture/data-model.md).
 
 **Cómo leerlo:** cada tabla dice si **existe hoy** o si está **planificada**.

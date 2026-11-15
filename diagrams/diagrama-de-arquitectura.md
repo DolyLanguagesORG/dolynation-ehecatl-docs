@@ -37,7 +37,7 @@ flowchart TB
 
     subgraph INFRA["dolynation-tlalli-infra"]
         COMPOSE["Docker Compose<br/>dev · test · prod"]
-        SCHEMA["Schema PostgreSQL 15<br/>01-init.sql + updates/"]
+        SCHEMA["Schema PostgreSQL 15<br/>01-init.sql"]
         CI["CI/CD<br/>Actions · rulesets · deploy"]
     end
 

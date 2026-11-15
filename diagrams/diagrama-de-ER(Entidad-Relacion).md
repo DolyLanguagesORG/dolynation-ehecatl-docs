@@ -160,10 +160,11 @@ erDiagram
 ```
 
 
-**Estado:** el diagrama muestra el modelo **completo**. Hoy existen seis
-tablas: `users`, `auth_access_tokens`, `readings`, `prompt_logs`,
-`user_settings` (`updates/06-user-settings.sql`) y `admins`
-(`updates/05-admin-table.sql`). Las que faltan (`categories`, `evaluations`,
+**Estado:** el diagrama muestra el modelo **completo**. Hoy existen diez
+tablas, todas en `01-init.sql`: `users`, `user_settings`, `admins`,
+`auth_access_tokens`, `auth_email_tokens`, `readings`,
+`reading_explanations`, `prompt_logs`, `moderated_categories` y
+`category_daily_usage`. Las que faltan (`categories`, `evaluations`,
 `vocabulary_logs`) llegan con las migraciones de los sprints 2 y 3
 (`infra#20`, `infra#21`).
 

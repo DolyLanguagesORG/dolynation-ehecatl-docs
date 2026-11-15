@@ -10,7 +10,7 @@ anteproyecto; lo aclara cuando la implementación tomó una decisión concreta.
 | ADR-003 | Puntos calculados desde el score de las evaluaciones | Aceptada |
 | ADR-004 | Roles en `users.role` (`STUDENT`/`ADMIN`) | Aceptada |
 | ADR-005 | Cuatro idiomas y TTS en `v1.0.0` | Aceptada |
-| ADR-006 | Migraciones de schema en dos fases para S2, S3 y S4 | Aceptada |
+| ADR-006 | Migraciones de schema: un archivo ahora, `updates/` cuando haya datos en producción | Aceptada |
 | ADR-007 | PostgreSQL 15 con Drizzle ORM como capa de acceso a datos | Aceptada |
 | ADR-008 | Argon2id + JWT HS256 con refresh token persistido y rotado | Aceptada |
 | ADR-009 | GitHub como plataforma principal de trabajo | Aceptada |
@@ -81,15 +81,19 @@ anteproyecto; lo aclara cuando la implementación tomó una decisión concreta.
 
 - **Contexto:** el schema cambió entre sprints y cada cambio necesita una
   versión reproducible.
-- **Decisión:** los cambios de S2/S3/S4 se entregan con `01-init.sql`
-  actualizado y un script idempotente en `database/postgres/updates/`.
+- **Decisión:** mientras producción no tenga datos, el schema vive en **un
+  solo archivo** (`01-init.sql`) y lo aplica `scripts/apply-schema.sh` en
+  cada deploy. Cuando producción tenga datos que no se puedan perder,
+  `01-init.sql` se congela y los cambios pasan a scripts idempotentes en
+  `database/postgres/updates/`.
 - **Alternativas:** un único archivo de schema reescrito por sprint
   (descartada: se pierde el historial y no hay forma de reproducir un entorno
   anterior); herramientas de migración con su propio formato (descartada: el
   proyecto ya usa SQL plano y no quiere sumar dependencias).
 - **Consecuencias:** se crean `02-sprint2-study-config.sql`,
   `03-sprint3-evaluations-vocabulary.sql` y `04-sprint4-admin-role.sql`. La
-  convención de dos fases se mantiene para producción.
+  convención de **dos fases** (schema en un archivo y luego `updates/`) se
+  mantiene para producción: la fase 2 se activa cuando haya datos reales.
 
 ## ADR-007 — Base de datos y ORM
 

@@ -43,7 +43,7 @@ inventario real, verificado en los cuatro repositorios.
 | **24 workflows** de GitHub Actions | 5 (docs) · 7 (back) · 6 (infra) · 6 (front) | CI de cada repo, validaciones de PR y despliegue a desarrollo |
 | `ci-backend.yml` | 3 jobs: `unit-and-static`, `e2e`, `build` | Corre los tests contra PostgreSQL real en cada PR |
 | `openapi-guard.yml` | 4 guardas de OpenAPI | Impide que el contrato de la API se rompa sin que se note |
-| `schema-sql` (en `ci-infra.yml`) | Aplica `01-init.sql` y `updates/*.sql` sobre Postgres limpio | Un SQL roto falla en el PR, no en el servidor |
+| `schema-sql` + `schema-runner` (en `ci-infra.yml`) | Aplican `01-init.sql` sobre Postgres limpio y prueban el runner del schema de punta a punta | Un SQL roto o un runner roto fallan en el PR, no en el servidor |
 | `deploy-dev.yml` | Autodespliegue al mergear a `develop` | El entorno de desarrollo se actualiza solo |
 | `release-please.yml` | Versionado automático: PR de release + tag anotado + GitHub Release en `develop` | La `v1.0.0` sale de un merge, no de un comando manual |
 | `dependabot.yml` (4 repos) | Actualizaciones semanales de npm y de las actions | Las dependencias no se quedan rancias |

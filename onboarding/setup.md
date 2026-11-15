@@ -220,9 +220,10 @@ Deberías ver las 10 tablas del schema actual:
 `auth_email_tokens`, `readings`, `reading_explanations`, `prompt_logs`,
 `moderated_categories` y `category_daily_usage`.
 
-`01-init.sql` ya trae el schema completo: una base nueva no necesita los
-scripts incrementales de `database/postgres/updates/`, que solo son para bases
-que ya existían (producción, staging o una de desarrollo con datos).
+`01-init.sql` ya trae el schema completo: **no hay carpeta `updates/`**. El
+schema vive en un solo archivo y `scripts/apply-schema.sh` (en el repo de
+infra) se encarga de aplicarlo en cada deploy: si el hash del archivo cambió,
+recrea la base, y si tiene datos, se niega a borrarla.
 
 Si faltan, recrea el contenedor:
 

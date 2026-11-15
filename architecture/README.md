@@ -14,7 +14,7 @@ datos.
 
 - [conventions/api-contracts.md](../conventions/api-contracts.md) — envelope,
   códigos de error y contratos HTTP.
-- [conventions/database.md](../conventions/database.md) — regla de dos fases y
-  propiedad del schema.
+- [conventions/database.md](../conventions/database.md) — el schema en un solo
+  archivo, el runner que lo aplica y la propiedad del schema.
 - [diagrams/](../diagrams/README.md) — ER, diccionario de datos, actores y
   secuencias.

@@ -19,122 +19,111 @@ El schema pertenece a [`dolynation-tlalli-infra`](https://github.com/DolyLanguag
 
 ```
 database/postgres/
-├── 01-init.sql                         # estado final para instalaciones nuevas
-└── updates/
-    ├── README.md
-    ├── 02-sprint2-study-config.sql
-    ├── 03-sprint3-evaluations-vocabulary.sql
-    └── 04-sprint4-admin-role.sql
+└── 01-init.sql                         # El schema COMPLETO, en un solo archivo
 ```
 
 El modelo de datos documentado está en
 [`architecture/data-model.md`](../architecture/data-model.md).
 
-## Regla de dos fases
+## Fase 1 (la actual): el schema en un solo archivo
 
-### Antes del primer deploy real a producción
+**El schema se cambia en un solo lugar**: `database/postgres/01-init.sql`.
+**No hay carpeta `updates/`** mientras producción no tenga datos.
 
-- `01-init.sql` es el **estado final deseado** y se usa para bases nuevas
-  (dev, test y CI).
-- Los scripts de `updates/` se mantienen **también** desde S2 para probar la
-  ruta de migración y preparar producción.
-- Cada cambio debe existir en **ambos**: el `CREATE TABLE`/columnas de
-  `01-init.sql` y el script idempotente de `updates/`.
-- Los scripts se prueban contra una base existente y contra una limpia.
+### Por qué no basta con editar el archivo
 
-### Después del primer deploy real a producción
+`01-init.sql` se monta en `/docker-entrypoint-initdb.d`, pero PostgreSQL
+**solo ejecuta esos scripts cuando el volumen de datos está vacío** (la
+primera vez que se crea la base). En un ambiente que ya existe, editar el
+archivo **no cambia la base**: la base se queda con el schema viejo y el
+backend nuevo falla con `columna o tabla inexistente` → **HTTP 500** en
+endpoints que antes funcionaban.
 
-- `01-init.sql` **se congela** en el estado del primer deploy.
-- Todo cambio va **solo** en un nuevo script de `updates/`.
-- Los scripts se aplican en orden numérico.
+Eso es exactamente lo que pasó en desarrollo: el backend se actualizó, la
+base no, y `/auth/register` y `/auth/login` empezaron a devolver 500.
+
+### Qué lo resuelve
+
+`scripts/apply-schema.sh` (en el repo de infra) compara el hash de
+`01-init.sql` con el hash guardado **dentro de la base** (tabla
+`schema_metadata`) y decide:
+
+| Situación | Qué hace |
+| --- | --- |
+| El schema no cambió | No toca nada (el caso normal de cada deploy) |
+| El schema cambió y la base **no** tiene datos | **Recrea** la base: Postgres aplica el schema solo |
+| El schema cambió y la base **sí** tiene datos | **No borra nada** y el deploy **se detiene**: hay que migrar a mano |
+
+El runner lo ejecutan **todos** los deploys:
+
+| Deploy | Quién lo llama |
+| --- | --- |
+| Desarrollo (infra) | `.github/workflows/deploy-dev.yml` (con `FORCE=1`: los datos de desarrollo son desechables) |
+| Desarrollo (backend) | `scripts/deploy-dev-back.sh`, antes de reiniciar el backend |
+| Staging / producción / rehearsal | `scripts/deploy-env.sh`, **antes** de levantar el stack |
+
+> El orden importa: el schema se aplica **antes** de que arranque el backend
+> de la versión nueva. Al revés, la app arranca contra el schema viejo y
+> falla en cuanto toca una tabla o columna nueva.
+
+**Consecuencia práctica: un cambio de schema y un deploy son la misma
+operación.** No hay que acordarse de aplicar nada a mano con `psql`.
 
 ### Idempotencia obligatoria
 
-Todos los statements deben poder ejecutarse más de una vez sin romper la BD:
+Aunque hoy no haya scripts incrementales, el SQL debe poder ejecutarse más de
+una vez sin romper la base (es lo que hace seguro al runner):
 
 ```sql
 CREATE TABLE IF NOT EXISTS categories (...);
 CREATE INDEX IF NOT EXISTS idx_readings_prompt_hash ON readings(user_id, prompt_hash);
 ALTER TABLE readings ADD COLUMN IF NOT EXISTS language VARCHAR(10) NOT NULL DEFAULT 'en';
-ALTER TABLE readings ADD CONSTRAINT ... CHECK (...);
 ```
 
 Evita `DROP COLUMN IF EXISTS` en PostgreSQL 15: no está soportado. Si hace
 falta eliminar una columna, usa un script explícito y documenta que se aplica
 una sola vez.
 
+## Fase 2: cuando producción tenga datos
+
+En cuanto producción tenga datos reales, recrear la base deja de ser una
+opción. Ahi se activa la ruta de migraciones incrementales:
+
+- `01-init.sql` **se congela**: ya no se edita.
+- Los cambios van en `database/postgres/updates/NN-<nombre>.sql`, en orden
+  numérico, **idempotentes** (`IF NOT EXISTS`, `ON CONFLICT`, backfills con
+  `WHERE ... IS NULL`).
+- `scripts/apply-schema.sh` deja de recrear y pasa a **aplicar los updates**
+  sobre la base existente, registrando los ya aplicados.
+
+El cambio de fase se hace **a mano y con un PR propio**: no se mezcla con un
+cambio de schema normal.
+
 ## Tablas
 
-### Actuales
+Las 10 tablas del schema actual:
 
 | Tabla | Propósito |
 | --- | --- |
-| `users` | Cuentas, hash Argon2id (`password`), racha y soft delete |
-| `auth_access_tokens` | Refresh tokens persistidos con hash |
-| `readings` | Lecturas generadas, estado y columnas legacy de evaluación |
-| `prompt_logs` | Auditoría de prompts y errores del proveedor |
-| `user_settings` | Preferencias por usuario: idioma de superficie y categorías elegidas |
+| `users` | Cuentas, hash Argon2id (`password`), racha, `locale` y soft delete |
+| `user_settings` | Preferencias por usuario: idiomas, cambio anual y categorías elegidas |
 | `admins` | Membresía de administrador (tabla aparte, no una columna en `users`) |
+| `auth_access_tokens` | Refresh tokens persistidos con hash |
+| `auth_email_tokens` | Tokens de un solo uso: confirmar correo y restablecer contraseña |
+| `readings` | Lecturas generadas, estado y columnas legacy de evaluación |
+| `reading_explanations` | Explicaciones de palabras y glosario por lectura |
+| `prompt_logs` | Auditoría de prompts y errores del proveedor |
+| `moderated_categories` | Categorías moderadas por el proveedor de IA |
+| `category_daily_usage` | Cuota diaria de uso por categoría |
 
-### Planificadas
-
-| Tabla / cambio | Sprint | Issue |
-| --- | --- | --- |
-| `categories` (hoy el catálogo vive en el código) | S2 | `infra#20` |
-| `readings.category_id`, `language`, `length_type`, `prompt_hash` | S2 | `infra#20` |
-| `evaluations` | S3 | `infra#21` |
-| `vocabulary_logs` | S3 | `infra#21` |
-| `word_lookups` (lo necesita `/history`) | — | por crear |
+La CI de infra (`schema-sql`) comprueba que las 10 existan tras aplicar
+`01-init.sql` sobre una base limpia, y el job `schema-runner` prueba el
+runner de punta a punta (aplicar, reaplicar, y negarse a borrar una base con
+datos).
 
 > `user_preferences` y `user_selected_categories` se sustituyeron por una sola
 > tabla, `user_settings`; y `users.role` por la tabla `admins`. El detalle
 > esta en [`architecture/data-model.md`](../architecture/data-model.md).
 
-> **Ojo con las bases que ya existen**: los scripts de
-> `database/postgres/updates/` solo se aplican hoy a bases **nuevas** (el
-> compose los monta en `/docker-entrypoint-initdb.d`). Para una base que ya
-> existe hay que aplicarlos a mano con `psql`.
-
-## Idea pendiente: que las migraciones se apliquen solas
-
-**Hoy el paso 4 es manual**: si agregas una columna, el SQL llega a la
-release (va en el PR de infra), pero aplicarlo a las bases que ya existen
-(staging, producción, la de desarrollo) hay que hacerlo a mano con `psql`.
-
-La idea es que el deploy lo haga solo:
-
-1. `scripts/deploy-env.sh`, antes de levantar el stack, aplica los `.sql`
-   pendientes **en orden numérico**.
-2. Cada script aplicado se registra en una tabla `schema_migrations`
-   (`version`, `applied_at`, `checksum`), para no reaplicar lo que ya está.
-3. Si un script falla, el deploy **falla** (no se levanta el stack con el
-   schema a medias).
-
-Con eso, el flujo de un cambio de schema sería: **PR en infra → merge → el
-siguiente deploy actualiza la base**. Sin.psql a mano.
-
-Está trackeado en el issue de infra (`runner de migraciones`).
-
 Detalle de columnas, tipos y relaciones en
 [`architecture/data-model.md`](../architecture/data-model.md).
-
-## Convenciones de nombres
-
-| Capa | Convención | Ejemplo |
-| --- | --- | --- |
-| Tablas SQL | `snake_case` | `auth_access_tokens` |
-| Columnas SQL | `snake_case` | `created_at` |
-| Variables TS | `camelCase` | `createdAt` |
-| Archivos TS | `kebab-case` | `auth-access-tokens.ts` |
-| Updates SQL | `NN-<kebab>` | `02-sprint2-study-config.sql` |
-
-## Workflow al cambiar el schema
-
-1. Crear el script `NN-<nombre>.sql` en `database/postgres/updates/`.
-2. Actualizar `01-init.sql` para que una base nueva tenga el mismo estado final.
-3. Probar el script en una base existente y en una limpia; debe ser idempotente.
-4. Commit de ambos archivos en el mismo PR de infra.
-5. Los cambios de código backend que usan la nueva estructura van en su repo y
-   en commits/PRs separados.
-6. Si el cambio desbloquea un issue de backend, cierra el issue de migración
-   con evidencia de la verificación.

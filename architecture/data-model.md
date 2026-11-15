@@ -1,8 +1,8 @@
 # Modelo de datos
 
-Fuente de verdad del schema: `dolynation-tlalli-infra` (`database/postgres/01-init.sql`
-y `database/postgres/updates/`). El backend no ejecuta DDL; Drizzle solo mapea
-las tablas para type-safety.
+Fuente de verdad del schema: `dolynation-tlalli-infra`
+(`database/postgres/01-init.sql`). El backend no ejecuta DDL; Drizzle solo
+mapea las tablas para type-safety.
 
 ## Estado actual vs. planificado
 
@@ -12,8 +12,8 @@ las tablas para type-safety.
 | `auth_access_tokens` | **Existe** (refresh tokens) | `01-init.sql` | — |
 | `readings` | **Existe** | `01-init.sql` | — |
 | `prompt_logs` | **Existe** | `01-init.sql` | — |
-| `user_settings` | **Existe** (idioma de superficie + categorías elegidas) | `updates/06-user-settings.sql` | `infra#22` |
-| `admins` | **Existe** (membresía de administrador) | `updates/05-admin-table.sql` | `infra#22` |
+| `user_settings` | **Existe** (idioma de superficie + categorías elegidas) | `01-init.sql` | `infra#22` |
+| `admins` | **Existe** (membresía de administrador) | `01-init.sql` | `infra#22` |
 | `categories` | Planificado S2 (hoy el catálogo vive **en el código**: `catalog.constants.ts`) | — | `infra#20` |
 | `readings.category_id`, `language`, `length_type`, `prompt_hash` | Planificado S2 | — | `infra#20` |
 | `evaluations` | Planificado S3 | — | `infra#21` |
@@ -29,9 +29,10 @@ las tablas para type-safety.
 >   `admins`: los SELECTs sobre `users` no cambian y el guardia de admin
 >   consulta `admins`. El cambio de rol dentro de `users` sigue pendiente.
 
-Las seis tablas que existen hoy se crean con `01-init.sql` (base nueva) y
-tienen su script idempotente en `database/postgres/updates/`. Los cambios
-de schema se hacen **en `dolynation-tlalli-infra`**, nunca en el backend.
+Las diez tablas que existen hoy se crean **todas** con `01-init.sql`: el schema
+vive en un solo archivo y `scripts/apply-schema.sh` (en el repo de infra) lo
+aplica en cada deploy. Los cambios de schema se hacen **en
+`dolynation-tlalli-infra`**, nunca en el backend.
 
 ## `users`
 
@@ -157,11 +158,11 @@ Seed inicial: `technology`, `history`, `education`, `programming`, `culture`,
 
 ## `reading_explanations` (glosario y ayuda contextual)
 
-Almacena explicaciones estructuradas de palabras y oraciones seleccionadas dentro de una lectura (`01-init.sql` + `updates/12-reading-explanations-glossary.sql`): `word` (`TEXT`), `normalized_word`, `entry_type` (`word` | `phrase`), `language`, `difficulty`, `context`, `literal_meaning`, `explanation`, `word_breakdown` (`JSONB`), `other_ways_to_say` (`JSONB`), `other_contexts` (`JSONB`), `is_saved`, `saved_at`, `created_at` y `updated_at`. También alimenta la cuota diaria por suscripción, la caché por `(user_id, reading_id, normalized_word)` y el contador `wordsLookedUp` en `/history`.
+Almacena explicaciones estructuradas de palabras y oraciones seleccionadas dentro de una lectura (`01-init.sql`): `word` (`TEXT`), `normalized_word`, `entry_type` (`word` | `phrase`), `language`, `difficulty`, `context`, `literal_meaning`, `explanation`, `word_breakdown` (`JSONB`), `other_ways_to_say` (`JSONB`), `other_contexts` (`JSONB`), `is_saved`, `saved_at`, `created_at` y `updated_at`. También alimenta la cuota diaria por suscripción, la caché por `(user_id, reading_id, normalized_word)` y el contador `wordsLookedUp` en `/history`.
 
 ## `moderated_categories`
 
-Caché global persistente de moderación y biblioteca compartida de prompts por categoría (`01-init.sql` + `updates/13-category-prompt-library.sql`):
+Caché global persistente de moderación y biblioteca compartida de prompts por categoría (`01-init.sql`):
 
 | Columna | Tipo | Notas |
 | --- | --- | --- |
@@ -181,15 +182,15 @@ Auditoría de generación: `level`, `event`, `message`, `seed`, `user_id`,
 `text_id`, `params` (JSONB), `system_prompt`, `user_prompt`, `error_message`,
 `error_stack`, `duration_ms`, `created_at`.
 
-## Migraciones
+## Cambios de schema
 
-| Archivo | Sprint | Contenido |
-| --- | --- | --- |
-| `updates/02-sprint2-study-config.sql` | S2 | preferencias, categorías, idioma, longitud y caché |
-| `updates/03-sprint3-evaluations-vocabulary.sql` | S3 | evaluaciones y vocabulario |
-| `updates/04-sprint4-admin-role.sql` | S4 | `users.role` |
-| `updates/12-reading-explanations-glossary.sql` | Glosario / Ayuda | Desglose estructurado, caché y glosario en `reading_explanations` |
-| `updates/13-category-prompt-library.sql` | Biblioteca de Categorías | Columnas `prompt_profile` (`JSONB`) y `profile_model` en `moderated_categories` |
+El schema vive en **un solo archivo**, `database/postgres/01-init.sql`, y lo
+aplica `scripts/apply-schema.sh` (en el repo de infra) en cada deploy. **No
+hay carpeta `updates/`** mientras producción no tenga datos.
 
-Regla: cada cambio actualiza `01-init.sql` **y** agrega el script idempotente en
-`updates/`. Ver [`../conventions/database.md`](../conventions/database.md).
+Cuando producción tenga datos reales, `01-init.sql` se congela y los cambios
+pasan a scripts incrementales idempotentes en
+`database/postgres/updates/NN-<nombre>.sql` (en orden numérico). Ese cambio de
+fase se hace a mano y con un PR propio.
+
+Ver [`../conventions/database.md`](../conventions/database.md).
