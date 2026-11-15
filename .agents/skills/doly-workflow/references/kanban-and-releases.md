@@ -8,6 +8,36 @@ La planificación vive en el
 
 - **Issues:** un issue por entregable, repartido entre los cuatro repos (se
   referencian como `back#2`, `front#2`, `infra#2`, `docs#3`, etc.).
+- **Un solo tablero para la organizacion.** No hay un tablero por repo: al
+  abrir un repo se ve el mismo project de la org, con sus issues. Eso es lo
+  que permite ver el sprint completo en un solo lugar.
+
+### El `Status` se mueve solo
+
+El tablero tiene cuatro estados: **Todo**, **In Progress**, **In Review** y
+**Done**. GitHub solo actualiza los campos que el mismo gestiona ("Linked
+pull requests", "Sub-issues progress"); el `Status` hay que moverlo a mano,
+y por eso se quedaba en "Todo" con el PR ya abierto.
+
+Ahora hay un workflow `kanban.yml` **en cada repo** que lo mueve:
+
+| Suceso | Estado destino |
+| --- | --- |
+| PR abierto que referencia la issue | **In Review** |
+| PR mergeado | **Done** |
+| PR cerrado sin mergear | **Todo** (vuelve a la cola) |
+| Issue cerrada | **Done** |
+| Issue reabierta | **Todo** |
+
+Se puede correr a mano (`workflow_dispatch`): con `issue` sincroniza esa
+issue; sin `issue`, sincroniza todas las del repo.
+
+Dos detalles que hacen que funcione:
+- Los PRs y las issues **comparten numeracion**: el workflow verifica que el
+  numero sea de una issue y no de un PR antes de tocar el tablero.
+- Los PRs de **release-please se excluyen**: su changelog menciona los
+  issues de la release anterior (`closes [#43]`) y eso ponia issues en
+  "In Review" sin que hubiera trabajo en ellas.
 - **Milestones:** uno por sprint, replicado en cada repo.
 - **Standup diario:** cada dev publica su avance al cierre de jornada
   (límite 23:59 CST).
@@ -40,6 +70,36 @@ release con el tag: sin release, el PR queda con la etiqueta
 
 El **número no cuenta PRs**: comunica riesgo de compatibilidad. El detalle de
 cada PR queda en el changelog y en el commit al que apunta el tag.
+
+### La release se publica sola
+
+El PR de release **se mergea solo** cuando sus checks requeridos están en
+verde. El auto-merge nativo de GitHub no sirve aquí: espera a que se cumplan
+las reglas de la rama y `develop` pide 1 aprobación, que nadie puede dar
+sobre el PR que abre el propio bot. Por eso el workflow espera a los checks
+y mergea con privilegio de admin. **Si un check falla, no se mergea**: el PR
+queda abierto para revisión.
+
+Las **PRs de feature siguen exigiendo 1 aprobación** (el bypass del scrum
+master es solo para `develop`).
+
+### Dependabot
+
+| Tipo | Tratamiento |
+| --- | --- |
+| patch / minor | **auto-merge** (el CI es el filtro) |
+| major | **revisión humana** (puede romper un workflow sin avisar) |
+
+Las majors de NestJS, ESLint y TypeScript ya están ignoradas en
+`.github/dependabot.yml`. Los PRs del bot están exentos de `pr-title` y
+`pr-target`.
+
+### La `rc` no se deja colgada
+
+Solo puede existir **una** `rc` a la vez (lo vigila `release-guard`). Al
+abandonar una candidata: **cerrar el PR y borrar la rama**; si no, bloquea
+la siguiente y ocupa una rama para siempre. Los **tags no se tocan**: son el
+historial de releases y no estorban.
 
 ### El manifiesto del proyecto
 

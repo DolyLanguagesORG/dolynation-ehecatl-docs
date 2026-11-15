@@ -179,6 +179,57 @@ y el historial conserven la fecha y el mensaje. El paso *"Convertir el tag en
 anotado"* del workflow `release-please.yml` lo resuelve después de crearse,
 sin cambiar a qué commit apunta.
 
+## La release se publica sola
+
+El PR `chore(release): vX.Y.Z` lo abre `release-please` y **se mergea solo**
+cuando los checks requeridos están en verde.
+
+> **Por qué no basta con el auto-merge nativo**: el auto-merge de GitHub
+> espera a que se cumplan las reglas de la rama, y `develop` pide **1
+> aprobación**. El PR de release lo abre la misma cuenta que despliega (el
+> PAT) y **GitHub no deja aprobar el propio PR** → el auto-merge se quedaba
+> esperando para siempre, y los PRs de release se acumulaban sin publicarse.
+>
+> Por eso el workflow **espera a los checks y mergea con privilegio de
+> admin** (el PAT es del propietario de la organización). Si un check
+> **falla**, no se mergea: el PR queda abierto para que una persona lo revise.
+
+Las **PRs de feature siguen exigiendo 1 aprobación**: esto solo aplica al PR
+de release y al PR del manifiesto.
+
+La cadena completa, sin intervención:
+
+```
+merge a develop
+   -> PR de release -> (checks verdes) -> se mergea solo
+   -> tag + GitHub Release
+   -> aviso al manifiesto -> PR del manifiesto -> (checks verdes) -> se mergea solo
+   -> versions.yml al día
+```
+
+## Dependabot
+
+Se configura en `.github/dependabot.yml` de cada repositorio, con **grupos**
+(producción / desarrollo) para que las actualizaciones vayan juntas.
+
+| Tipo | Qué hacer | Por qué |
+| --- | --- | --- |
+| **patch** (4.1.2 → 4.1.3) | **auto-merge** ✓ | Arreglo de bugs; el CI es el filtro suficiente |
+| **minor** (4.1 → 4.2) | **auto-merge** ✓ | Compatible; si algo se rompe, el CI lo dice |
+| **major** (4 → 5) | **revisión humana** ⚠️ | Puede romper el workflow entero sin avisar |
+
+Las majors de NestJS, ESLint y TypeScript **ya están ignoradas** en la
+configuración (migración manual del equipo).
+
+Los PRs de dependabot están exentos de `pr-title` y `pr-target` ✓ (no se
+turban por la convención de nombres): el bot los abre y su autor es el bot,
+así que la aprobación la puede dar cualquier persona del equipo.
+
+> Un bump mayor de un `action` **puede dejar los workflows sin arrancar**
+> (el run nace con 0 jobs y falla sin explicar por qué). Por eso el CI tiene
+> `workflow-lint`: detecta la sintaxis inválida antes de que llegue a
+> producción.
+
 ## Qué NO se hace
 
 - **No se sube la versión a mano.** Si alguien la edita, el tag y el
@@ -187,8 +238,14 @@ sin cambiar a qué commit apunta.
 - **No se crea el tag a mano.** Los tags salen del PR de release.
 - **No se corta una `rc` a mano si ya hay otra.** El guard lo impide: primero
   se consolida la anterior.
-- **No se borra una `rc` sin querer.** La rama esta protegida (regla
+- **No se borra una `rc` sin querer.** La rama está protegida (regla
   `deletion` + bypass solo del scrum master).
+- **No se deja una `rc` colgada.** Bloquea la siguiente (single-flight) y
+  ocupa una rama para siempre. Al abandonar una candidata: cerrar el PR y
+  borrar la rama.
+- **No se dejan muchos tags.** No hay límite, pero cada release añade un tag
+  y una Release: a ~2 releases por semana son ~100 al año, sin problema. Lo
+  que hay que limpiar son las **ramas**, no los tags.
 
 ## Forzar un bump
 

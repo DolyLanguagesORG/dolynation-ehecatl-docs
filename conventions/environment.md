@@ -19,19 +19,41 @@ Política de configuración por variables de entorno. La fuente de verdad es
 | `DB_DATABASE`           | Sí        | string | -                     | Nombre de la base                                 |
 | `DB_LOGGING`            | No        | boolean| `false`               | Logging de queries de Drizzle                     |
 | `JWT_SECRET`            | Sí        | string | -                     | Secreto para firmar JWT (≥48 chars random)        |
-| `JWT_ACCESS_TTL`        | No        | string | `15m`                 | TTL del access token                              |
+| `JWT_ACCESS_TTL`        | No        | string | `5m`                  | TTL del access token                              |
 | `JWT_REFRESH_TTL`       | No        | string | `30d`                 | TTL del refresh token                             |
-| `AI_DEFAULT_PROVIDER`   | Sí        | enum   | `minimax`             | Solo `minimax` está registrado en la factoría     |
+| `AI_DEFAULT_PROVIDER`   | No        | enum   | `minimax`             | `minimax` \| `google` (los dos registrados en la factoría) |
 | `MINIMAX_API_KEY`       | Cond.*    | string | -                     | API key de MiniMax (*si provider es minimax)        |
 | `MINIMAX_MODEL`         | No        | string | `MiniMax-M2.7`        | Modelo principal (con fallback a `MiniMax-M3`)    |
 | `MINIMAX_ENDPOINT`      | No        | string | `https://api.minimax.io/v1/chat/completions` | URL del API |
 | `MINIMAX_MAX_TOKENS`    | No        | int    | `8192`                | Límite de tokens de salida                        |
 | `MINIMAX_TEMPERATURE`   | No        | float  | `0.7`                 | Temperatura de sampling                           |
 | `MINIMAX_TIMEOUT_MS`    | No        | int    | `90000`               | Timeout HTTP en ms                                |
+| `MINIMAX_REASONING_EFFORT` | No     | enum   | `low`                 | `minimal` \| `low` \| `medium` \| `high`         |
+| `GOOGLE_API_KEY`        | Cond.**   | string | -                     | API key de Google AI Studio (*si provider es `google`; también habilita `gemini-decision-1`) |
+| `GOOGLE_MODEL`          | No        | string | `gemini-3.5-flash-lite` | Modelo de Gemini                              |
+| `CATEGORY_MODERATION_ENABLED` | No   | boolean| `true`                | Activa el filtro de moderación de categorías      |
+| `CATEGORY_MODERATION_AI_ENABLED` | No | boolean| `true`             | Activa la capa de IA del filtro                   |
+| `CATEGORY_MODERATION_AI_PROVIDER` | No | enum | `auto`               | `auto` \| `openai` \| `google-decisions` \| `minimax` \| `google` \| `none` |
+| `CATEGORY_DAILY_LIMIT`  | No        | int    | `20`                  | Tope diario de categorías distintas por usuario    |
+| `CATEGORY_MODERATION_SCORE_THRESHOLD` | No | float | `0.45`            | Umbral de las APIs gratuitas de moderación        |
 | `CATEGORY_MODERATION_TIMEOUT_MS` | No | int   | `15000`               | Timeout por lote de moderación/blueprint en ms    |
+| `CATEGORY_MODERATION_CACHE_TTL_MS` | No | int  | `86400000`            | TTL del caché de categorías moderadas             |
+| `OPENAI_API_KEY`        | No        | string | -                     | API key de OpenAI (la moderación es **gratis**)    |
+| `OPENAI_MODERATION_ENDPOINT` | No  | url    | `https://api.openai.com/v1/moderations` | Endpoint de moderación        |
+| `OPENAI_MODERATION_MODEL` | No      | string | `omni-moderation-latest` | Modelo de moderación de OpenAI               |
 | `GROQ_API_KEY`          | No        | string | -                     | *Legacy*: hoy ningún proveedor Groq está registrado|
 | `GROQ_MODEL`            | No        | string | `qwen/qwen3-32b`      | Modelo legacy                                     |
 | `LOG_LEVEL`             | No        | enum   | `info`                | `trace` \| `debug` \| `info` \| `warn` \| `error` |
+
+> \* `MINIMAX_API_KEY` es obligatoria si `AI_DEFAULT_PROVIDER=minimax`: el provider
+> la necesita para cada llamada.
+> \** `GOOGLE_API_KEY` es **obligatoria** si `AI_DEFAULT_PROVIDER=google`: el schema
+> Zod aborta el arranque sin ella (antes la app arrancaba y fallaba en cada
+> generación de lectura).
+>
+> La API de **Google Perspective se eliminó**: Jigsaw la apaga el 31 de diciembre
+> de 2026 y el cierre de keys nuevas fue en febrero de 2026. La moderación usa
+> OpenAI Moderation, Google Decisions (`gemini-decision-1`) y la IA generativa.
 
 Las variables de TTS se definirán en `back#11`; no agregues nombres nuevos
 hasta que el proveedor esté decidido.
@@ -77,10 +99,28 @@ secret existe en GitHub, pero la aplicación no la ve):
 | 2 | `tlalli-infra`: `docker-compose.env.yml` | se pasa al contenedor que la use |
 | 3 | `tlalli-infra`: los 3 workflows `deploy-*.yml` | **la lista de variables del `.env` está escrita a mano**: si no se agrega ahí, no llega al servidor |
 | 4 | `atl-back`: `.env.example` | la forma para los que trabajan en local |
-| 5 | GitHub **Environments** | un secret por ambiente (`desarrollo`, `rehearsal`, `staging`, `prod`), con valores distintos |
+| 5 | GitHub **Environments** | un valor por ambiente (`desarrollo`, `rehearsal`, `staging`, `prod`), con valores distintos |
 
 Y el sexto paso, que es de documentación: la tabla de variables de este
 archivo (`conventions/environment.md`).
+
+**Secret o variable de GitHub.** En el paso 5 no todo es un *secret*:
+
+| Tipo | Qué es | Cómo se referencia en el workflow |
+| --- | --- | --- |
+| **Secret** | credencial: API keys, contraseñas, `JWT_SECRET` | `${{ secrets.NOMBRE }}` |
+| **Variable** | parámetro de configuración: `CATEGORY_DAILY_LIMIT`, `EMAIL_VERIFICATION_REQUIRED`, `GOOGLE_MODEL` | `${{ vars.NOMBRE }}` |
+
+Una variable de GitHub que no existe se resuelve a **cadena vacía**, no a error.
+Por eso el `docker-compose.env.yml` le pone un default a cada una
+(`${CATEGORY_DAILY_LIMIT:-20}`): el default del compose gana cuando la
+variable no llegó, y el backend nunca se queda sin valor.
+
+> **Las keys de IA no son las mismas en todos los ambientes.** Los ambientes
+> no-productivos (`desarrollo`, `rehearsal`, `staging`) comparten un juego de
+> credenciales y `prod` tiene el suyo, en otro proyecto del proveedor. La
+> separación se puede hacer más fina después sin tocar código: solo cambian
+> los valores de los secrets.
 
 > Si la variable es **pública** (va al navegador), lleva el prefijo
 > `NEXT_PUBLIC_` y se compila en el bundle. Si es de **servidor**, **no** lleva
@@ -94,18 +134,37 @@ servidor**: nunca al frontend):
 
 | Variable | Requerida | Descripción |
 | --- | --- | --- |
-| `SMTP_HOST` | Sí | Host del servidor SMTP (p. ej. `smtp.example.com`) |
-| `SMTP_PORT` | Sí | Puerto (587 con STARTTLS, 465 con TLS implícito) |
-| `SMTP_USER` | Según proveedor | Usuario de la cuenta |
-| `SMTP_PASSWORD` | Según proveedor | Contraseña o **app password** |
-| `SMTP_FROM` | Sí | Remitente (`no-reply@dominio`) |
-| `SMTP_FROM_NAME` | No | Nombre visible del remitente (default `DolyNation`) |
-| `SMTP_SECURE` | No | `true` si el puerto es 465 (TLS implícito) |
-| `FRONTEND_BASE_URL` | No | URL pública del frontend para construir enlaces firmados (default `http://localhost:3000`) |
+| `SMTP_HOST` | No | Host del servidor SMTP |
+| `SMTP_PORT` | No | Puerto (587 con STARTTLS, 465 con TLS implícito) |
+| `SMTP_USER` | No | Usuario de la cuenta |
+| `SMTP_PASSWORD` | No | Clave SMTP de la cuenta |
+| `SMTP_FROM` | No | Remitente (`Nombre <correo@dominio>`) |
+| `SMTP_FROM_NAME` | No | Nombre del remitente, si se quiere separado |
+| `SMTP_SECURE` | No | `true` solo si el cifrado es implícito (465) |
+| `FRONTEND_BASE_URL` | No | URL pública del frontend para construir los enlaces de los correos (default `http://localhost:3000`) |
 | `EMAIL_VERIFICATION_REQUIRED` | No | `true` para exigir correo confirmado al registrarse / iniciar sesión (default `false`) |
 
-Y en cada ambiente, con **claves distintas** (en `desarrollo` y `rehearsal`
-pueden ser de un proveedor de pruebas, nunca las de producción).
+**Son opcionales a propósito**: si fueran obligatorias, un ambiente sin
+SMTP no arrancaría. El servicio de correo falla con un mensaje claro
+("falta SMTP_HOST/SMTP_USER") cuando se usa sin configurar.
+
+### El servidor de correo que hay hoy
+
+| | Valor |
+| --- | --- |
+| Host | `smtp-relay.brevo.com` |
+| Puerto | `587` (STARTTLS) |
+| Usuario | la cuenta del ambiente |
+| Clave | **una distinta por ambiente**, en los GitHub Environments |
+
+Los valores de cada ambiente los pone el scrum master como secrets del
+Environment correspondiente: el deploy escribe el `.env` del servidor con
+ellos, así que **nadie tiene que saber el servidor de correo de ningún
+ambiente para trabajar en su código**. En local, cada quien usa los suyos o
+un catcher local (Mailpit/MailHog).
+
+Detalle en la issue del backend (SMTP) y en
+[`operations/FLUJO-DE-RELEASE.md`](../operations/FLUJO-DE-RELEASE.md).
 
 En local no hace falta una clave real: se puede levantar un *catch-all*
 (Mailpit/MailHog) y ver el correo en el navegador.

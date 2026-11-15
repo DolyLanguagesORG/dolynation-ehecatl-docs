@@ -9,6 +9,24 @@ La **versión se declara en `version.txt`**: el bot de release-please la sube
 junto con la sección del changelog, y publica el tag al mergear su PR de
 release.
 
+## [0.2.0](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/compare/v0.1.4...v0.2.0) (2026-11-12)
+
+
+### Features
+
+* **kanban:** las issues pasan a 'In Review' solas ([#67](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/67)) ([b542828](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/b542828058943b288f8bab760d8e22a32c57deba)), closes [#66](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/66)
+* **kanban:** las issues pasan a 'In Review' solas ([#68](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/68)) ([cc1de98](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/cc1de989b2d8d3eaa4139298d4ad482076f778e1)), closes [#66](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/66)
+* **kanban:** las issues pasan a 'In Review' solas ([#69](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/69)) ([c9d8bb8](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/c9d8bb86e0452132603442e9d4e33a99f8a0c84d)), closes [#66](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/66)
+* **kanban:** las issues pasan a 'In Review' solas ([#70](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/70)) ([e5e0d32](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/e5e0d324708a41b0a33b1f0f474a840c57ffb351)), closes [#66](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/66)
+* **kanban:** las issues pasan a 'In Review' solas ([#71](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/71)) ([939799d](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/939799dfb7ed06fcab26e42ffb2bd0edcfc36ceb)), closes [#66](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/66)
+* **kanban:** las issues pasan a 'In Review' solas ([#72](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/72)) ([c0c266e](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/c0c266e6a6440bbdea072d0582865b54cb9a5a2a)), closes [#66](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/66)
+
+
+### Bug Fixes
+
+* **ci:** validar la rama normalizada (los acentos no bloquean el PR) ([#59](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/59)) ([a32107e](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/a32107eec23cd66426e04c44dd135aa8fba92902)), closes [#46](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/46)
+* **ci:** validar los workflows con actionlint ([#74](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/74)) ([7a976fa](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/7a976fa575658d586656848701a64af0f0421212)), closes [#66](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/66)
+
 ## [0.1.4](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/compare/v0.1.3...v0.1.4) (2026-11-09)
 
 
