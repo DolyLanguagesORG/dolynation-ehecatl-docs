@@ -9,6 +9,13 @@ La **versión se declara en `version.txt`**: el bot de release-please la sube
 junto con la sección del changelog, y publica el tag al mergear su PR de
 release.
 
+## [0.2.2](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/compare/v0.2.1...v0.2.2) (2026-11-15)
+
+
+### Bug Fixes
+
+* **kanban:** leer la accion del evento y no el nombre del step ([#82](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/82)) ([90b82bf](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/commit/90b82bf9976e9bab7cd5779cdb61fd4501c799f9)), closes [#66](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/issues/66)
+
 ## [0.2.1](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs/compare/v0.2.0...v0.2.1) (2026-11-15)
 
 
