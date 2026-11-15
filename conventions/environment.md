@@ -12,6 +12,10 @@ Política de configuración por variables de entorno. La fuente de verdad es
 | `HOST`                  | No        | string | `0.0.0.0`             | Interface de bind                                 |
 | `API_PREFIX`            | No        | string | `api/v1`              | Prefijo global de rutas                           |
 | `APP_NAME`              | No        | string | `dolynglish-backend`  | Nombre lógico para logs                           |
+| `APP_VERSION`           | No        | string | -                     | Versión ÚNICA de la aplicación. La inyecta el build de la imagen; sin ella se usa la del repo |
+| `COMPONENT`             | No        | string | `dolynation-atl-back` | Qué pieza de la aplicación es este proceso        |
+| `BUILT_AT`              | No        | string | -                     | Momento de la construcción del artefacto. Lo inyecta el build |
+| `GIT_COMMIT`            | No        | string | `unknown`             | Commit de build. Lo inyecta el Dockerfile (ARG -> ENV) |
 | `DB_HOST`               | Sí        | string | -                     | Host de PostgreSQL                                |
 | `DB_PORT`               | Sí        | int    | `5432`                | Puerto de PostgreSQL                              |
 | `DB_USER`               | Sí        | string | -                     | Usuario de la BD                                  |
@@ -31,6 +35,13 @@ Política de configuración por variables de entorno. La fuente de verdad es
 | `MINIMAX_REASONING_EFFORT` | No     | enum   | `low`                 | `minimal` \| `low` \| `medium` \| `high`         |
 | `GOOGLE_API_KEY`        | Cond.**   | string | -                     | API key de Google AI Studio (*si provider es `google`; también habilita `gemini-decision-1`) |
 | `GOOGLE_MODEL`          | No        | string | `gemini-3.5-flash-lite` | Modelo de Gemini                              |
+| `GOOGLE_ENDPOINT`       | No        | url    | `https://generativelanguage.googleapis.com/v1beta/openai/chat/completions` | Endpoint de Gemini (compatible con OpenAI) |
+| `GOOGLE_TIMEOUT_MS`     | No        | int    | `90000`               | Timeout HTTP a Google en ms                    |
+| `GOOGLE_MAX_TOKENS`     | No        | int    | `8192`                | Límite de tokens de salida (Gemini)           |
+| `GOOGLE_TEMPERATURE`    | No        | float  | `0.7`                 | Temperatura de sampling (Gemini)               |
+| `GOOGLE_DECISIONS_MODEL` | No       | string | `gemini-decision-1`  | Modelo de la API de Decisions (moderación por compuertas) |
+| `GOOGLE_DECISIONS_ENDPOINT` | No    | url    | `https://generativelanguage.googleapis.com/v1beta/decisions` | Endpoint de Decisions |
+| `GOOGLE_DECISIONS_TIMEOUT_MS` | No | int | `15000`             | Timeout de la API de Decisions en ms           |
 | `CATEGORY_MODERATION_ENABLED` | No   | boolean| `true`                | Activa el filtro de moderación de categorías      |
 | `CATEGORY_MODERATION_AI_ENABLED` | No | boolean| `true`             | Activa la capa de IA del filtro                   |
 | `CATEGORY_MODERATION_AI_PROVIDER` | No | enum | `auto`               | `auto` \| `openai` \| `google-decisions` \| `minimax` \| `google` \| `none` |
@@ -127,8 +138,69 @@ variable no llegó, y el backend nunca se queda sin valor.
 > ese prefijo: así no se filtra al cliente (es el caso de
 > `BACKEND_INTERNAL_URL` en el frontend).
 
-## Variables de correo (SMTP)
+## Variables del frontend
 
+El frontend (`dolynation-tonatiuh-front`) tiene sus propias variables, todas de
+**servidor** (el navegador nunca ve la dirección del backend).
+
+| Variable | Repo | Ambiente | Qué es |
+| --- | --- | --- | --- |
+| `BACKEND_INTERNAL_URL` | tonatiuh-front | los 4 | URL **interna** del backend. En los 4 ambientes es `http://backend:3333/api/v1` (por la red de compose), **nunca** un dominio público |
+| `NEXT_ALLOWED_DEV_ORIGINS` | tonatiuh-front | `desarrollo` | Hosts desde los que se permite el dev server de Next. Admite comodines: `**.yacaterkos.tech` matchea cualquier subdominio (no el apex) |
+
+### Por qué `NEXT_ALLOWED_DEV_ORIGINS` existe
+
+Next.js 16 bloquea los recursos cross-site del dev server (`/_next/*`) cuando el
+`Origin` de la petición no está en `allowedDevOrigins`, y **el websocket de HMR**
+(`/_next/hmr`) entra en esa regla.
+
+El rechazo de Next **no es una respuesta HTTP válida**: escribe `"Unauthorized"`
+crudo en el socket, sin línea de estado ni cabeceras. El proxy de Cloudflare lo
+interpreta como una respuesta inválida y devuelve **520**, que el navegador
+reporta como:
+
+```
+WebSocket connection to 'wss://devweb.yacaterkos.tech/_next/hmr' failed
+```
+
+Sin esta variable, **el HMR no funciona** en desarrollo (el sitio carga, pero
+hay que recargar a mano para ver los cambios).
+
+> Solo aplica al **dev server**. En `rehearsal`, `staging` y `prod` la app corre
+> compilada (`output: 'standalone'` → `node server.js`): sin HMR, sin websocket.
+
+## Cambiar el dominio público
+
+El **frontend nunca conoce el dominio público**: su `BACKEND_INTERNAL_URL` es
+interno en los 4 ambientes. El dominio aparece en **3 lugares**, y solo 2 son
+código:
+
+| # | Dónde | Qué cambia | ¿Requiere código? |
+| --- | --- | --- | --- |
+| 1 | `tlalli-infra/nginx/dolynation.conf` → `server_name` | el ruteo de `devweb` / `devapi` / `stagingweb` | **Sí** |
+| 2 | `NEXT_ALLOWED_DEV_ORIGINS` (variable del front, env `desarrollo`) | el HMR de desarrollo | **No** |
+| 3 | `FRONTEND_BASE_URL` (variable del backend, por ambiente) | los enlaces de los correos transaccionales | **No** |
+
+Procedimiento completo:
+
+1. **DNS / Cloudflare** → apuntar el host nuevo al servidor (y emitir el
+   certificado de origen si hace falta).
+2. **`tlalli-infra`**: `nginx/dolynation.conf` → `server_name` del host nuevo
+   (y `upstream` si cambian los puertos). Un PR a `develop` y el deploy.
+3. **`NEXT_ALLOWED_DEV_ORIGINS`** del environment `desarrollo` del front →
+   el patrón del dominio nuevo. Sin código: redeploy del front.
+4. **`FRONTEND_BASE_URL`** del environment correspondiente del backend → la URL
+   pública nueva. Sin código: redeploy del backend.
+
+### `rehearsal` no tiene dominio
+
+`rehearsal` **no sale a internet**: no tiene `server_name` en el nginx y se
+accede por puerto (`5704x`) desde el propio servidor. Por eso su
+`FRONTEND_BASE_URL` **replica el de producción**: rehearsal existe para probar
+el tren de release completo, así que debe ensayar la configuración de
+producción.
+
+## Variables de correo (SMTP)
 Para enviar correo, el backend necesita estas variables (todas **de
 servidor**: nunca al frontend):
 
