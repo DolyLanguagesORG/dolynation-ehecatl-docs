@@ -139,6 +139,42 @@ Staging, producción y rehearsal comparten el mismo
 nombre del proyecto. Todos escuchan **solo en `127.0.0.1`**: el único que
 llega a los contenedores es el proxy (nginx) de este servidor.
 
+### Qué ambiente tiene dominio público
+
+| Ambiente | Host público | Notas |
+| --- | --- | --- |
+| Desarrollo | `devweb` + `devapi` | El front corre el **dev server** (`next dev`), así que necesita `NEXT_ALLOWED_DEV_ORIGINS` para que el websocket de HMR conecte |
+| Rehearsal | **ninguno** | No sale a internet: se accede por puerto (`5704x`) desde el propio servidor. No hay `server_name` en el nginx |
+| Staging | `stagingweb` | El front corre **compilado** (`output: 'standalone'`): sin HMR, sin websocket |
+| Producción | pendiente de definir | El dominio está reservado (`yacaterkos.tech`) pero el nginx **todavía no tiene su `server_name`** |
+
+### Cambiar el dominio público
+
+El **frontend nunca conoce el dominio público**: su `BACKEND_INTERNAL_URL` es
+interno en los 4 ambientes (`http://backend:3333/api/v1`, por la red de
+compose). El dominio aparece en **3 lugares**, y solo 2 son código:
+
+| # | Dónde | Qué cambia | ¿Requiere código? |
+| --- | --- | --- | --- |
+| 1 | `tlalli-infra/nginx/dolynation.conf` → `server_name` | el ruteo | **Sí** |
+| 2 | `NEXT_ALLOWED_DEV_ORIGINS` (variable del front, env `desarrollo`) | el HMR de desarrollo | **No** |
+| 3 | `FRONTEND_BASE_URL` (variable del backend, por ambiente) | los enlaces de los correos | **No** |
+
+Pasos:
+
+1. **DNS / Cloudflare** → apuntar el host nuevo al servidor (y emitir el
+   certificado de origen si hace falta).
+2. **`tlalli-infra`**: `nginx/dolynation.conf` → `server_name` del host nuevo
+   (y `upstream` si cambian los puertos). PR a `develop` y deploy.
+3. **`NEXT_ALLOWED_DEV_ORIGINS`** del environment `desarrollo` del front →
+   el patrón del dominio nuevo. Redeploy del front.
+4. **`FRONTEND_BASE_URL`** del environment correspondiente del backend → la URL
+   pública nueva. Redeploy del backend.
+
+> `NEXT_ALLOWED_DEV_ORIGINS` admite comodines: `**.yacaterkos.tech` matchea
+> cualquier subdominio (no el apex). Y solo aplica al **dev server**: en
+> rehearsal, staging y producción la app corre compilada, sin HMR.
+
 ## Secretos por Environment
 
 Cada entorno define sus propios secretos (nada compartido en el repo):
