@@ -159,6 +159,22 @@ Seed inicial: `technology`, `history`, `education`, `programming`, `culture`,
 
 Almacena explicaciones estructuradas de palabras y oraciones seleccionadas dentro de una lectura (`01-init.sql` + `updates/12-reading-explanations-glossary.sql`): `word` (`TEXT`), `normalized_word`, `entry_type` (`word` | `phrase`), `language`, `difficulty`, `context`, `literal_meaning`, `explanation`, `word_breakdown` (`JSONB`), `other_ways_to_say` (`JSONB`), `other_contexts` (`JSONB`), `is_saved`, `saved_at`, `created_at` y `updated_at`. También alimenta la cuota diaria por suscripción, la caché por `(user_id, reading_id, normalized_word)` y el contador `wordsLookedUp` en `/history`.
 
+## `moderated_categories`
+
+Caché global persistente de moderación y biblioteca compartida de prompts por categoría (`01-init.sql` + `updates/13-category-prompt-library.sql`):
+
+| Columna | Tipo | Notas |
+| --- | --- | --- |
+| `canonical_key` | `VARCHAR(120)` | PK normalizada (minúsculas, sin acentos) |
+| `sample_category` | `VARCHAR(100)` | Nombre original de muestra |
+| `allowed` | `BOOLEAN` | Veredicto de moderación reutilizado globalmente |
+| `layer` | `VARCHAR(30)` | Capa que decidió el bloqueo (nullable) |
+| `reason` | `VARCHAR(120)` | Motivo normalizado |
+| `provider` | `VARCHAR(30)` | Proveedor que evaluó la categoría (`minimax`, `openai`, etc.) |
+| `prompt_profile` | `JSONB` | Blueprint editorial reutilizable (`displayName`, `editorialGuidance`, `subtopics`, `uniqueFocusAngles`, `coreConcepts`) |
+| `profile_model` | `VARCHAR(60)` | Modelo de IA que generó el blueprint (nullable) |
+| `created_at` / `updated_at` | `TIMESTAMP` | Control temporal |
+
 ## `prompt_logs`
 
 Auditoría de generación: `level`, `event`, `message`, `seed`, `user_id`,
@@ -173,6 +189,7 @@ Auditoría de generación: `level`, `event`, `message`, `seed`, `user_id`,
 | `updates/03-sprint3-evaluations-vocabulary.sql` | S3 | evaluaciones y vocabulario |
 | `updates/04-sprint4-admin-role.sql` | S4 | `users.role` |
 | `updates/12-reading-explanations-glossary.sql` | Glosario / Ayuda | Desglose estructurado, caché y glosario en `reading_explanations` |
+| `updates/13-category-prompt-library.sql` | Biblioteca de Categorías | Columnas `prompt_profile` (`JSONB`) y `profile_model` en `moderated_categories` |
 
 Regla: cada cambio actualiza `01-init.sql` **y** agrega el script idempotente en
 `updates/`. Ver [`../conventions/database.md`](../conventions/database.md).

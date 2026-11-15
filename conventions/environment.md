@@ -22,12 +22,13 @@ Política de configuración por variables de entorno. La fuente de verdad es
 | `JWT_ACCESS_TTL`        | No        | string | `15m`                 | TTL del access token                              |
 | `JWT_REFRESH_TTL`       | No        | string | `30d`                 | TTL del refresh token                             |
 | `AI_DEFAULT_PROVIDER`   | Sí        | enum   | `minimax`             | Solo `minimax` está registrado en la factoría     |
-| `MINIMAX_API_KEY`       | Cond.*    | string | -                     | API key de MiniMax-M3 (*si provider es minimax)     |
-| `MINIMAX_MODEL`         | No        | string | `MiniMax-M3`          | Modelo a usar                                     |
+| `MINIMAX_API_KEY`       | Cond.*    | string | -                     | API key de MiniMax (*si provider es minimax)        |
+| `MINIMAX_MODEL`         | No        | string | `MiniMax-M2.7`        | Modelo principal (con fallback a `MiniMax-M3`)    |
 | `MINIMAX_ENDPOINT`      | No        | string | `https://api.minimax.io/v1/chat/completions` | URL del API |
-| `MINIMAX_MAX_TOKENS`    | No        | int    | `4096`                | Límite de tokens de salida                        |
-| `MINIMAX_TEMPERATURE`   | No        | float  | `0.6`                 | Temperatura de sampling                           |
-| `MINIMAX_TIMEOUT_MS`    | No        | int    | `30000`               | Timeout HTTP en ms                                |
+| `MINIMAX_MAX_TOKENS`    | No        | int    | `8192`                | Límite de tokens de salida                        |
+| `MINIMAX_TEMPERATURE`   | No        | float  | `0.7`                 | Temperatura de sampling                           |
+| `MINIMAX_TIMEOUT_MS`    | No        | int    | `90000`               | Timeout HTTP en ms                                |
+| `CATEGORY_MODERATION_TIMEOUT_MS` | No | int   | `15000`               | Timeout por lote de moderación/blueprint en ms    |
 | `GROQ_API_KEY`          | No        | string | -                     | *Legacy*: hoy ningún proveedor Groq está registrado|
 | `GROQ_MODEL`            | No        | string | `qwen/qwen3-32b`      | Modelo legacy                                     |
 | `LOG_LEVEL`             | No        | enum   | `info`                | `trace` \| `debug` \| `info` \| `warn` \| `error` |
