@@ -1,5 +1,24 @@
 # Auditoría de estado de los sprints
 
+> ## ⚠️ HISTÓRICO — foto del 04-nov-2026
+>
+> Este documento es la **auditoría del 4 de noviembre** y se conserva como
+> histórico: sus cifras (84 issues, sprints vencidos, milestones abiertos,
+> PRs que no cierran) **ya no describen el estado real**.
+>
+> **El estado vigente (16-nov-2026)** está en:
+>
+> - [`cronograma.md`](./cronograma.md) — la fuente de verdad escrita, con las
+>   cifras reconstruidas desde GitHub (111 issues: 33 abiertas / 78 cerradas).
+> - Los **milestones** de GitHub: Sprint 1 y Sprint 3 **cerrados**, con las
+>   descripciones y las fechas definitivas.
+> - El **Project** del plan, cuyos 95 items coinciden con el estado real de
+>   cada issue.
+>
+> La foto que sigue es la del 04-nov.
+>
+> ---
+>
 > **Fecha:** 04-nov-2026 · **Alcance:** los 4 repositorios de la organización,
 > sus 84 issues, 46 pull requests y el Project del plan.
 >
@@ -46,8 +65,8 @@ coinciden con los milestones de GitHub.
 
 | Sprint | Periodo | Cerrados | Parciales | Sin avance | Sin PR asociado |
 | --- | --- | ---: | ---: | ---: | ---: |
-| 1 | 05–18 oct | 2/8 | 6/8 | 0/8 | 5/8 |
-| 2 | 19 oct–01 nov | 1/17 | 7/17 | 9/17 | 7/17 |
+| 1 | 05 oct–08 nov | 2/8 | 6/8 | 0/8 | 5/8 |
+| 2 | 19 oct–22 nov | 1/17 | 7/17 | 9/17 | 7/17 |
 | 3 | 02–15 nov | 0/10 | 2/10 | 8/10 | 3/10 |
 | 4 | 16–29 nov | 0/17 | 5/17 | 12/17 | 4/17 |
 | 5 | 30 nov–10 dic | 0/16 | 2/16 | 14/16 | 2/16 |
@@ -55,6 +74,23 @@ coinciden con los milestones de GitHub.
 > **Ninguno de los 5 milestones está cerrado.** El Sprint 1 venció el 18-oct y el
 > Sprint 2 el 01-nov; hoy es 04-nov, así que hay **dos sprints vencidos** y el
 > Sprint 3 está a un día de terminarse.
+
+### La foto del 16-nov-2026, para comparar
+
+| Sprint | Periodo | Cerradas / total | Abiertas |
+| --- | --- | ---: | --- |
+| 1 | 05 oct–08 nov | **9/9** ✅ milestone cerrado | 0 |
+| 2 | 19 oct–22 nov (vence el 22) | 13/17 | `back#19`, `back#20`, `back#6`, `infra#20` |
+| 3 | 02–15 nov | 7/10 ✅ milestone cerrado | 0 (las 3 pendientes se movieron a S4) |
+| 4 | 16–29 nov | 7/17 | 10 |
+| 5 | 30 nov–10 dic | 6/16 | 10 |
+
+De los **33 issues abiertos** que quedan, la mayoría ya están implementados y
+solo falta cerrar el issue (o ajustar su alcance): `front#9`, `front#11` y
+`front#15` se cerraron el 16-nov con la evidencia en el código. Los que sí
+tienen trabajo de verdad son `back#44` (TTS), `back#12`/`#22`/`#23` (motor de
+evaluación), `front#12` (panel admin), `infra#25` (paridad Drizzle↔SQL) e
+`infra#9` (auditoría de seguridad).
 
 ---
 

@@ -22,9 +22,19 @@ tarea en los issues del repositorio.
 | Corte interno de desarrollo | 06/Dic/2026 (deja 4 días de margen) |
 | Límite diario por tarea | 23:59 CST |
 | Sprints | 5 |
-| Issues | 84 en total: 65 abiertas (33 entregables + 12 sub-issues + 3 de plataforma + 3 migraciones + 14 de saneamiento) y 19 cerradas |
-| Release actual | `v0.1.0` |
+| Issues | 111 en total: **33 abiertas** (entregables de producto, sub-issues, plataforma y migraciones) y **78 cerradas** |
+| Release actual | `v0.7.0` (las 4 repos; `main` sigue en `v0.1.0`) |
 | Release de cierre | `v1.0.0` |
+
+> **Estado re-sincronizado el 16-nov-2026.** Los datos de este documento
+> se reconstruyeron **desde GitHub** (`state`, `closedAt` y `milestone` de cada
+> issue), no desde la foto del 04-nov que había en
+> [`AUDITORIA-ESTADO-SPRINTS.md`](./AUDITORIA-ESTADO-SPRINTS.md). Ese archivo
+> se conserva como histórico: sus cifras ya no describen el estado real.
+>
+> Los **milestones** de GitHub también se actualizaron: Sprint 1 y Sprint 3
+> están **cerrados** (con lo que quedó pendiente del S3 trasladado al S4),
+> y las descripciones de los 5 sprints tienen ya las fechas definitivas.
 
 ## Dónde ver el avance
 
@@ -244,24 +254,30 @@ label `area:infra`) que cierran el pipeline descrito en
 
 El árbol `infra#10-#17` se fusionó en P2-P5 e `infra#4`; los issues quedaron cerrados como duplicados.
 
-**P3 y P4 quedan fuera de la entrega** (1-10 dic 2026): el cierre usa la
-versión exacta `v1.0.0` (commit `Release-As: 1.0.0` en cada repo) y el
-despliegue por SHA con rollback (`infra#27`). Ambos issues están **abiertos** y
-visibles en el milestone «Fuera de alcance (post-entrega)», que existe en los
-cuatro repos con cierre el 31-ene-2027.
+**P3 y P4 se anticiparon y ya están cerrados** (16-nov-2026): el versionado
+automático (`infra#7`: release-please + `versions.yml` + guard single-flight)
+y la cascada de releases (`infra#8`: promoción desde `rc-*` a staging) son la
+base del pipeline que hoy corre en los cuatro repos. El milestone «Fuera de
+alcance (post-entrega)» sigue existiendo en los cuatro repos con cierre el
+30-ene-2027, pero **ya no tiene ninguna tarea abierta**.
 
 ## Prerrequisitos de schema
 
 Estas tareas no suman a los entregables del producto, pero bloquean backend y
 se rastrean en el mismo Project:
 
-| Issue | Qué habilita | Bloquea |
-| :---: | --- | --- |
-| [infra#20](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/20) | `user_preferences`, `user_selected_categories`, `categories`, `readings.language`, `length_type` y `prompt_hash` | `back#8`, `back#9`, `back#10` |
-| [infra#21](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/21) | `evaluations` y `vocabulary_logs` | `back#11`, `back#13`, `back#16` |
-| [infra#22](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/22) | `users.role` (`STUDENT`/`ADMIN`) | `back#17` |
+| Issue | Qué habilita | Bloquea | Estado (16-nov-2026) |
+| :---: | --- | --- | --- |
+| [infra#20](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/20) | `readings.prompt_hash` (y `categories`, si se quiere catálogo predefinido) | `back#9` | **Abierta, pero reducida**: el schema ya está completo en `database/postgres/01-init.sql` (ver [conventions/database.md](../conventions/database.md)). Lo único que falta de verdad es `readings.prompt_hash`, para la caché de lecturas. El catálogo predefinido se **eliminó por diseño** (las categorías son dinámicas) |
+| [infra#21](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/21) | `evaluations` y `vocabulary_logs` | `back#11`, `back#22`, `back#23` | **Abierta**: las dos tablas no existen todavía |
+| [infra#22](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/22) | `users.role` (`STUDENT`/`ADMIN`) | `back#17` | **Cerrada**: el rol vive en la tabla `admins` (no en `users`) |
 
-Cada migración sigue la regla de dos fases: actualizar `01-init.sql` y agregar un script en `database/postgres/updates/`.
+**El schema ya no se migra por scripts.** Vive en **un solo archivo**
+(`database/postgres/01-init.sql`) y `scripts/apply-schema.sh` lo aplica en
+cada deploy: si el hash del archivo cambió y la base no tiene datos, la
+recrea; si tiene datos, se niega a borrarla y el deploy se detiene. Los
+scripts incrementales de `database/postgres/updates/` se activan en la **fase
+2**, cuando producción tenga datos que no se puedan perder.
 
 ## Reglas de trabajo
 
