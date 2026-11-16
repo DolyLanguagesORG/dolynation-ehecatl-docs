@@ -113,7 +113,7 @@ Las 10 tablas del schema actual:
 | `readings` | Lecturas generadas, estado y columnas legacy de evaluación |
 | `reading_explanations` | Explicaciones de palabras y glosario por lectura |
 | `prompt_logs` | Auditoría de prompts y errores del proveedor |
-| `moderated_categories` | Categorías moderadas por el proveedor de IA |
+| `moderated_categories` | Categorías moderadas por el proveedor de IA. **Es el catálogo global**: `GET /settings/categories` sirve de aquí las categorías aprobadas (las más recientes primero), así que la lista crece con el uso real |
 | `category_daily_usage` | Cuota diaria de uso por categoría |
 
 La CI de infra (`schema-sql`) comprueba que las 10 existan tras aplicar

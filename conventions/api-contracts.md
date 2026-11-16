@@ -153,7 +153,7 @@ cliente solo recibe un código estable + mensaje seguro.
 | `POST /api/v1/readings/{id}/explanations` | Implementado (caché por lectura, desglose palabra por palabra, sentido literal vs. contextual, alternativas y otros contextos; persistido en `reading_explanations`) | `back#11` |
 | `GET /api/v1/readings/{id}/explanations`, `GET /api/v1/readings/glossary`, `PATCH /api/v1/readings/explanations/{explanationId}/glossary` | Implementado (consulta de ayudas por lectura y glosario personal persistente) | `back#11` |
 | `GET /api/v1/readings/{id}/tts` | Planificado S3 | `back#44` |
-| `GET/PUT /api/v1/settings/languages`; `GET/PUT /api/v1/settings/categories` | Implementado (requiere suscripción; `categories` exige mínimo 3 categorías únicas para guardar y generar lecturas) | `back#8` |
+| `GET/PUT /api/v1/settings/languages`; `GET/PUT /api/v1/settings/categories` | Implementado (requiere suscripción; `categories` exige mínimo 3 categorías únicas para guardar y generar lecturas). El `catalog` que devuelve es el **catálogo global de categorías dinámicas**: las que alguien escribió y pasaron la moderación, servidas desde `moderated_categories` (solo las aprobadas, las más recientes primero). | `back#8` |
 | `GET /api/v1/history`, `/history/scores` | Planificado S4 (PR #38 en Draft, sin paginación) | `back#16` |
 | `GET/POST/PATCH/DELETE /api/v1/admin/categories`; `GET /admin/users`; `PATCH /admin/users/{id}/role` | Planificado S4 (bloqueado por `infra#22`) | `back#17` |
 | `GET /api/v1/health/live`, `/health/ready` | Implementado | — |

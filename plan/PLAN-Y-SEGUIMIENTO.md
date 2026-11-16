@@ -94,7 +94,7 @@ por push directo a `main` sin PR ni `Closes #N`.
 
 Lo que hay que tener presente al empezar:
 
-- **22 issues cerrados, 62 abiertos.** Cada issue abierto tiene un comentario
+- **78 issues cerrados, 33 abiertos** (re-sincronizado el 16-nov-2026; era 22/62 en la foto del 04-nov). Cada issue abierto tiene un comentario
   con qué entregó el código ya mergeado y qué falta. No hace falta reconstruir
   el estado: está escrito.
 - **El Sprint 1 se extiende al 08-nov y el Sprint 2 al 22-nov.** Los dos
@@ -285,7 +285,8 @@ No pasa nada, se arregla a mano:
 Para saber **quién no ha avanzado**, sin adivinar:
 
 - **Filtros de issues útiles:**
-  - `milestone:"Sprint 1: Infraestructura, Autenticación y Perfil" is:open` → lo que falta del sprint.
+  - `milestone:"Sprint 1: Configuración del repositorio y cimientos" is:open` → lo que falta del sprint.
+    (Los 5 milestones se llaman igual en los cuatro repos: "Sprint 1…5" y "Fuera de alcance (post-entrega)".)
   - `label:sprint-1 is:open` → lo mismo, por label.
   - `is:open no:assignee` → tareas sin dueño.
   - `assignee:@AzaelG26 is:open` → la carga de una persona.
@@ -314,7 +315,7 @@ rastro verificable dentro de GitHub, con fechas, no una versión de memoria.
 
 ## Documentos relacionados
 
-- [`cronograma.md`](./cronograma.md) — los 70 issues, sprints y fechas.
+- [`cronograma.md`](./cronograma.md) — los 111 issues, sprints y fechas.
 - [`FLUJO-DE-TRABAJO.md`](../operations/FLUJO-DE-TRABAJO.md) — ramas, tablero y releases.
 - [`COMO-HACER-UN-PR.md`](../operations/COMO-HACER-UN-PR.md) — el paso a paso de un PR.
 - [`conventions/git-workflow.md`](../conventions/git-workflow.md) — ramas y hotfixes.

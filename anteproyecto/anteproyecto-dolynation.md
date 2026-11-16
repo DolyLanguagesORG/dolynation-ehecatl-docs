@@ -532,7 +532,7 @@ El sistema deberá garantizar la consistencia e integridad de la información al
 
 ### **11.1. Metodología de trabajo**
 
-Para el desarrollo del proyecto **DolyNation** se implementa el marco de trabajo **Scrum** combinado con un flujo de desarrollo guiado por tareas en GitHub (*Issue-Driven Development*). El proyecto se divide en 5 Sprints con fechas estrictas de entrega que abarcan desde el **19 de octubre** hasta el **10 de diciembre** de 2026\. El Sprint 1 se reprogramó al 19 de octubre tras detectarse que su entrega se retrasó, y los sprints 4 y 5 se acortaron para sostener la fecha de entrega de la 1 a 10 de diciembre.
+Para el desarrollo del proyecto **DolyNation** se implementa el marco de trabajo **Scrum** combinado con un flujo de desarrollo guiado por tareas en GitHub (*Issue-Driven Development*). El proyecto se divide en 5 Sprints con fechas estrictas de entrega que abarcan desde el **19 de octubre** hasta el **10 de diciembre** de 2026\. El Sprint 1 se **extendió** del 18-oct al **08-nov** tras detectarse que su entrega se retrasó (el trabajo se completó el 19 de octubre), y el Sprint 2 se extendió del 01-nov al **22-nov**; los sprints 4 y 5 mantienen su duración para sostener la entrega del 1 al 10 de diciembre.
 
 **Plataforma de trabajo.** Toda la coordinación vive en **GitHub**: los repositorios de código, la documentación, las issues con sus entregables y dependencias, el tablero del proyecto, la revisión de código por *code owners*, la integración continua, los entornos de despliegue y los releases. La justificación de esa decisión, con los criterios, las alternativas descartadas y sus límites, está en
 [`operations/JUSTIFICACION-GITHUB.md`](../operations/JUSTIFICACION-GITHUB.md) y en el
@@ -553,7 +553,7 @@ Para el desarrollo del proyecto **DolyNation** se implementa el marco de trabajo
 
 ## **12\. Separación del proyecto en tareas**
 
-El proyecto se gestiona como un conjunto de **issues en GitHub**, uno por entregable, y esa lista es la fuente de verdad. En total hay **65 issues abiertas** repartidas en cuatro repositorios: 33 entregables de producto derivados de los requerimientos funcionales y del MVP, 12 sub-issues que descomponen los entregables grandes, 5 tareas de plataforma de CI/CD y entornos, 3 migraciones de schema y 12 issues de saneamiento creadas en la auditoría del proyecto.
+El proyecto se gestiona como un conjunto de **issues en GitHub**, uno por entregable, y esa lista es la fuente de verdad. En total hay **111 issues** repartidas en cuatro repositorios: **33 abiertas** (33 entregables de producto derivados de los requerimientos funcionales y del MVP, 12 sub-issues que descomponen los entregables grandes, 5 tareas de plataforma de CI/CD y entornos, 3 migraciones de schema y 12 issues de saneamiento creadas en la auditoría del proyecto) y **78 cerradas**. *(Cifras re-sincronizadas el 16-nov-2026; el documento arrastraba la foto del 04-nov.)*
 
 Las tareas están divididas por capas técnicas: los desarrolladores backend y frontend trabajan en sus áreas específicas y colaboran en tareas en pareja para la integración de la API con la interfaz de usuario. **Cada issue tiene estado actual, entregables, criterios de aceptación, dependencias, evidencia esperada y fecha objetivo**; el avance se mide en los sub-issues, no en los padres, para no contarlo dos veces.
 
@@ -593,7 +593,7 @@ La columna «Asignaciones» cuenta una vez por persona cada issue que tiene asig
 
 #### **Sprint 1: Configuración del repositorio y cimientos**
 
-**Periodo:** 05 al 18 de octubre de 2026 (cerrado con retraso el 19 de octubre)
+**Periodo:** 05 de octubre al **08 de noviembre** de 2026 (extendido; el trabajo se completó el 19 de octubre)
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
@@ -608,7 +608,7 @@ La columna «Asignaciones» cuenta una vez por persona cada issue que tiene asig
 
 #### **Sprint 2: Fundamentos: autenticación, perfil y base del frontend**
 
-**Periodo:** 19 de octubre al 01 de noviembre de 2026
+**Periodo:** 19 de octubre al **22 de noviembre** de 2026 (extendido)
 
 | Issue | Tarea / Descripción | Responsable | Fecha Inicio | Fecha Entrega |
 | :---- | :---- | :---- | :---- | :---- |
