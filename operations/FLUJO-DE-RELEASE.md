@@ -308,12 +308,35 @@ stack. Como la imagen es inmutable, el rollback es exacto: no depende de que
 | Tag y GitHub Release | sí | release-please, al mergear el PR |
 | Imagen en GHCR | sí | `build-images` (push a develop, rc o tag) |
 | Manifiesto `versions.yml` | sí | `sync-versions` |
+| **Schema de la base** | sí | `scripts/apply-schema.sh` (antes de levantar el backend; se detiene si la base tiene datos) |
 | Despliegue a rehearsal | sí | al empujar la `rc` |
 | Smoke test | sí | `workflow_run` tras cada deploy |
 | Despliegue a staging | sí | al empujar la `rc`, si rehearsal pasó |
 | PR `rc -> main` | sí (se abre) | **una persona lo mergea** |
 | Aprobaciones de `main` | no | 2 revisores + code owner |
 | Despliegue a producción | **no** | alguien lo dispara y lo aprueban 2 revisores |
+
+---
+
+## 10-bis. El schema viaja con el deploy
+
+El schema de la base **no es un paso manual**: vive en **un solo archivo**
+(`dolynation-tlalli-infra/database/postgres/01-init.sql`) y
+`scripts/apply-schema.sh` lo aplica **en cada deploy**, antes de que arranque
+el backend de la versión nueva.
+
+El detalle está en
+[`conventions/database.md`](../conventions/database.md) y en la
+[discusión del repo de infra](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/discussions/169).
+
+Lo que hay que saber para operar:
+
+- **Si el deploy se detiene** con *"El schema cambió y la base tiene datos"*, no
+  es un fallo: es el runner haciendo su trabajo. Hay que migrar a mano.
+- En **rehearsal y staging** los datos son de prueba: se recrean sin
+  preguntar. En **producción** nunca se borra nada.
+- Cambiar el schema y desplegar son **la misma operación**: no hay paso
+  forgotten que ejecutar con `psql`.
 
 ---
 
