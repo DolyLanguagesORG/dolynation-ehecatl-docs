@@ -3,6 +3,10 @@
 Registro corto de las decisiones que afectan a varios repos. No sustituye al
 anteproyecto; lo aclara cuando la implementación tomó una decisión concreta.
 
+Las decisiones **que aún no están tomadas** van en
+[`PENDIENTES.md`](./PENDIENTES.md) (con la etiqueta `needs:decision` en los
+issues que dependen de ellas).
+
 | ID | Decisión | Estado |
 | --- | --- | --- |
 | ADR-001 | MiniMax-M3 como proveedor de IA por defecto, con interfaz adaptable | Aceptada |
