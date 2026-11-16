@@ -22,7 +22,7 @@ tarea en los issues del repositorio.
 | Corte interno de desarrollo | 06/Dic/2026 (deja 4 días de margen) |
 | Límite diario por tarea | 23:59 CST |
 | Sprints | 5 |
-| Issues | **114** en total: **29 abiertas** (entregables de producto, sub-issues, plataforma y migraciones) y **85 cerradas** |
+| Issues | **115** en total: **29 abiertas** (entregables de producto, sub-issues, plataforma y migraciones) y **86 cerradas** |
 | Release actual | `v0.7.0` (las 4 repos; `main` sigue en `v0.1.0`) |
 | Release de cierre | `v1.0.0` |
 
