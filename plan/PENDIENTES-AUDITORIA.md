@@ -1,12 +1,27 @@
 # Pendientes de la auditoría — para retomar
 
-> Lista de lo que quedó **pendiente de decisión o de ejecución** el
+> ## ✅ Los 5 puntos están resueltos (revisado el 16-nov-2026)
+>
+> Esta lista es la de lo que quedó pendiente el **04-nov-2026**. Los cinco
+> puntos se cerraron:
+>
+> | # | Punto | Estado hoy |
+> | --- | --- | --- |
+> | 1 | `Closes #N` → `Refs #N` en los PRs que no completan el issue | ✅ hecho |
+> | 2 | Milestone «Fuera de alcance (post-entrega)» | ✅ hecho (hoy, además, **sin tareas**: P3 y P4 se anticiparon) |
+> | 3 | Cerrar `docs#15` (saneamiento de la configuración de GitHub) | ✅ **cerrado** (16-nov-2026) |
+> | 4 | Fix del versionado | ✅ resuelto con release-please |
+> | 5 | Manifiesto de versiones: quién lo actualiza y quién lo valida | ✅ automatizado con `sync-versions` |
+>
+> Se conserva como histórico. Lo que **queda abierto** está en
+> [`PENDIENTES.md`](../decisions/PENDIENTES.md) (las decisiones que necesitan
+> al equipo) y en el Project (las tareas).
+>
+> ---
+>
+> Lista original de lo que quedó **pendiente de decisión o de ejecución** el
 > **04-nov-2026**, después de la auditoría de trazabilidad y el anuncio de
 > cierres.
->
-> El usuario pidió explícitamente **aplazar estos tres puntos** hasta que
-> Terminasen las revisiones de los PRs en curso. **No forgotten: siguen
-> abiertos y hay que retomarlos.**
 
 ## 1. Pasar los `Closes #N` a `Refs #N` en los 8 PRs de features
 
@@ -57,7 +72,7 @@ El texto del cronograma sobre P3 y P4 queda así exacto.
 
 ## 3. Cerrar `docs#15` (saneamiento de la configuración de GitHub)
 
-**Estado:** casi listo · **Responsable:** coordinación · **Prioridad:** media
+**Estado:** ✅ **cerrado** (16-nov-2026) · **Responsable:** coordinación · **Prioridad:** media
 
 Ya está hecho:
 
@@ -113,7 +128,7 @@ puede escribir sobre una rama protegida.
 
 ## 5. Manifiesto de versiones: quién lo actualiza y quién lo valida
 
-**Estado:** preparado (04-nov-2026) · **Responsable:** coordinación
+**Estado:** ✅ automatizado con `sync-versions` (16-nov-2026) · **Responsable:** coordinación
 
 `versions.yml` declara la versión publicada de cada repositorio. Ningún
 workflow puede escribirlo (la rama está protegida), así que **lo sube una
