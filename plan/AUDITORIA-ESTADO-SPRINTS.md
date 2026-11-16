@@ -85,7 +85,7 @@ coinciden con los milestones de GitHub.
 | 4 | 16–29 nov | 7/17 | 10 |
 | 5 | 30 nov–10 dic | 6/16 | 10 |
 
-De los **33 issues abiertos** que quedan, la mayoría ya están implementados y
+De los **29 issues abiertos** que quedan, la mayoría ya están implementados y
 solo falta cerrar el issue (o ajustar su alcance): `front#9`, `front#11` y
 `front#15` se cerraron el 16-nov con la evidencia en el código. Los que sí
 tienen trabajo de verdad son `back#44` (TTS), `back#12`/`#22`/`#23` (motor de
