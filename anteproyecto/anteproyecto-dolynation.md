@@ -553,7 +553,7 @@ Para el desarrollo del proyecto **DolyNation** se implementa el marco de trabajo
 
 ## **12\. Separación del proyecto en tareas**
 
-El proyecto se gestiona como un conjunto de **issues en GitHub**, uno por entregable, y esa lista es la fuente de verdad. En total hay **111 issues** repartidas en cuatro repositorios: **33 abiertas** (33 entregables de producto derivados de los requerimientos funcionales y del MVP, 12 sub-issues que descomponen los entregables grandes, 5 tareas de plataforma de CI/CD y entornos, 3 migraciones de schema y 12 issues de saneamiento creadas en la auditoría del proyecto) y **78 cerradas**. *(Cifras re-sincronizadas el 16-nov-2026; el documento arrastraba la foto del 04-nov.)*
+El proyecto se gestiona como un conjunto de **issues en GitHub**, uno por entregable, y esa lista es la fuente de verdad. En total hay **114 issues** repartidas en cuatro repositorios: **29 abiertas** (entregables de producto derivados de los requerimientos funcionales y del MVP, sub-issues que descomponen los entregables grandes, tareas de plataforma de CI/CD y entornos, migraciones de schema y issues de saneamiento creadas en la auditoría del proyecto) y **85 cerradas**. *(Cifras re-sincronizadas el 16-nov-2026; el documento arrastraba la foto del 04-nov.)*
 
 Las tareas están divididas por capas técnicas: los desarrolladores backend y frontend trabajan en sus áreas específicas y colaboran en tareas en pareja para la integración de la API con la interfaz de usuario. **Cada issue tiene estado actual, entregables, criterios de aceptación, dependencias, evidencia esperada y fecha objetivo**; el avance se mide en los sub-issues, no en los padres, para no contarlo dos veces.
 

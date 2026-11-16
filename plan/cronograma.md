@@ -22,7 +22,7 @@ tarea en los issues del repositorio.
 | Corte interno de desarrollo | 06/Dic/2026 (deja 4 días de margen) |
 | Límite diario por tarea | 23:59 CST |
 | Sprints | 5 |
-| Issues | 111 en total: **33 abiertas** (entregables de producto, sub-issues, plataforma y migraciones) y **78 cerradas** |
+| Issues | **114** en total: **29 abiertas** (entregables de producto, sub-issues, plataforma y migraciones) y **85 cerradas** |
 | Release actual | `v0.7.0` (las 4 repos; `main` sigue en `v0.1.0`) |
 | Release de cierre | `v1.0.0` |
 
@@ -35,6 +35,12 @@ tarea en los issues del repositorio.
 > Los **milestones** de GitHub también se actualizaron: Sprint 1 y Sprint 3
 > están **cerrados** (con lo que quedó pendiente del S3 trasladado al S4),
 > y las descripciones de los 5 sprints tienen ya las fechas definitivas.
+>
+> Las cifras de arriba son **issues** (sin pull requests) en los cuatro repos,
+> contadas con paginación sobre la API. Los milestones incluyen además las
+> tareas de plataforma y de saneamiento, así que sus totales son mayores que
+> las filas de las tablas por sprint de este documento (que solo listan los
+> entregables de producto).
 
 ## Dónde ver el avance
 
