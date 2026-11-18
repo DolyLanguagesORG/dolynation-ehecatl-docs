@@ -41,6 +41,19 @@ Scopes habituales: `auth`, `readings`, `ia`, `users`, `errors`, `docs`, `deps`,
 - `Closes #N` en el cuerpo (en su propia línea) para cerrar el issue al mergear.
 - Debe pasar **los checks del repo** (ver `references/commits-and-prs.md`).
 
+## Quién hace qué
+
+- **El scrum master** es el dueño del **release train**: versionado
+  automático, releases, el manifiesto `versions.yml`, la promoción de la `rc` y
+  los deploys que salen de ahí. Mergea el PR de release con su cuenta (la
+  que tiene el token de release-please) y por eso existe el bypass de
+  `develop`.
+- **Cada entregable** tiene su dueño en la columna **Responsable** del
+  [`cronograma.md`](../../plan/cronograma.md). Si no puede hacerlo, se cambia
+  ahí; una issue sin asignar es trabajo que nadie ve.
+- Al abrir un issue: **assignee + `area:*` + `sprint-*`**. Las plantillas
+  solo añaden `bug` o `enhancement`.
+
 ## Tablero y releases
 
 Kanban y Timeline viven en el
