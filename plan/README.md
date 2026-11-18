@@ -2,6 +2,10 @@
 
 Planificación del producto y seguimiento del trabajo.
 
+- [PENDIENTES.md](./PENDIENTES.md) — **el apartado de lo que falta**: lo que
+  queda dentro de la entrega (por sprint) y lo que se decidió dejar fuera
+  (Stripe, reCAPTCHA, tutorial, amistades), y dónde vive cada tipo de
+  trabajo (bugs, decisiones, anuncios).
 - [cronograma.md](./cronograma.md) — 5 sprints, 33 entregables, 5 tareas de
   plataforma y 3 migraciones de schema.
 - [PLAN-Y-SEGUIMIENTO.md](./PLAN-Y-SEGUIMIENTO.md) — ruta crítica,
