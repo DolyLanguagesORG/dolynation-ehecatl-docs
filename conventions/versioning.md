@@ -9,6 +9,37 @@ cada repositorio mantiene **un pull request de release acumulativo** contra
 `develop`. Al mergear ese PR, la versión sube sola, el changelog se escribe
 solo, y se crean el **tag anotado** y la **GitHub Release**.
 
+## Quién es el dueño del versionado
+
+El **release train** (versionado automático, releases, el manifiesto
+`versions.yml`, la promoción de la `rc` y el deploy que sale de ahí) es del
+**scrum master**:
+
+- el PR de release se mergea con su cuenta, que es la que tiene el token que
+  release-please usa;
+- el manifiesto `versions.yml` lo actualiza `sync-versions` desde esa misma
+  cuenta;
+- el bypass de `develop` existe precisamente para que el scrum master pueda
+  mergear el PR de release sin esperar una segunda aprobación.
+
+Lo que **no** es del scrum master es el trabajo de cada entregable: ese
+tiene dueño, y es la columna **Responsable** del
+[`cronograma.md`](../plan/cronograma.md). Si ese dueño no puede hacer la tarea,
+se cambia en el cronograma, no se deja la issue sin asignar.
+
+**Regla al abrir un issue** (las plantillas solo ponen `bug` o `enhancement`):
+
+| Qué | Cómo |
+| --- | --- |
+| Dueño | Asignar la issue a quien la va a hacer |
+| Área | `area:backend`, `area:frontend`, `area:infra`, `area:docs` (o `area:qa`, `area:fullstack`) |
+| Sprint | `sprint-1` … `sprint-5`, según el sprint del cronograma |
+
+Una issue sin assignee, sin `area:*` o sin `sprint-*` no se puede filtrar ni
+asignar: es trabajo que se pierde de vista.
+
+---
+
 ## El ciclo, de punta a punta
 
 ```

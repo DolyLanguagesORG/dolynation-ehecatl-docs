@@ -280,6 +280,18 @@ El bypass de `develop` existe porque el scrum master es quien aprueba y
 mergea; el de `main` **no** existe: los releases a producción se miran entre
 dos.
 
+### Quién es el dueño de qué
+
+| Ámbito | Dueño |
+| --- | --- |
+| **El release train**: versionado automático, releases, `versions.yml`, promoción de la `rc` y los deploys que salen de ahí | **el scrum master** (mergea el PR de release con la cuenta que tiene el token de release-please) |
+| **Cada entregable** | el **Responsable** de la columna homónima del [`cronograma.md`](../plan/cronograma.md) |
+| **Los chores de versionado** (`chore(release)`, `chore(versions)`) | **el scrum master**, siempre |
+
+Una issue sin assignee no es un detalle: es trabajo que nadie ve. Al abrir
+una, hay que poner **assignee + `area:*` + `sprint-*`** (las plantillas solo
+añaden `bug` o `enhancement`).
+
 ---
 
 ## 9. Rollback
