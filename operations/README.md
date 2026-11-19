@@ -14,6 +14,8 @@ Cómo se trabaja y se despliega el proyecto.
 - [PLAN-DE-DESPLIEGUE.md](./PLAN-DE-DESPLIEGUE.md) — los ambientes (desarrollo,
   rehearsal, staging y producción) sobre servidor único, puertos, secretos y flujo de
   despliegue.
+- [VPN.md](./VPN.md) — la VPN de desarrollo: WireGuard con mTLS, las tres familias
+  de red, cómo dar de alta y revocar peers y qué hacer cuando algo falla.
 - [PROTOTIPO-FIGMA.md](./PROTOTIPO-FIGMA.md) — el prototipo de Figma: dónde está,
   la imagen versionada, cómo se re-exporta, los tokens de diseño y la app
   «Figma for GitHub».
