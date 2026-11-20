@@ -15,11 +15,30 @@ comparte material con nadie, y revocar un peer no toca a los demas.
 | `devapi` | servicios | `10.90.0.2` | API del ambiente de desarrollo |
 | `devweb` | servicios | `10.90.0.3` | Web del ambiente de desarrollo |
 | `minios` | servicios | `10.90.0.4` | Almacenamiento de objetos (S3) |
-| `jxadevp` | admin | `10.92.0.2` | Jesus Alberto: administracion |
-| `sebastian` | devs | `10.91.0.2` | Sebastian: PO |
+| `jxadevp-dev` | devs | `10.91.0.6` | Jesus Alberto: desarrollo |
+| `jxadevp-admin` | admin | `10.92.0.2` | Jesus Alberto: administracion |
+| `sebastian-dev` | devs | `10.91.0.2` | Sebastian: desarrollo |
+| `sebastian-admin` | admin | `10.92.0.3` | Sebastian: administracion |
 | `azael` | devs | `10.91.0.3` | Azael: backend |
 | `elias` | devs | `10.91.0.4` | Elias: backend |
 | `y0adq1` | devs | `10.91.0.5` | Juan Antonio: frontend |
+
+### Las personas con dos identidades
+
+Jesus Alberto y Sebastian desarrollan **y** administran. Cada uno tiene por
+eso **dos peers distintos**, con su propia llave y su propio PSK:
+
+| Identidad | Familia | Alcanza a |
+| --- | --- | --- |
+| `jxadevp-dev` / `sebastian-dev` | devs | servicios y los demas developers |
+| `jxadevp-admin` / `sebastian-admin` | admin | todo |
+
+Son **identidades separadas a proposito**: la de desarrollo no puede tocar
+el plano de administracion, aunque la persona sea la misma. Asi una laptop
+que se filtra no arrastra a la identidad de administracion.
+
+Cada identidad tiene su certificado de cliente, con su CN: el registro del
+servidor dice **que identidad** se uso en cada conexion.
 
 - **Protocolo**: WireGuard, sobre `udp/50443`.
 - **TLS**: CA interna de DolyNation (raiz + intermedia). Los servicios
@@ -43,10 +62,26 @@ firewall.
 Lo que **no** pasa:
 
 - **devs → admin**: un developer no entra en la familia de
-  administracion, tampoco por SSH.
+  administracion, tampoco por SSH. Esto vale tambien para la identidad de
+  desarrollo de quien ademas administra: su peer de desarrollo no llega a
+  la familia admin.
 - **servicios → admin**: un servicio comprometido no llega a la
   administracion.
 - **servicios → devs**: los servicios solo responden; no inician.
+
+El corte se hace en dos sitios, a proposito:
+
+1. **En el `AllowedIPs` del peer**: la identidad de desarrollo no tiene
+   ruta hacia la familia admin, asi que ni siquiera puede dirigir el
+   paquete.
+2. **En el firewall** (cadena `DOLY-FWD`): la regla
+   `-s 10.91.0.0/24 -d 10.92.0.0/24 -j DROP` corta lo que se cuele por
+   el camino del reenvio.
+
+Que el firewall vea ese trafico es lo que hace posible la segunda capa: en
+OpenVPN el demonio reenruta entre clientes en *userspace* y el firewall del
+host no lo ve (medido: los contadores de `INPUT` y `FORWARD` se quedan en
+cero y una regla `DROP` no corta nada).
 
 Que el admin sea una familia aparte y no "el primero de los devs" es
 deliberado: revocar el acceso de un developer no toca el del admin, y

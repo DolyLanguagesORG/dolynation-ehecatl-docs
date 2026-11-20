@@ -26,6 +26,33 @@ alcanza a que, como se autentica) estan en
 sudo /etc/doly-vpn/vpn-up.sh status
 ```
 
+## Las personas con dos identidades
+
+Jesus Alberto y Sebastian tienen un peer de **desarrollo** y otro de
+**administracion**. Cada uno tiene su propia llave y su propio PSK: son
+identidades distintas, no la misma con dos permisos.
+
+| Peer | Familia | IP de tunel | Alcanza a |
+| --- | --- | --- | --- |
+| `jxadevp-dev` | devs | `10.91.0.6` | servicios y los demas developers |
+| `jxadevp-admin` | admin | `10.92.0.2` | todo |
+| `sebastian-dev` | devs | `10.91.0.2` | servicios y los demas developers |
+| `sebastian-admin` | admin | `10.92.0.3` | todo |
+
+El paquete de cada uno lleva las dos configs (`wg-dev.conf` y
+`wg-admin.conf`) y los dos `.p12`.
+
+Que el peer de desarrollo **no** tenga ruta hacia la familia admin es lo
+que impide que la identidad de desarrollo toque el plano de
+administracion. El firewall lo reinforce con
+`-s 10.91.0.0/24 -d 10.92.0.0/24 -j DROP`.
+
+Para comprobarlo:
+
+```bash
+sudo /etc/doly-vpn/vpn-test.sh identidades
+```
+
 ## Dar de alta a un developer
 
 El developer genera su llave publica en su maquina y te la pasa:
@@ -57,9 +84,26 @@ scp vaneserver:/etc/doly-vpn/bundles/<peer>.tar.gz.sealed <peer>:
 El developer lo abre con `doly-vpn-decrypt` (le pasas la passphrase de
 la CA por un canal aparte).
 
+## Dar de alta a un developer con las dos identidades
+
+1. Anadir **dos** lineas en `PEERS`: una en la familia `devs` y otra en la
+   `admin`, cada una con su IP.
+2. Anadir la persona a `PERSONAS_DUALES`, con sus dos peers.
+3. Regenerar y reiniciar:
+
+```bash
+sudo doly-vpn-run peers
+sudo doly-vpn-run render
+sudo doly-vpn-run certs
+sudo doly-vpn-run bundles
+sudo /etc/doly-vpn/vpn-up.sh start
+```
+
+4. El paquete sale con las dos identidades y sus dos `.p12`.
+
 ## Revocar a un developer
 
-1. Quitar su linea de `PEERS` en el `doly-vpn.py`.
+1. Quitar su linea de `PEERS` en el `doly-vpn.py` (las dos, si es dual).
 2. Regenerar y reiniciar:
 
 ```bash
