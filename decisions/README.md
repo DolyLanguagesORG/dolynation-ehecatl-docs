@@ -178,7 +178,11 @@ issues que dependen de ellas).
   compartido con `POST /billing/checkout/:sessionId/sync`). Al cancelarse o
   vencer una suscripción pagada (`customer.subscription.deleted`), el usuario
   baja automáticamente a `dolly` conservando intacto el orden priorizado de
-  `user_settings.selected_languages` y el candado anual de 365 días.
+  `user_settings.selected_languages` y el candado anual de 365 días. Además, se
+  protegen los endpoints de dinero con límites de tasa por usuario
+  (`BILLING_RATE_LIMITED` 429 en ventana de 60 s), soporte de cabecera opcional
+  `Idempotency-Key`, locks en memoria anti doble clic, guarda contra webhooks
+  tardíos y `payment_behavior: 'pending_if_incomplete'` en cambios de plan.
 - **Alternativas:**
   - *Solo Stripe Hosted Checkout + Customer Portal:* descartado como experiencia
     principal porque saca al usuario de la identidad visual B&W de DolyNation.

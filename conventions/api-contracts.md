@@ -99,6 +99,7 @@ verifica exhaustividad.
 | `BILLING_SUBSCRIPTION_CONFLICT`     | 409  | El usuario ya posee una suscripción Stripe activa y debe usar `change-plan` o `cancel` |
 | `BILLING_PROVIDER_ERROR`            | 502  | Error de comunicación o respuesta inválida desde Stripe      |
 | `BILLING_NOT_CONFIGURED`            | 503  | Pasarela Stripe desactivada (`BILLING_PROVIDER=manual`) o credenciales/Price IDs incompletos |
+| `BILLING_RATE_LIMITED`              | 429  | Límite de peticiones por ventana de 60 s alcanzado en checkout, SetupIntent o mutaciones |
 | `VALIDATION_ERROR`                  | 400  | Falló class-validator; `details.fields` es un array de `{ field, message }` |
 | `INTERNAL_ERROR`                    | 500  | Error no controlado; el cliente no recibe detalles internos  |
 | `SERVICE_UNAVAILABLE`               | 503  | Dependencia externa (DB, AI provider) caída                  |

@@ -86,6 +86,18 @@ No requiere token de sesión. Devuelve `BillingConfigResponseDto`:
 | `POST /api/v1/billing/portal` | Bearer + suscripción activa | — | `{ url: string }` | Respaldo opcional para abrir Customer Portal alojado en Stripe. |
 | `POST /api/v1/billing/webhook` | `@Public()` + header `stripe-signature` | Raw JSON body de Stripe | `{ received: boolean, ignored: boolean }` | Uso exclusivo servidor Stripe ↔ Backend (el frontend nunca lo invoca). |
 
+### Protecciones de dinero, idempotencia y límites de tasa (`429`)
+
+1. **Límites de tasa por usuario (`BILLING_RATE_LIMITED` 429):** los endpoints monetarios protegen contra doble clic, card-testing y abuso en ventana deslizante de **60 segundos** por usuario autenticado (complementando el futuro soporte de **reCAPTCHA** en frontend):
+   - `checkout/subscription` y `checkout/language-unlock`: **5 peticiones / 60 s** (`checkout`)
+   - `payment-method/setup-intent`: **5 peticiones / 60 s** (`setup_intent`)
+   - `subscription/change-plan`, `subscription/cancel`, `subscription/resume`, `payment-method/default`, `portal`: **10 peticiones / 60 s** (`mutation`)
+   - `checkout/:sessionId/sync`: **15 peticiones / 60 s** (`sync`)
+   - `invoices`: **20 peticiones / 60 s** (`invoices`)
+   - `GET /billing/config` usa caché de 5 min con coalescencia in-flight; `POST /billing/webhook` no se limita por usuario y se protege por firma HMAC `stripe-signature` + PK `billing_webhook_events`.
+2. **Cabecera opcional `Idempotency-Key`:** los `POST` `checkout/subscription`, `checkout/language-unlock`, `subscription/change-plan` y `payment-method/setup-intent` aceptan `Idempotency-Key` (`1–128` caracteres `[A-Za-z0-9._:-]`), aislada automáticamente por ambiente y usuario antes de enviarse a Stripe.
+3. **Prorrateo seguro y webhooks tardíos:** `change-plan` envía `payment_behavior: 'pending_if_incomplete'` y bloquea cambios si la suscripción está en `past_due` (`402 BILLING_PAYMENT_REQUIRED`); además, `syncSubscriptionState` ignora webhooks `canceled`/`unpaid` tardíos de suscripciones antiguas si existe otra suscripción activa vigente.
+
 ### Estructuras DTO clave
 
 - **`CheckoutSessionResponseDto`**:
@@ -210,7 +222,14 @@ export const dolyStripeAppearance: Appearance = {
 | `BILLING_SUBSCRIPTION_CONFLICT` | 409 | Ya existe una suscripción Stripe activa y el usuario intentó crear un checkout duplicado o bajar directo a `dolly` vía `/user/subscription`. Redirigir a `change-plan` o `cancel`. |
 | `BILLING_PROVIDER_ERROR` | 502 | Falla temporal comunicándose con `api.stripe.com`. Permitir reintento manual sin duplicar cargos. |
 | `BILLING_NOT_CONFIGURED` | 503 | Ambiente configurado con `BILLING_PROVIDER=manual` o sin credenciales/Price IDs completos. Ocultar formularios Stripe o usar flujo manual. |
+| `BILLING_RATE_LIMITED` | 429 | Límite de peticiones en ventana de 60 s superado (`details.retryAfterSeconds`). Deshabilitar botón temporalmente y respetar espera antes de reintentar. |
 | `SUBSCRIPTION_INVALID_TIER` | 400 | Se envió `dolly` a `/checkout/subscription` o un identificador desconocido. |
 | `LANGUAGE_CHANGE_LOCKED` | 403 | El usuario intentó cambiar idiomas antes de cumplir 365 días y sin créditos (`languageChangeCredits === 0`). Ofrecer botón que invoca `POST /api/v1/billing/checkout/language-unlock`. |
+
+## 6. Notas operativas de Sandbox y entorno local
+
+- **No mezclar claves API y Price IDs entre cuentas/sandboxes de Stripe:** los prefijos/sufijos de `STRIPE_PUBLISHABLE_KEY`, `STRIPE_SECRET_KEY`, `STRIPE_PRICE_*` y `stripe listen` deben pertenecer exactamente a la misma cuenta o Sandbox (`livemode: false`), o Stripe responderá `No such price` (`400 BILLING_CHECKOUT_INVALID`).
+- **Stripe CLI `1.55+`:** `stripe listen` requiere indicar eventos explícitos (`--events checkout.session.completed,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted,invoice.payment_succeeded,invoice.payment_failed` o `--all-snapshot`).
+- **Suites E2E con `.env` local en modo `stripe`:** las suites heredadas manuales (`subscription-language-flows` y `access-requests`) fijan explícitamente `BILLING_PROVIDER=manual` en `beforeAll` para no fallar cuando el desarrollador tiene `BILLING_PROVIDER=stripe` en su `.env` local.
 
 Referencias relacionadas: [`../conventions/environment.md`](../conventions/environment.md), [`../conventions/api-contracts.md`](../conventions/api-contracts.md), [`../architecture/data-model.md`](../architecture/data-model.md) y [`./PLAN-DE-DESPLIEGUE.md`](./PLAN-DE-DESPLIEGUE.md).
