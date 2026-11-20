@@ -67,6 +67,39 @@ Direcciones dentro de la VPN:
 | Web | `https://devweb.yacaterkos.tech` |
 | Objetos (S3) | `https://minios.doly.internal:50090` |
 
+## Servicios de terceros y la VPN
+
+La VPN cierra el ambiente de desarrollo al exterior. Pero hay entradas que
+**no son de la VPN**: un proveedor de pagos (Stripe) entrega eventos a una
+URL publica. La regla es separar *"el servicio tiene que ser publico"* de
+*"el servicio esta publico"*.
+
+| Ambiente | Como entra el webhook | Superficie publica |
+| --- | --- | --- |
+| `desarrollo` | `stripe listen` (CLI) reenvia a `localhost` | **cero** |
+| `rehearsal` / `staging` | una sola ruta en el proxy | 1 ruta |
+| `produccion` | una sola ruta en el proxy | 1 ruta |
+
+Las reglas:
+
+- **En desarrollo no se expone nada.** El cliente de Stripe (`stripe listen
+  --forward-to localhost:3333`) recibe los eventos y los reenvia a la
+  maquina. La firma se verifica igual que en produccion. Cero puertos
+  nuevos, cero entradas al servidor.
+- **En staging y produccion se expone una ruta, no un servicio.** El proxy
+  enruta solo `/api/v1/billing/webhook`; el resto del vhost responde
+  `deny`. La regla de firewall que deja entrar el trafico viene del
+  conjunto de rangos de IP del proveedor, no de `0.0.0.0/0`.
+- **La firma se verifica en el backend.** Que un atacante alcance el
+  puerto no sirve de nada: sin una firma valida del proveedor, la
+  peticion se rechaza y no cambia nada.
+- **El webhook no pasa por la VPN.** Es una entrada de internet por
+  definicion. Lo que es privado es todo lo demas: la API, la base de
+  datos, el panel de administracion y el almacenamiento de objetos.
+
+Esto vive en el issue `atl-back#143` (modulo de pagos). Cuando ese modulo
+entre, el camino publico es **una ruta**, no un ambiente entero.
+
 ## El bot de GitHub Actions
 
 El bot **no entra en la VPN**: sus runners son efemeros y tienen IP
