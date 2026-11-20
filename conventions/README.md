@@ -17,6 +17,7 @@ duplica** el comportamiento, lo explica y lo enlaza.
 | [environment.md](./environment.md)                              | Variables de entorno, secretos, `.env.example`                   |
 | [database.md](./database.md)                                    | PostgreSQL + Drizzle, schema vía SQL crudo, convenciones         |
 | [security.md](./security.md)                                    | Auth (JWT + Argon2), Helmet, CSP, ValidationPipe                 |
+| [vpn.md](./vpn.md)                                              | VPN de desarrollo: WireGuard, mTLS, familias de red                |
 | [i18n.md](./i18n.md)                                            | Los 4 idiomas: interfaz, inmersión por contenido y documentos legales |
 
 ## Cómo aplicar estas convenciones
