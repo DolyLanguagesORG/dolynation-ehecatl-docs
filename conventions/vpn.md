@@ -40,11 +40,11 @@ que se filtra no arrastra a la identidad de administracion.
 Cada identidad tiene su certificado de cliente, con su CN: el registro del
 servidor dice **que identidad** se uso en cada conexion.
 
-- **Protocolo**: WireGuard, sobre `udp/50443`.
+- **Protocolo**: WireGuard, sobre `udp/58376`.
 - **TLS**: CA interna de DolyNation (raiz + intermedia). Los servicios
   exigen **mTLS**: sin un certificado de cliente firmado por la CA, la
   peticion se rechaza con `400`.
-- **Puerto del cliente**: `50022` (el `22` queda como respaldo mientras
+- **Puerto del cliente**: `59253` (el `22` queda como respaldo mientras
   la migracion del bot no este hecha).
 
 ## Las familias
@@ -169,7 +169,7 @@ El bot **no entra en la VPN**: sus runners son efemeros y tienen IP
 dinamica, y darle acceso a la VPN significaria que cualquiera que
 lograra ejecutar un workflow tendria acceso a la red interna.
 
-Su canal es propio: SSH por el `50022`, con el firewall aceptando solo
+Su canal es propio: SSH por el `59253`, con el firewall aceptando solo
 los rangos oficiales de IP de GitHub Actions. Esos rangos cambian, asi
 que un timer los actualiza cada 6 horas. El puerto se cambia en el
 secret `DEPLOY_PORT` de los environments: **ningun workflow cambia**.
@@ -186,7 +186,7 @@ secret `DEPLOY_PORT` de los environments: **ningun workflow cambia**.
   del host: `devapi` y `devweb` se pueden revocar por separado.
 - **El material sellado se sella con AES-256-GCM**, no con AES-CBC: el
   GCM autentica, asi que un fichero alterado no se abre.
-- **El `22` se cierra** cuando la migracion del bot al `50022` este
+- **El `22` se cierra** cuando la migracion del bot al `59253` este
   hecha y verificada.
 - **La CA raiz solo firma la intermedia.** Ningun certificado de
   servicio o de developer se emite directamente con la raiz.
