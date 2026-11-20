@@ -203,11 +203,51 @@ es la Security List.
 
 1. Instalar el paquete de la persona (el `.conf` de la identidad, las CAs
    y el `.p12`).
-2. Levantar la identidad:
+2. Levantar la identidad. Hay dos formas en Linux (hacen lo mismo) y la
+   app oficial en otros sistemas:
+
+   **En Windows, macOS, Android e iOS** (app oficial de WireGuard): al
+   importar el `.conf` la aplicacion aplica `DNS = 10.90.0.1` sola. Solo
+   hace falta instalar `ca.crt` e importar el `.p12` en el navegador una
+   vez para el mTLS.
+
+   **Con NetworkManager en Linux** (el menu de red del escritorio). La
+   conexion se importa una vez y luego se conecta desde el icono de red
+   del panel:
+
+   ```bash
+   nmcli connection import type wireguard file /etc/wireguard/wg-dev.conf
+   nmcli connection up wg-dev
+   nmcli connection down wg-dev
+   ```
+
+   Si el sistema usa `systemd-resolved`, NetworkManager tiene que ser el
+   que le pase el DNS de la VPN al resolved. Si al conectar el nombre
+   `devapi.yacaterkos.tech` no resuelve a `10.90.0.2`, crear
+   `/etc/NetworkManager/conf.d/00-dns.conf`:
+
+   ```ini
+   [main]
+   dns=systemd-resolved
+   systemd-resolved=true
+   ```
+
+   y `sudo systemctl restart NetworkManager`. Si aun asi no prioriza el
+   DNS del tunel sobre la interfaz Ethernet/Wi-Fi, fijar dominio de
+   busqueda y prioridad en el perfil importado:
+
+   ```bash
+   nmcli connection modify wg-dev ipv4.dns-search "~." ipv4.dns-priority -50
+   nmcli connection up wg-dev
+   ```
+
+   **Con wg-quick** (la terminal). Necesita `resolvconf` instalado:
 
    ```bash
    sudo wg-quick up wg-dev      # identidad de desarrollo
    sudo wg-quick up wg-admin    # identidad de administracion (si la hay)
+   sudo wg-quick down wg-dev    # desconectar
+   sudo wg show wg-dev          # estado: handshake y trafico
    ```
 
 3. Comprobar que el handshake se hizo:
