@@ -56,6 +56,7 @@ en este repositorio:
 | **[Justificación de la plataforma](./operations/JUSTIFICACION-GITHUB.md)** | Por qué **Git** y **GitHub**: criterios, alternativas descartadas y límites reales |
 | **[Flujo de release](./operations/FLUJO-DE-RELEASE.md)** | El mapa del proyecto: de un PR a producción, los ambientes, las `rc-*` y los frenos |
 | **[Plan de despliegue](./operations/PLAN-DE-DESPLIEGUE.md)** | Los ambientes, puertos, secretos y flujo de despliegue |
+| **[Integración Stripe Frontend](./operations/INTEGRACION-STRIPE-FRONTEND.md)** | Contrato `/api/v1/billing/*`, UI Blanco y Negro con Elements y flujos in-app |
 
 ### Índice de evidencias de la Unidad 2
 

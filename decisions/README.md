@@ -159,6 +159,42 @@ issues que dependen de ellas).
 - **Consecuencias:** el `package.json`, la API, la documentación, la portada de
   la organización y el material de la entrega usan **DolyNation**.
 
+## ADR-011 — Módulo de pagos y suscripciones con Stripe Sandbox y UI propia B&W
+
+- **Contexto:** el sistema necesita monetizar planes recurrentes (`dolly_plus`,
+  `dolly_pro`) y créditos de desbloqueo de idioma (`language_unlock`) en MXN
+  sin romper el plan gratuito (`dolly` `$0`), manteniendo el diseño editorial
+  monocromático Blanco y Negro en `dolynation-tonatiuh-front` y permitiendo
+  correr CI/entornos protegidos tras VPN sin depender de webhooks públicos.
+- **Decisión:** implementar el módulo `billing` en `dolynation-atl-back`
+  (`back#143`) mediante puerto/adaptador (`PaymentGateway` → `StripeGateway`),
+  con `BILLING_PROVIDER=manual` por defecto en CI/`rehearsal`/`dev` y
+  `BILLING_PROVIDER=stripe` para Sandbox con `BILLING_ENV_TAG` para aislar
+  eventos compartidos. El checkout usa por defecto
+  `STRIPE_CHECKOUT_UI_MODE=custom` (`ui_mode: 'elements'`) junto con endpoints
+  in-app (`change-plan`, `cancel`, `resume`, `setup-intent`, `payment-method/default`,
+  `invoices` y `portal` como respaldo opcional). La idempotencia se garantiza en
+  PostgreSQL (`billing_webhook_events` + `billing_payments.fulfilled_at IS NULL`
+  compartido con `POST /billing/checkout/:sessionId/sync`). Al cancelarse o
+  vencer una suscripción pagada (`customer.subscription.deleted`), el usuario
+  baja automáticamente a `dolly` conservando intacto el orden priorizado de
+  `user_settings.selected_languages` y el candado anual de 365 días. Además, se
+  protegen los endpoints de dinero con límites de tasa por usuario
+  (`BILLING_RATE_LIMITED` 429 en ventana de 60 s), soporte de cabecera opcional
+  `Idempotency-Key`, locks en memoria anti doble clic, guarda contra webhooks
+  tardíos y `payment_behavior: 'pending_if_incomplete'` en cambios de plan.
+- **Alternativas:**
+  - *Solo Stripe Hosted Checkout + Customer Portal:* descartado como experiencia
+    principal porque saca al usuario de la identidad visual B&W de DolyNation.
+  - *Guardar tarjetas en tablas propias:* descartado por cumplimiento PCI-DSS;
+    los campos sensibles permanecen en los iframes de Stripe Elements y el
+    backend solo almacena `brand`, `last4` y vencimiento.
+- **Consecuencias:** el frontend renderiza checkout y gestión completa con
+  `<PaymentElement>` + Appearance API sin perder cumplimiento PCI-DSS; las
+  pruebas unitarias y E2E operan sin red mediante el adaptador mockeado y firma
+  HMAC real; `staging` recibe webhooks en `/api/v1/billing/webhook` validados
+  con `rawBody: true`.
+
 ## Decisiones pendientes de toma
 
 Estas decisiones **no están tomadas**: se listan con sus opciones y con el

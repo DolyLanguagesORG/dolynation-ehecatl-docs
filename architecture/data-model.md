@@ -6,33 +6,40 @@ mapea las tablas para type-safety.
 
 ## Estado actual vs. planificado
 
+Las **16 tablas** vigentes se definen en
+`database/postgres/01-init.sql` (repositorio `dolynation-tlalli-infra`) y se
+aplican en cada despliegue mediante `scripts/apply-schema.sh`. El backend usa
+Drizzle ORM únicamente para type-safety; los cambios de DDL siempre nacen en
+`dolynation-tlalli-infra`.
+
 | Tabla / cambio | Estado | Dónde | Issue |
 | --- | --- | --- | --- |
-| `users` | **Existe** | `01-init.sql` | — |
-| `auth_access_tokens` | **Existe** (refresh tokens) | `01-init.sql` | — |
+| `roles` | **Existe** (`student`, `admin`; reemplaza a la antigua tabla `admins`) | `01-init.sql` | — |
+| `users` | **Existe** (incluye `role_id`, `subscription_tier`, `stripe_customer_id`, `email_verified_at`, `locale`) | `01-init.sql` | `infra#196` |
+| `user_settings` | **Existe** (`preferred_language`, `selected_languages`, `last_language_change_at`, `language_change_credits`, `preferred_categories`, `saved_categories`) | `01-init.sql` | `infra#22` |
+| `access_requests` | **Existe** (solicitudes manuales cuando `ACCESS_REQUESTS_ENABLED=true`) | `01-init.sql` | — |
+| `auth_access_tokens` | **Existe** (refresh tokens opacos rotados en cookie `HttpOnly` desde el BFF de Next.js) | `01-init.sql` | — |
+| `auth_email_tokens` | **Existe** (confirmación de cuenta y restablecimiento de contraseña) | `01-init.sql` | — |
 | `readings` | **Existe** | `01-init.sql` | — |
+| `reading_explanations` | **Existe** (explicaciones cacheadas y glosario personal) | `01-init.sql` | `back#11` |
 | `prompt_logs` | **Existe** | `01-init.sql` | — |
-| `user_settings` | **Existe** (idioma de superficie + categorías elegidas) | `01-init.sql` | `infra#22` |
-| `admins` | **Existe** (membresía de administrador) | `01-init.sql` | `infra#22` |
-| `categories` | Planificado S2 (hoy el catálogo vive **en el código**: `catalog.constants.ts`) | — | `infra#20` |
-| `readings.category_id`, `language`, `length_type`, `prompt_hash` | Planificado S2 | — | `infra#20` |
-| `evaluations` | Planificado S3 | — | `infra#21` |
-| `vocabulary_logs` | Planificado S3 | — | `infra#21` |
-| `word_lookups` | Planificado (lo necesita `/history`: hoy `wordsLookedUp` devuelve 0) | — | por crear |
+| `moderated_categories` | **Existe** (caché de moderación y blueprint editorial compartido) | `01-init.sql` | — |
+| `category_daily_usage` | **Existe** (cuota diaria anti-abuso por usuario) | `01-init.sql` | — |
+| `audit_logs` | **Existe** (bitácora de auditoría por módulo/acción/estado) | `01-init.sql` | — |
+| `error_logs` | **Existe** (registro estructurado de errores y fallos de proveedores) | `01-init.sql` | — |
+| `billing_subscriptions` | **Existe** (estado local sincronizado de suscripción Stripe y resumen de tarjeta) | `01-init.sql` | `infra#196` |
+| `billing_payments` | **Existe** (historial e idempotencia vía `fulfilled_at` y sesión/factura única) | `01-init.sql` | `infra#196` |
+| `billing_webhook_events` | **Existe** (deduplicación atómica por `event_id` recibido desde Stripe) | `01-init.sql` | `infra#196` |
+| `categories` (relacional) | Sustituida por `moderated_categories` + librería personal en `user_settings` | — | — |
+| `evaluations` / `vocabulary_logs` | Planificado S3/S4 (`evaluations` pendiente; vocabulario cubierto por `reading_explanations`) | — | `infra#21` |
 
-> **Dos disenos cambian respecto al plan original:**
+> **Notas de arquitectura vigentes respecto al diseño inicial:**
 >
-> - `user_preferences` + `user_selected_categories` se sustituyeron por **una**
->   tabla, `user_settings`, con `preferred_language` y `preferred_categories`
->   (jsonb). Es lo que implementa el backend.
-> - `users.role` (`STUDENT`/`ADMIN`) se sustituyó por la tabla aparte
->   `admins`: los SELECTs sobre `users` no cambian y el guardia de admin
->   consulta `admins`. El cambio de rol dentro de `users` sigue pendiente.
+> - Los roles RBAC usan **`roles`** referenciada desde **`users.role_id`** (y no una tabla separada `admins`).
+> - En web (`dolynation-tonatiuh-front`), los tokens opacos de refresco persistidos en **`auth_access_tokens`** viajan dentro de **cookies `HttpOnly`** gestionadas por el BFF de Next.js, manteniendo el `accessToken` JWT en memoria del cliente.
+> - La propiedad **`users.stripe_customer_id`** enlaza al usuario con su cliente en Stripe Sandbox (índice único parcial `uq_users_stripe_customer_id`).
 
-Las diez tablas que existen hoy se crean **todas** con `01-init.sql`: el schema
-vive en un solo archivo y `scripts/apply-schema.sh` (en el repo de infra) lo
-aplica en cada deploy. Los cambios de schema se hacen **en
-`dolynation-tlalli-infra`**, nunca en el backend.
+Los cambios de schema se hacen **en `dolynation-tlalli-infra`**, nunca en el backend.
 
 ## `users`
 
@@ -42,7 +49,11 @@ aplica en cada deploy. Los cambios de schema se hacen **en
 | `full_name` | `VARCHAR(255)` | Nullable |
 | `email` | `VARCHAR(254)` | `NOT NULL`, `UNIQUE` |
 | `password` | `VARCHAR(255)` | **Hash Argon2id**, nunca texto plano |
-| `role` | `VARCHAR(20)` | S4: `STUDENT` \| `ADMIN`, default `STUDENT` |
+| `role_id` | `INTEGER` | FK `roles.id` (`student` \| `admin`) |
+| `subscription_tier` | `VARCHAR(30)` | `dolly` \| `dolly_plus` \| `dolly_pro` (nullable en cuentas nuevas) |
+| `stripe_customer_id` | `VARCHAR(64)` | Nullable; índice único parcial `uq_users_stripe_customer_id` |
+| `email_verified_at` | `TIMESTAMP` | Nullable; confirmación de cuenta |
+| `locale` | `VARCHAR(10)` | Idioma de interfaz/correos (`es` \| `en` \| ...) |
 | `current_streak` | `INTEGER` | Default 0 |
 | `last_streak_date` | `DATE` | Última actividad |
 | `created_at` | `TIMESTAMP` | `NOT NULL` |
@@ -181,6 +192,60 @@ Caché global persistente de moderación y biblioteca compartida de prompts por 
 Auditoría de generación: `level`, `event`, `message`, `seed`, `user_id`,
 `text_id`, `params` (JSONB), `system_prompt`, `user_prompt`, `error_message`,
 `error_stack`, `duration_ms`, `created_at`.
+
+## `billing_subscriptions` (`infra#196`)
+
+Estado sincronizado de la suscripción recurrente pagada en Stripe (un registro por usuario):
+
+| Columna | Tipo | Notas |
+| --- | --- | --- |
+| `id` | `SERIAL` | PK |
+| `user_id` | `INTEGER` | `NOT NULL`, `UNIQUE`, FK `users.id` (`ON DELETE CASCADE`) |
+| `provider` | `VARCHAR(20)` | `NOT NULL`, default `'stripe'` |
+| `stripe_customer_id` | `VARCHAR(64)` | `NOT NULL`, índice `idx_billing_subscriptions_customer` |
+| `stripe_subscription_id` | `VARCHAR(64)` | `NOT NULL`, `UNIQUE` |
+| `stripe_price_id` | `VARCHAR(64)` | `NOT NULL` |
+| `tier` | `VARCHAR(30)` | `NOT NULL` (`dolly_plus` \| `dolly_pro` \| `dolly`) |
+| `status` | `VARCHAR(30)` | `NOT NULL`, índice `idx_billing_subscriptions_status` (`active`, `trialing`, `past_due`, `canceled`, etc.) |
+| `current_period_start` / `current_period_end` | `TIMESTAMP` | Nullable; límites del ciclo actual |
+| `cancel_at_period_end` | `BOOLEAN` | `NOT NULL`, default `false` |
+| `canceled_at` | `TIMESTAMP` | Nullable |
+| `payment_method_brand` / `payment_method_last4` / `payment_method_exp_month` / `payment_method_exp_year` | `VARCHAR` / `INTEGER` | Resumen no sensible de la tarjeta predeterminada (sin PAN ni CVC) |
+| `created_at` / `updated_at` | `TIMESTAMP` | `NOT NULL`, default `NOW()` |
+
+## `billing_payments` (`infra#196`)
+
+Historial e idempotencia transaccional de checkout único (`language_unlock`), checkout inicial de suscripción y facturas (`subscription_invoice`):
+
+| Columna | Tipo | Notas |
+| --- | --- | --- |
+| `id` | `SERIAL` | PK |
+| `user_id` | `INTEGER` | `NOT NULL`, FK `users.id` (`ON DELETE CASCADE`) |
+| `provider` | `VARCHAR(20)` | `NOT NULL`, default `'stripe'` |
+| `kind` | `VARCHAR(40)` | `NOT NULL` (`subscription` \| `subscription_invoice` \| `language_unlock`) |
+| `tier` | `VARCHAR(30)` | Nullable |
+| `stripe_checkout_session_id` | `VARCHAR(128)` | `UNIQUE` (idempotencia por sesión) |
+| `stripe_payment_intent_id` | `VARCHAR(128)` | Nullable |
+| `stripe_invoice_id` | `VARCHAR(128)` | `UNIQUE` (idempotencia por factura) |
+| `amount_cents` | `INTEGER` | `NOT NULL`, default `0` |
+| `currency` | `VARCHAR(10)` | `NOT NULL`, default `'mxn'` |
+| `status` | `VARCHAR(30)` | `NOT NULL`, default `'pending'` (`pending` \| `paid` \| `failed`) |
+| `fulfilled_at` | `TIMESTAMP` | Marca atómica (`IS NULL`) para evitar acreditar dos veces en carrera webhook ↔ `/sync` |
+| `metadata` | `JSONB` | `NOT NULL`, default `{}` |
+| `created_at` / `updated_at` | `TIMESTAMP` | `NOT NULL`, default `NOW()` |
+
+## `billing_webhook_events` (`infra#196`)
+
+Tabla de deduplicación por identificador de evento de Stripe (`event_id`):
+
+| Columna | Tipo | Notas |
+| --- | --- | --- |
+| `event_id` | `VARCHAR(120)` | PK (`evt_...`) |
+| `provider` | `VARCHAR(20)` | `NOT NULL`, default `'stripe'` |
+| `event_type` | `VARCHAR(100)` | `NOT NULL` (ej. `checkout.session.completed`, `customer.subscription.deleted`) |
+| `status` | `VARCHAR(20)` | `NOT NULL`, default `'processing'` (`processing` \| `processed` \| `failed`) |
+| `error_message` | `TEXT` | Nullable; error en caso de fallo recuperable |
+| `processed_at` / `created_at` | `TIMESTAMP` | `processed_at` nullable; `created_at` `NOT NULL` |
 
 ## Cambios de schema
 
