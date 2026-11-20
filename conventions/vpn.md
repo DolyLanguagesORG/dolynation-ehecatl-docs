@@ -102,6 +102,34 @@ Direcciones dentro de la VPN:
 | Web | `https://devweb.yacaterkos.tech` |
 | Objetos (S3) | `https://minios.doly.internal:50090` |
 
+### El DNS va dentro del tunel
+
+El config de WireGuard del cliente lleva `DNS = 10.90.0.1`: el hub de la
+VPN, donde corre un `dnsmasq` que responde con la **IP de tunel** de cada
+servicio:
+
+| Nombre | Resuelve a (dentro de la VPN) |
+| --- | --- |
+| `devapi.yacaterkos.tech` | `10.90.0.2` |
+| `devweb.yacaterkos.tech` | `10.90.0.3` |
+| `minios.doly.internal` | `10.90.0.4` |
+
+El resto de nombres se resuelven como siempre (el hub los reenvia).
+
+**Por que es obligatorio**: sin esa linea, el nombre resuelve por la DNS
+publica a la IP de Cloudflare, y la peticion sale por la conexion normal
+de internet **sin pasar por el tunel**. La VPN seguiria levantada y el
+servicio responderia igual: el filtro no existiria. El resolutor escucha
+solo en la direccion del tunel y el firewall deja el 53 unicamente desde
+las tres familias.
+
+Para comprobarlo, desde un equipo con la VPN levantada:
+
+```bash
+dig +short devapi.yacaterkos.tech
+# debe devolver 10.90.0.2, nunca una IP de Cloudflare
+```
+
 ## Servicios de terceros y la VPN
 
 La VPN cierra el ambiente de desarrollo al exterior. Pero hay entradas que
@@ -162,6 +190,15 @@ secret `DEPLOY_PORT` de los environments: **ningun workflow cambia**.
   hecha y verificada.
 - **La CA raiz solo firma la intermedia.** Ningun certificado de
   servicio o de developer se emite directamente con la raiz.
+- **El origen solo lo alcanza Cloudflare.** El 80/443 se acepta
+  unicamente desde los rangos publicados de Cloudflare (el set
+  `cf_ranges`, que se refresca cada 6 h). Sin esto, la IP del origen es
+  publica y cualquiera se salta el proxy. El firewall es *fail-safe*: si
+  la lista de Cloudflare se queda vacia, **no** corta el 80/443 y avisa,
+  porque cortar ahi tumbaria el sitio.
+- **Una lista de IPs vacia no vacia el conjunto**: se conserva la
+  anterior. La lista de Cloudflare cambio de URL (`/ips-v4.txt` devolvio
+  404 y dejo la proteccion desactivada sin que nadie se enterara).
 
 ## Verificar
 
@@ -170,7 +207,15 @@ sudo /etc/doly-vpn/vpn-test.sh
 ```
 
 Comprueba el tunel, el mTLS (que responde con certificado y que rechaza
-sin el) y el aislamiento entre familias.
+sin el), el aislamiento entre familias, las identidades duales y que el
+DNS de la VPN resuelve los servicios a sus IPs de tunel.
+
+Y, desde un equipo con la VPN levantada, que el nombre **no** resuelve a
+la IP publica:
+
+```bash
+dig +short devapi.yacaterkos.tech   # 10.90.0.2
+```
 
 ## Documentos relacionados
 

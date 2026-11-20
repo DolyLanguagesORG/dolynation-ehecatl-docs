@@ -172,6 +172,13 @@ El `0.0.0.0/0` es correcto en los dos: el puerto UDP de WireGuard no
 responde a nada sin la llave correcta, y el puerto 50022 exige llave
 publica. Quien no tenga la llave se queda fuera.
 
+Los puertos `80` y `443` **tambien** conviene restringirlos a los rangos
+publicados de Cloudflare. El firewall del servidor ya lo hace (acepta el
+80/443 solo desde `cf_ranges` y rechaza el resto), pero la OCI es la
+primera capa: si la regla de la Security List sigue abierta a
+`0.0.0.0/0`, el trafico llega hasta el firewall, que lo corta, pero
+cuesta mas y deja el origen visible en los logs de la red.
+
 Despues, el `tcp/22` se puede **quitar** de la Security List, una vez
 migrado el bot (ver la seccion siguiente).
 
@@ -180,6 +187,49 @@ Comprobacion desde fuera:
 ```bash
 # Debe responder el handshake (la salida es el "peer" del hub).
 sudo wg show wg0
+```
+
+Si el handshake se queda en `0`, el puerto `udp/50443` sigue cerrado en
+la OCI: el firewall del servidor ya lo acepta (comprobado con
+`iptables -S DOLY-IN | grep 50443`), asi que el unico bloqueo que queda
+es la Security List.
+
+## Probar la VPN desde un equipo
+
+1. Instalar el paquete de la persona (el `.conf` de la identidad, las CAs
+   y el `.p12`).
+2. Levantar la identidad:
+
+   ```bash
+   sudo wg-quick up wg-dev      # identidad de desarrollo
+   sudo wg-quick up wg-admin    # identidad de administracion (si la hay)
+   ```
+
+3. Comprobar que el handshake se hizo:
+
+   ```bash
+   sudo wg show wg-dev
+   # latest-handshakes: una marca de tiempo, no 0
+   ```
+
+4. Comprobar que el **nombre** resuelve dentro del tunel (no a la IP
+   publica):
+
+   ```bash
+   dig +short devapi.yacaterkos.tech
+   # 10.90.0.2   <- correcto
+   # 104.21.x.x <- incorrecto: el trafico se saldria sin pasar por el tunel
+   ```
+
+5. Abrir `https://devapi.yacaterkos.tech` en el navegador. Pide el
+   certificado de cliente: sin el importado responde `400`.
+
+Si el paso 4 devuelve una IP publica, el config no lleva `DNS = 10.90.0.1`
+o el resolutor del hub no esta levantado:
+
+```bash
+sudo systemctl status doly-dns
+sudo dig @10.90.0.1 +short devapi.yacaterkos.tech
 ```
 
 ## Migrar el bot de GitHub Actions al puerto 50022
@@ -295,10 +345,19 @@ lo debido.
 sudo /etc/doly-vpn/vpn-test.sh
 ```
 
-- el tunel esta arriba y los 8 peers estan,
+- el tunel esta arriba y los 10 peers estan,
 - `devapi` y `devweb` responden **con** certificado de cliente y
   **rechazan** sin el,
-- las reglas de familia estan puestas.
+- las reglas de familia estan puestas,
+- las identidades duales estan separadas (la de desarrollo no tiene ruta
+  hacia la familia admin),
+- el DNS de la VPN resuelve los servicios a sus IPs de tunel.
+
+Y, con peers reales en namespaces (prueba funcional del aislamiento):
+
+```bash
+sudo bash /etc/doly-vpn/exp-identidades.sh
+```
 
 ## Cosas que NO se tocan
 
