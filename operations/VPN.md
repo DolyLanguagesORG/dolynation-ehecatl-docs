@@ -165,11 +165,16 @@ Add Ingress Rule**:
 
 | Protocolo | Puerto | Source | Para que |
 | --- | --- | --- | --- |
-| UDP | `50443` | `0.0.0.0/0` | la VPN (los peers de fuera) |
-| TCP | `50022` | `0.0.0.0/0` | el SSH del bot de GitHub Actions |
+| UDP | `58376` | `0.0.0.0/0` | la VPN (los peers de fuera) |
+| TCP | `59253` | `0.0.0.0/0` | el SSH del bot de GitHub Actions |
+
+Los dos puertos son altos y **no son los que se adivinan** (50443 y 50022
+son los que usa WireGuard y la mayoria de los servidores de SSH). Eso no
+es seguridad: la seguridad la dan la llave con PSK, el mTLS y el firewall.
+Es solo para que un escaner de puertos no sepa donde golpear.
 
 El `0.0.0.0/0` es correcto en los dos: el puerto UDP de WireGuard no
-responde a nada sin la llave correcta, y el puerto 50022 exige llave
+responde a nada sin la llave correcta, y el puerto 59253 exige llave
 publica. Quien no tenga la llave se queda fuera.
 
 Los puertos `80` y `443` **tambien** conviene restringirlos a los rangos
@@ -189,9 +194,9 @@ Comprobacion desde fuera:
 sudo wg show wg0
 ```
 
-Si el handshake se queda en `0`, el puerto `udp/50443` sigue cerrado en
+Si el handshake se queda en `0`, el puerto `udp/58376` sigue cerrado en
 la OCI: el firewall del servidor ya lo acepta (comprobado con
-`iptables -S DOLY-IN | grep 50443`), asi que el unico bloqueo que queda
+`iptables -S DOLY-IN | grep 58376`), asi que el unico bloqueo que queda
 es la Security List.
 
 ## Probar la VPN desde un equipo
@@ -232,15 +237,15 @@ sudo systemctl status doly-dns
 sudo dig @10.90.0.1 +short devapi.yacaterkos.tech
 ```
 
-## Migrar el bot de GitHub Actions al puerto 50022
+## Migrar el bot de GitHub Actions al puerto 59253
 
-1. Abrir el `tcp/50022` en la **Security List de OCI** (solo ese puerto;
+1. Abrir el `tcp/59253` en la **Security List de OCI** (solo ese puerto;
    el `22` se puede cerrar despues).
 2. Cambiar el secret `DEPLOY_PORT` de los environments
    (`desarrollo`, `rehearsal`, `staging`, `prod`) de `tlalli-infra` a
-   `50022`. **Ningun workflow cambia.**
+   `59253`. **Ningun workflow cambia.**
 3. Lanzar un deploy de prueba y confirmar que sale bien.
-4. Cuando el bot entre por el 50022, cerrar el 22:
+4. Cuando el bot entre por el 59253, cerrar el 22:
 
 ```bash
 sudo /etc/doly-vpn/vpn-firewall.sh cerrar-22
@@ -331,12 +336,12 @@ lo debido.
 
 | Sintoma | Causa probable | Que hacer |
 | --- | --- | --- |
-| El handshake no ocurre | El `udp/50443` no esta abierto en la Security List de OCI | Abrirlo en la consola de OCI |
+| El handshake no ocurre | El `udp/58376` no esta abierto en la Security List de OCI | Abrirlo en la consola de OCI |
 | El handshake ocurre pero no hay datos | PSK distinto, o la regla del firewall | `sudo wg show` y `vpn-firewall.sh verify` |
 | `400 The SSL certificate error` | El navegador no tiene el certificado de cliente, o no confia en la CA | Importar el `.p12` e instalar `ca.crt` |
 | `404` en vez de la aplicacion | El peer no tiene su interfaz de tunel arriba | `docker logs doly-vpn-<peer>` |
 | El bot no puede desplegar | Los rangos de Actions quedaron viejos | `sudo systemctl start doly-vpn-refresh.service` |
-| `SSH` al 50022 da timeout | El puerto no esta abierto en OCI | Abrir el `tcp/50022` |
+| `SSH` al 59253 da timeout | El puerto no esta abierto en OCI | Abrir el `tcp/59253` |
 | Un developer no entra a un servicio | Su `AllowedIPs` no incluye la IP del peer | `sudo doly-vpn list` y regenerar su paquete |
 
 ## Comprobaciones
