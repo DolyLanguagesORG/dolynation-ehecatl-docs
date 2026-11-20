@@ -93,6 +93,12 @@ verifica exhaustividad.
 | `SUBSCRIPTION_INVALID_TIER`         | 400  | Plan no válido (válidos: dolly, dolly_plus, dolly_pro)       |
 | `SUBSCRIPTION_CATEGORY_LIMIT_EXCEEDED` | 400 | Excede el límite de categorías permitido por la suscripción  |
 | `SUBSCRIPTION_LANGUAGE_NOT_ALLOWED` | 403 | Idioma no permitido para el plan de suscripción actual       |
+| `BILLING_PAYMENT_REQUIRED`          | 402  | Acción pagada requiere Checkout (`dolly_plus`, `dolly_pro`, `language_unlock`), cambio sin suscripción activa o pago aún pendiente en `/sync` |
+| `BILLING_CHECKOUT_INVALID`          | 400  | Sesión de Checkout o payload raw de webhook inválido o perteneciente a otro `BILLING_ENV_TAG` |
+| `BILLING_WEBHOOK_SIGNATURE_INVALID` | 400  | Firma HMAC `stripe-signature` faltante o inválida            |
+| `BILLING_SUBSCRIPTION_CONFLICT`     | 409  | El usuario ya posee una suscripción Stripe activa y debe usar `change-plan` o `cancel` |
+| `BILLING_PROVIDER_ERROR`            | 502  | Error de comunicación o respuesta inválida desde Stripe      |
+| `BILLING_NOT_CONFIGURED`            | 503  | Pasarela Stripe desactivada (`BILLING_PROVIDER=manual`) o credenciales/Price IDs incompletos |
 | `VALIDATION_ERROR`                  | 400  | Falló class-validator; `details.fields` es un array de `{ field, message }` |
 | `INTERNAL_ERROR`                    | 500  | Error no controlado; el cliente no recibe detalles internos  |
 | `SERVICE_UNAVAILABLE`               | 503  | Dependencia externa (DB, AI provider) caída                  |
@@ -143,7 +149,8 @@ cliente solo recibe un código estable + mensaje seguro.
 | --- | --- | --- |
 | `POST /api/v1/auth/register`, `/login`, `/refresh`, `/logout`, `/verify-email`, `/resend-verification`, `/forgot-password`, `/reset-password`; `GET /api/v1/auth/me` | Implementado (`/verify-email` emite tokens de sesión y redirige a selección de plan) | `back#4` |
 | `GET/PATCH /api/v1/user/profile` | Implementado | `back#5` |
-| `GET /api/v1/subscriptions/plans`; `GET/POST /api/v1/user/subscription` | Implementado (`dolly`, `dolly_plus`, `dolly_pro`) | — |
+| `GET /api/v1/subscriptions/plans`; `GET/POST /api/v1/user/subscription` | Implementado (`dolly`, `dolly_plus`, `dolly_pro`). En modo `BILLING_PROVIDER=stripe`, seleccionar `dolly` sigue siendo gratuito (salvo con suscripción Stripe activa → `409`), mientras que elegir un tier pagado responde `402 BILLING_PAYMENT_REQUIRED`. | `back#143` |
+| `GET /api/v1/billing/config`, `GET /status`, `POST /checkout/subscription`, `/checkout/language-unlock`, `/checkout/:sessionId/sync`, `POST /subscription/change-plan`, `/cancel`, `/resume`, `POST /payment-method/setup-intent`, `/payment-method/default`, `GET /invoices`, `POST /portal`, `POST /webhook` | Implementado (Sandbox Stripe + Elements UI custom + idempotencia + webhooks firmados). Detalle completo para frontend en [`../operations/INTEGRACION-STRIPE-FRONTEND.md`](../operations/INTEGRACION-STRIPE-FRONTEND.md). | `back#143` |
 | `GET /api/v1/user/streak` | Implementado (la racha aún se simula) | `back#15` |
 | `GET /api/v1/user/points` | Planificado S4 (aún no está en el alcance de `back#15`) | `back#15` |
 | `GET /api/v1/readings/options` | Implementado | `back#10` |

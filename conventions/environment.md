@@ -248,6 +248,29 @@ Las variables se validan al arrancar con un schema Zod en
 Si falta una variable requerida o tiene un valor inválido, la app **no
 arranca** y muestra el error exacto.
 
+## Pagos y facturación (Stripe Sandbox / manual)
+
+| Variable | Default | Cuándo es obligatoria / propósito |
+| --- | --- | --- |
+| `BILLING_PROVIDER` | `manual` | `manual` mantiene el flujo local/CI sin pasarela externa; `stripe` activa checkout, sincronización y webhooks. |
+| `BILLING_ENV_TAG` | `local` | Aísla eventos (`local`, `dev`, `rehearsal`, `staging`, `prod`) cuando varios ambientes no productivos comparten una misma clave Stripe Sandbox (`metadata.env`). |
+| `STRIPE_SECRET_KEY` | — | Obligatoria si `BILLING_PROVIDER=stripe` (`sk_test_...` en Sandbox). Nunca en el frontend. |
+| `STRIPE_PUBLISHABLE_KEY` | — | Obligatoria si `BILLING_PROVIDER=stripe` (`pk_test_...`). Expuesta en `GET /api/v1/billing/config`. |
+| `STRIPE_WEBHOOK_SECRET` | — | Obligatoria si `BILLING_PROVIDER=stripe` (`whsec_...`). Firma HMAC para `POST /api/v1/billing/webhook`. |
+| `STRIPE_CURRENCY` | `mxn` | Código ISO 4217 normalizado a minúsculas. |
+| `STRIPE_CHECKOUT_UI_MODE` | `custom` | `custom` usa Stripe `<PaymentElement>` + Appearance API dentro de la UI B&W de DolyNation; `hosted` funciona como respaldo hacia Stripe Checkout alojado. |
+| `STRIPE_PRICE_DOLLY` | — | Opcional. Dejar vacía mientras `dolly` permanezca gratuito (`$0`). |
+| `STRIPE_PRICE_DOLLY_PLUS` | — | Obligatoria si `BILLING_PROVIDER=stripe` (`price_...` recurrente mensual en MXN). |
+| `STRIPE_PRICE_DOLLY_PRO` | — | Obligatoria si `BILLING_PROVIDER=stripe` (`price_...` recurrente mensual en MXN). |
+| `STRIPE_PRICE_LANGUAGE_UNLOCK` | — | Obligatoria si `BILLING_PROVIDER=stripe` (`price_...` pago único `+1` crédito de cambio de idioma). |
+
+### Estrategia por ambiente y red (VPN + Sandbox)
+
+- **Sandbox global por ahora:** todos los entornos (incluido `prod` mientras opere en beta) usan Test Mode / Sandbox de Stripe; pasar a Live Mode solo requiere sustituir secretos y Price IDs en el Environment de GitHub correspondiente.
+- **`dev` tras VPN WireGuard + mTLS:** el tráfico saliente (`dev → api.stripe.com`, IA, SMTP) funciona normalmente, pero **los webhooks entrantes de Stripe (`POST /api/v1/billing/webhook`) no pueden alcanzar un `dev` privado tras VPN**. Por ello `BILLING_PROVIDER=manual` es el valor por defecto en CI, `rehearsal` y `dev`.
+- **Pruebas locales con webhooks reales:** usar `stripe listen --forward-to http://localhost:3333/api/v1/billing/webhook` (sin abrir puertos ni exponer DNS público).
+- **`staging`:** Nginx enruta `location = /api/v1/billing/webhook` directo al backend (sin pasar por el BFF de Next.js), validando la firma criptográfica `stripe-signature` con `rawBody: true` en lugar de depender de listas de IPs detrás de Cloudflare.
+
 ## Cómo arrancar en local
 
 ```bash
