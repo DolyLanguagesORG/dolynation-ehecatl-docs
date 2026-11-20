@@ -292,6 +292,17 @@ asi en el modo single). El que importa es que el puerto 9000 **no** se
 publica: la unica entrada es la interfaz de tunel, con nginx y mTLS
 por delante.
 
+## El correo en un ambiente solo por VPN
+
+El correo **si funciona** con la VPN puesta, porque el trafico es
+**saliente**: el backend abre la conexion al proveedor de SMTP (Brevo) y
+sale a internet. La VPN filtra las entradas, no las salidas.
+
+Lo que **no** funciona con la VPN puesta es el **webhook de Stripe**: los
+servidores de Stripe conectan al ambiente, y ese trafico es **entrante**.
+
+Por eso el correo va configurado en desarrollo y el modulo de pagos, no.
+
 ## Servicios de terceros (Stripe)
 
 Un webhook de pagos no puede pasar por la VPN: es una entrada de

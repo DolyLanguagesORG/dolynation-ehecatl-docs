@@ -143,6 +143,26 @@ URL publica. La regla es separar *"el servicio tiene que ser publico"* de
 | `rehearsal` / `staging` | una sola ruta en el proxy | 1 ruta |
 | `produccion` | una sola ruta en el proxy | 1 ruta |
 
+### Entrar y salir: no es lo mismo
+
+La VPN cierra las **entradas** desde internet. Las **salidas** siguen
+funcionando, y esa distincion explica que cosa va donde:
+
+| Cosa | Direccion | En un ambiente solo por VPN |
+| --- | --- | --- |
+| El correo (SMTP) | **saliente**: el backend abre la conexion al proveedor | **funciona**: la VPN no toca el trafico saliente |
+| La API de IA | **saliente**: idem | **funciona** |
+| El webhook de Stripe | **entrante**: los servidores de Stripe conectan a ti | **no llega**: hace falta `stripe listen` |
+| Un atacante de internet | entrante | **no llega** |
+
+Por eso un ambiente de desarrollo puede tener correo configurado y no
+tener el modulo de pagos activo: el correo sale, el webhook no entra.
+
+Y al reves: un enlace de un correo de verificacion apunta al
+`FRONTEND_BASE_URL` del ambiente. Con el ambiente cerrado, ese enlace
+solo abre en un equipo que tenga la VPN levantada, que es justo lo que
+se quiere.
+
 Las reglas:
 
 - **En desarrollo no se expone nada.** El cliente de Stripe (`stripe listen
