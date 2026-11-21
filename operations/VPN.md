@@ -15,7 +15,10 @@ alcanza a que, como se autentica) estan en
 | Firewall | `/etc/doly-vpn/vpn-firewall.sh` |
 | Endurecimiento de SSH | `/etc/doly-vpn/vpn-sshd.sh` |
 | Comprobaciones | `/etc/doly-vpn/vpn-test.sh` |
+| Sincronizar TLS Let's Encrypt a `runtime` | `/etc/doly-vpn/vpn-tls-sync.sh` |
 | Configuracion de MinIO | `/usr/local/sbin/doly-minio-setup` |
+| Credenciales Cloudflare DNS-01 (certbot) | `/etc/doly-vpn/cloudflare.ini` (`600`, root) |
+| Certificado Let's Encrypt de `dev` | `/etc/letsencrypt/live/doly-vpn-dev/` |
 | Material sellado | `/etc/doly-vpn/{ca,peers,bundles}` |
 | Config en claro del hub | `/etc/wireguard/wg0.conf` |
 | Paquete de un developer | `/etc/doly-vpn/bundles/<peer>.tar.gz.sealed` |
@@ -170,8 +173,9 @@ Add Ingress Rule**:
 
 Los dos puertos son altos y **no son los que se adivinan** (50443 y 50022
 son los que usa WireGuard y la mayoria de los servidores de SSH). Eso no
-es seguridad: la seguridad la dan la llave con PSK, el mTLS y el firewall.
-Es solo para que un escaner de puertos no sepa donde golpear.
+es seguridad: la seguridad la dan la llave con PSK y el firewall (ademas
+de mTLS en `minios`). Es solo para que un escaner de puertos no sepa donde
+golpear.
 
 El `0.0.0.0/0` es correcto en los dos: el puerto UDP de WireGuard no
 responde a nada sin la llave correcta, y el puerto 59253 exige llave
@@ -201,15 +205,17 @@ es la Security List.
 
 ## Probar la VPN desde un equipo
 
-1. Instalar el paquete de la persona (el `.conf` de la identidad, las CAs
-   y el `.p12`).
+1. Importar **solo el `.conf` de WireGuard** de la persona (`wg0.conf` o
+   `wg-dev.conf`). `devapi.yacaterkos.tech` y `devweb.yacaterkos.tech`
+   usan certificado publico de Let's Encrypt y `MTLS_VERIFY=off`, asi que
+   **no** hace falta instalar `ca.crt` ni importar `.p12` en el navegador
+   (eso solo aplica si se entra directo a `minios.doly.internal:50090`).
 2. Levantar la identidad. Hay dos formas en Linux (hacen lo mismo) y la
    app oficial en otros sistemas:
 
    **En Windows, macOS, Android e iOS** (app oficial de WireGuard): al
-   importar el `.conf` la aplicacion aplica `DNS = 10.90.0.1` sola. Solo
-   hace falta instalar `ca.crt` e importar el `.p12` en el navegador una
-   vez para el mTLS.
+   importar el `.conf` la aplicacion aplica `DNS = 10.90.0.1` sola y
+   basta con activar el tunel para abrir `https://devweb.yacaterkos.tech`.
 
    **Con NetworkManager en Linux** (el menu de red del escritorio). La
    conexion se importa una vez y luego se conecta desde el icono de red
@@ -266,8 +272,10 @@ es la Security List.
    # 104.21.x.x <- incorrecto: el trafico se saldria sin pasar por el tunel
    ```
 
-5. Abrir `https://devapi.yacaterkos.tech` en el navegador. Pide el
-   certificado de cliente: sin el importado responde `400`.
+5. Abrir `https://devweb.yacaterkos.tech` o `https://devapi.yacaterkos.tech/api/v1/health/live`
+   en el navegador: debe responder con candado TLS valido de Let's Encrypt
+   sin pedir certificado de cliente (HTTP `200` en `/health/live`).
+   *(Solo `minios.doly.internal:50090` sigue exigiendo `.p12` y `ca.crt`.)*
 
 Si el paso 4 devuelve una IP publica, el config no lleva `DNS = 10.90.0.1`
 o el resolutor del hub no esta levantado:
@@ -311,6 +319,29 @@ sudo systemctl start doly-vpn-refresh.service
 
 Si la actualizacion falla, se conserva la lista anterior: el bot nunca
 se queda sin desplegar por un fallo de red.
+
+## TLS de Let's Encrypt (DNS-01) y renovacion automatica
+
+`devapi.yacaterkos.tech` y `devweb.yacaterkos.tech` usan un certificado
+unico (`doly-vpn-dev`) emitido por Let's Encrypt mediante reto DNS-01 con
+Cloudflare (cero puertos publicos abiertos) y credenciales restringidas
+en `/etc/doly-vpn/cloudflare.ini` (`600`, root).
+
+- `certbot.timer` renueva automaticamente antes de que caduque.
+- Al renovar, el hook `/etc/letsencrypt/renewal-hooks/deploy/doly-vpn-reload.sh`
+  ejecuta `/etc/doly-vpn/vpn-tls-sync.sh`, que copia el `fullchain.pem`
+  y `privkey.pem` desreferenciados a `/etc/doly-vpn/runtime/{devapi,devweb}/`
+  y recarga nginx sin recrear contenedores.
+- `MTLS_VERIFY` en `docker-compose.vpn.yml` viene en `off` para
+  `devapi`/`devweb` y `on` para `minios`. Puede reactivarse por servicio
+  cambiando esa variable y recreando el peer.
+
+Comprobar o sincronizar a mano:
+
+```bash
+sudo certbot renew --dry-run
+sudo /etc/doly-vpn/vpn-tls-sync.sh
+```
 
 ## MinIO
 
@@ -389,7 +420,7 @@ lo debido.
 | --- | --- | --- |
 | El handshake no ocurre | El `udp/58376` no esta abierto en la Security List de OCI | Abrirlo en la consola de OCI |
 | El handshake ocurre pero no hay datos | PSK distinto, o la regla del firewall | `sudo wg show` y `vpn-firewall.sh verify` |
-| `400 The SSL certificate error` | El navegador no tiene el certificado de cliente, o no confia en la CA | Importar el `.p12` e instalar `ca.crt` |
+| `400 The SSL certificate error` | Ocurre solo en `minios` (o si `MTLS_VERIFY=on`) por falta de `.p12` / `ca.crt` | Importar el `.p12` e instalar `ca.crt` (en `devapi`/`devweb` verificar `MTLS_VERIFY=off`) |
 | `404` en vez de la aplicacion | El peer no tiene su interfaz de tunel arriba | `docker logs doly-vpn-<peer>` |
 | El bot no puede desplegar | Los rangos de Actions quedaron viejos | `sudo systemctl start doly-vpn-refresh.service` |
 | `SSH` al 59253 da timeout | El puerto no esta abierto en OCI | Abrir el `tcp/59253` |
@@ -402,8 +433,9 @@ sudo /etc/doly-vpn/vpn-test.sh
 ```
 
 - el tunel esta arriba y los 10 peers estan,
-- `devapi` y `devweb` responden **con** certificado de cliente y
-  **rechazan** sin el,
+- `devapi` y `devweb` responden segun su modo (`MTLS_VERIFY=off`: TLS
+  Let's Encrypt valido sin certificado de cliente; `MTLS_VERIFY=on`: con
+  certificado y rechaza sin el),
 - las reglas de familia estan puestas,
 - las identidades duales estan separadas (la de desarrollo no tiene ruta
   hacia la familia admin),
