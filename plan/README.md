@@ -14,6 +14,9 @@ Planificación del producto y seguimiento del trabajo.
   está mergeado, qué issues se pueden cerrar y qué inconsistencias tiene el plan.
 - [PENDIENTES-AUDITORIA.md](./PENDIENTES-AUDITORIA.md) — lo que quedó en
   suspense tras la auditoría, con responsable y prioridad.
+- [BUGS.md](./BUGS.md) — **el índice de bugs conocidos**: qué bugs hay,
+  dónde está la explicación de cada uno y qué está pendiente. Se regenera
+  solo cada semana.
 - [backlog.md](./backlog.md) — mejoras y pendientes fuera del cronograma.
 - [RUBRICA-UNIDAD-2.md](./RUBRICA-UNIDAD-2.md) — índice de evidencias de la
   Unidad 2: cada criterio de la rúbrica con el archivo que lo respalda.

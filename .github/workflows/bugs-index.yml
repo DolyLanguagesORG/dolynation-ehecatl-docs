@@ -1,0 +1,101 @@
+name: bugs-index
+
+# Mantiene al dia `plan/BUGS.md`: el indice de bugs conocidos.
+#
+# El indice NO duplica las descripciones: dice que bugs conocemos y donde
+# esta la explicacion de cada uno (la issue, el PR, el commit). Por eso
+# puede generarse solo: si el indice se escribiera a mano, se quedaria
+# viejo en dos semanas y nadie se acordaria de actualizarlo.
+#
+# De donde sale:
+#   - las issues con la etiqueta `bug` de los repos de la organizacion,
+#   - las issues con la etiqueta `type:gap` (lo que la auditoria encontro),
+#   - la checklist de la auditoria del modulo de pagos (`back#150`).
+#
+# Se corre solo cada lunes y tambien a mano. Si el contenido cambia, abre
+# un PR (nunca un push directo: `develop` esta protegido).
+
+on:
+  schedule:
+    # Los lunes a las 6:23 UTC (los minutos raros evitan el pico de GitHub).
+    - cron: '23 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: read
+
+concurrency:
+  group: bugs-index
+  cancel-in-progress: false
+
+jobs:
+  generar:
+    name: Regenerar el indice de bugs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: develop
+
+      - name: Generar el indice
+        env:
+          # El PAT: el GITHUB_TOKEN solo alcanza a este repo, y el indice
+          # lee las issues de los cinco.
+          GITHUB_TOKEN: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 scripts/generar-indice-bugs.py
+
+      - name: Abrir el PR si el indice cambio
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet -- plan/BUGS.md; then
+            echo "El indice ya estaba al dia: no se abre PR."
+            exit 0
+          fi
+
+          echo "El indice cambio:"
+          git diff --stat -- plan/BUGS.md
+
+          branch="chore/issue-0-indice-de-bugs"
+          title="chore(docs): actualiza el indice de bugs conocidos"
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git add plan/BUGS.md
+          git commit -m "$title"
+          git push --force origin "$branch"
+
+          existing="$(gh pr list --repo "${{ github.repository }}" --head "$branch" --state open --json number --jq '.[0].number' 2>/dev/null || echo '')"
+
+          if [ -n "$existing" ]; then
+            echo "El PR ya existe (#$existing): no se abre otro."
+            exit 0
+          fi
+
+          # El cuerpo va linea por linea con `printf`: un heredoc dentro de
+          # este bloque YAML se lleva por delante el final del escalar.
+          body="$(printf '%s\n' \
+            'Actualiza `plan/BUGS.md`: el indice de bugs conocidos.' \
+            '' \
+            'Lo genera `scripts/generar-indice-bugs.py` leyendo:' \
+            '' \
+            '- las issues con la etiqueta `bug` de los repos de la organizacion,' \
+            '- las issues con la etiqueta `type:gap` (lo que encontro la auditoria),' \
+            '- la checklist de la auditoria del modulo de pagos (`back#150`).' \
+            '' \
+            'El indice no duplica las descripciones: dice **donde** esta cada una.' \
+            '' \
+            'Refs #7')"
+
+          gh pr create --repo "${{ github.repository }}" \
+            --base develop \
+            --head "$branch" \
+            --title "$title" \
+            --body "$body"
