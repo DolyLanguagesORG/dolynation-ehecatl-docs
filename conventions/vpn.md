@@ -37,13 +37,22 @@ Son **identidades separadas a proposito**: la de desarrollo no puede tocar
 el plano de administracion, aunque la persona sea la misma. Asi una laptop
 que se filtra no arrastra a la identidad de administracion.
 
-Cada identidad tiene su certificado de cliente, con su CN: el registro del
-servidor dice **que identidad** se uso en cada conexion.
+Cada identidad tiene su certificado de cliente, con su CN: en servicios
+con mTLS (`minios`), el registro del servidor dice **que identidad** se
+uso en cada conexion; en `devapi` y `devweb` el registro queda por IP de
+tunel (`10.91.0.x` / `10.92.0.x`).
 
 - **Protocolo**: WireGuard, sobre `udp/58376`.
-- **TLS**: CA interna de DolyNation (raiz + intermedia). Los servicios
-  exigen **mTLS**: sin un certificado de cliente firmado por la CA, la
-  peticion se rechaza con `400`.
+- **TLS**:
+  - `devapi` y `devweb`: certificado publico de Let's Encrypt emitido
+    por DNS-01 (Cloudflare) con renovacion automatica y `MTLS_VERIFY=off`.
+    Para desarrollar **basta con importar el `.conf` de WireGuard**, sin
+    instalar CA ni `.p12` en el navegador.
+  - `minios` (`minios.doly.internal:50090`): CA interna de DolyNation
+    (raiz + intermedia) y **mTLS** (`MTLS_VERIFY=on`), porque Let's
+    Encrypt no firma dominios `.internal`.
+  - La verificacion de cliente (`MTLS_VERIFY=on|off`) queda configurable
+    por servicio en `docker-compose.vpn.yml`.
 - **Puerto del cliente**: `59253` (el `22` queda como respaldo mientras
   la migracion del bot no este hecha).
 
@@ -89,10 +98,12 @@ un developer comprometido no gana el de nadie mas.
 
 ## Entrar
 
-Cada developer recibe un paquete cifrado con su configuracion de
-WireGuard, su certificado de cliente y las CAs. El procedimiento
-completo (instalar WireGuard, instalar la CA, importar el `.p12`) esta
-en el README de la VPN del servidor: `operations/VPN.md`.
+Cada developer recibe su paquete (por canal de confianza) con su
+configuracion de WireGuard (`wg0.conf`, o `wg-dev.conf` y `wg-admin.conf`
+si tiene dos identidades). Para entrar a `devweb` y `devapi` **solo hace
+falta importar el `.conf` de WireGuard**: no necesita instalar `ca.crt`
+ni importar `.p12`. El procedimiento completo (y el opcional para `minios`)
+esta en [`operations/VPN.md`](../operations/VPN.md).
 
 Direcciones dentro de la VPN:
 
@@ -226,9 +237,10 @@ secret `DEPLOY_PORT` de los environments: **ningun workflow cambia**.
 sudo /etc/doly-vpn/vpn-test.sh
 ```
 
-Comprueba el tunel, el mTLS (que responde con certificado y que rechaza
-sin el), el aislamiento entre familias, las identidades duales y que el
-DNS de la VPN resuelve los servicios a sus IPs de tunel.
+Comprueba el tunel, el TLS de `devapi` y `devweb` (certificado Let's
+Encrypt valido o mTLS segun `MTLS_VERIFY`), el aislamiento entre
+familias, las identidades duales y que el DNS de la VPN resuelve los
+servicios a sus IPs de tunel.
 
 Y, desde un equipo con la VPN levantada, que el nombre **no** resuelve a
 la IP publica:
