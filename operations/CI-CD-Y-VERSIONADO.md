@@ -19,11 +19,12 @@ DolyNation: `dolynation-atl-back` (backend), `dolynation-tonatiuh-front`
 
 | Componente | Estado | Dónde |
 | --- | --- | --- |
-| Versionado automático en `develop` | ✅ **Implementado** | `.github/workflows/release-please.yml` en los 4 repos |
+| Versionado automático en `develop` | ✅ **Implementado** | `.github/workflows/release-please.yml` en los 5 repos |
 | Tag anotado + GitHub Release (*Pre-release*) | ✅ **Implementado** | paso *"Convertir el tag en anotado"* del mismo workflow |
 | Manifiesto multirepo (`versions.yml`) | ✅ **Implementado** | `dolynation-tlalli-infra/versions.yml` |
 | Actualización automática del manifiesto | ✅ **Implementado** | `.github/workflows/sync-versions.yml` en infra |
 | Autodespliegue a desarrollo con la versión inyectada | ✅ **Implementado** | `deploy-dev.yml` en back y front |
+| **Landing en el flujo multirepo** | ✅ **Implementado** | `dolynation-tetl-landing`: CI propia, `site_version` propia, compose y despliegue aparte |
 | Version visible en la API | ✅ **Implementado** | `GET /api/v1/version` + cabecera `X-App-Version` |
 | Version visible en el frontend | ✅ **Implementado** | `/version.json` + `VersionBadge` |
 | Ambiente de staging | ✅ **Implementado** | `docker-compose.env.yml` + `deploy-env.sh` |

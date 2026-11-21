@@ -228,4 +228,4 @@ botón de merge.
 | `pr-target` | rama base y rama origen |
 
 `pr-title` y `pr-target` vienen del workflow `pr-title.yml` (dos jobs) y están
-en los cuatro repos.
+en los cinco repos.

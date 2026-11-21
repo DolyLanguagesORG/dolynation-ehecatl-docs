@@ -88,6 +88,7 @@ mergear, así que un título inválido nunca llega a la release.
 | --- | --- | --- |
 | `dolynation-atl-back` | `package.json` → `version` | El PR de release (release-please) |
 | `dolynation-tonatiuh-front` | `package.json` → `version` | El PR de release (release-please) |
+| `dolynation-tetl-landing` | `package.json` → `version` | El PR de release (release-please) |
 | `dolynation-tlalli-infra` | `version.txt` | El PR de release (release-please) |
 | `dolynation-ehecatl-docs` | `version.txt` | El PR de release (release-please) |
 | **Manifiesto del proyecto** | `dolynation-tlalli-infra/versions.yml` | release-please (su propia fila) + el workflow `sync-versions` (las demás) |
@@ -103,6 +104,7 @@ de cada componente compone la aplicación publicada**.
 ```yaml
 project: dolynation
 app_version: 0.2.0        # la versión ÚNICA de la aplicación
+site_version: 0.1.0        # la versión de la landing (su propia línea)
 updated: '2026-11-06'
 repositories:
   dolynation-atl-back:
@@ -113,6 +115,10 @@ repositories:
     version: 0.2.1
     tag: v0.2.1
     commit: 161a96847dce3352bcc9beb097de0c5d3d986722
+  dolynation-tetl-landing:
+    version: 0.1.0
+    tag: v0.1.0
+    commit: a159c4c2d6e45c19bc8fa3183910a1c870d839fe
   dolynation-tlalli-infra:
     version: 0.2.1
     tag: v0.2.1
@@ -129,6 +135,7 @@ release:
 | Campo | Qué significa |
 | --- | --- |
 | `app_version` | La versión de la **aplicación** (el tren de release). Es la que ve el usuario final. |
+| `site_version` | La versión de la **landing**. Es un producto aparte, con su propia línea de releases. |
 | `repositories.<repo>.version` | La versión de **ese** repositorio. |
 | `repositories.<repo>.tag` | El tag exacto que se publicó. |
 | `repositories.<repo>.commit` | El commit exacto. Con esto se puede hacer rollback a un estado anterior. |
@@ -141,6 +148,23 @@ cambio (nunca un push directo: `develop` está protegido).
 > **Dos formatos, dos versiones.** La **aplicación** tiene una versión
 > (`app_version`). Cada **componente** tiene la suya. La API expone las dos:
 > `GET /api/v1/version` devuelve `appVersion` y `version` por separado.
+
+> **La landing es un producto aparte.** La landing (`dolynation-tetl-landing`)
+> vive en otro dominio (`yacaterkos.tech` / `www`, y `play.` es la app) y
+> tiene **su propia línea de releases**:
+>
+> - `app_version` = la versión de la **aplicación** (backend + frontend). Es la
+>   más alta entre los dos, y **no se mueve** cuando sale una release de la
+>   landing.
+> - `site_version` = la versión de la **landing**.
+>
+> Por qué separadas: un retoque visual en la landing no puede obligar a
+> subir la versión de la app (ni al revés). Publicar la landing **no**
+> reinicia ni el backend ni el frontend: tiene su propio compose
+> (`docker-compose.site.yml`) y su propio despliegue.
+>
+> La landing **no entra en la cascada de la `rc`**: la `rc-<app_version>` es
+> el tren de la aplicación.
 
 ## La `rc-<version>`: la candidata
 

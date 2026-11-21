@@ -140,14 +140,49 @@ versionan su propio software, pero no mandan en la versión de la app.
 
 | Ambiente | Puertos | Se despliega | Para qué sirve |
 | --- | --- | --- | --- |
-| desarrollo | 57010-57012 | merge a `develop` | el día a día del equipo |
-| **rehearsal** | 57040-57042 | al empujar una `rc` | simulación: el tren completo sin tocar staging ni producción |
-| **staging** | 57020-57022 | al empujar una `rc`, **después** de que rehearsal pase su smoke test | preproducción con datos de prueba |
-| producción | 57030-57032 | **a mano**, con 2 revisores | usuarios reales |
+| desarrollo | 57010-57013 | merge a `develop` | el día a día del equipo (app: 57010-57012, landing: 57013) |
+| **rehearsal** | 57040-57043 | al empujar una `rc` | simulación: el tren completo sin tocar staging ni producción (landing: 57043) |
+| **staging** | 57020-57023 | al empujar una `rc`, **después** de que rehearsal pase su smoke test | preproducción con datos de prueba (landing: 57023) |
+| producción | 57030-57033 | **a mano**, con 2 revisores | usuarios reales (landing: 57033) |
 
 Rehearsal y staging comparten el mismo `docker-compose.env.yml`; se
 distinguen por `COMPOSE_PROJECT_NAME` y por los puertos. El servidor nunca
 compila: baja imágenes de GHCR.
+
+---
+
+## 3-bis. La landing: su propio ciclo
+
+La **landing** (`dolynation-tetl-landing`) es un producto aparte: vive en
+`yacaterkos.tech` / `www` y la aplicación, en `play.`. Por eso **no** viaja
+en el tren de la `rc`.
+
+```
+develop ──PR + 5 checks + 1 aprobación──► merge (squash)
+      │
+      └──► release-please corta vX.Y.Z ──► tag + CHANGELOG + GitHub Release
+                    │
+                    └──► sync-versions ──► versions.yml (fila propia + site_version)
+                                          │  (app_version NO se mueve)
+                                          └──► deploy-site.yml (A MANO, por ambiente)
+                                                └──► solo el contenedor de la landing
+```
+
+| Qué | Cómo |
+| --- | --- |
+| **Versionado** | El suyo: `site_version` en el manifiesto. La `app_version` es la de la app y no se mueve. |
+| **Ambiente de desarrollo** | Merge a `develop` → la landing avisa a `tlalli-infra` (`repository_dispatch`) y el infra despliega. Va **dentro de la VPN**: `devsite.yacaterkos.tech` → IP de túnel. |
+| **Staging / producción** | **A mano**, con el workflow `deploy-site.yml` (ambiente + `COMPOSE_PROJECT_NAME` + puerto). |
+| **Qué se despliega** | **Solo la landing.** Su compose es aparte (`docker-compose.site.yml`): ni la base, ni el backend, ni el frontend se tocan. |
+| **Promoción a `main`** | La landing tiene su propia `main` (protegida igual que la de los demás: 2 aprobaciones + code owner + checks). El PR sale de `develop`. |
+
+**Por qué no comparte la `rc`:** la `rc-<app_version>` es el tren de la
+**aplicación**. Si la landing viajara en ella, cada retoque visual obligaría
+a subir la versión de la app y a repetir rehearsal y staging. Con su propio
+ciclo, publicar la landing es una operación de minutos que no toca la app.
+
+**Lo que sí comparten:** el mismo `versions.yml` (fuente de verdad de qué
+corre), las mismas reglas de rama y los mismos checks.
 
 ---
 

@@ -25,7 +25,7 @@ funciona y qué pasa si te saltas un paso.
 ## Requisitos (una sola vez)
 
 Clona **el repositorio en el que vas a trabajar**. El código no vive en un repo
-único, sino en cuatro repos separados (front, back, infra, docs):
+único, sino en cinco repos separados (front, back, landing, infra, docs):
 
 ```bash
 # elige el que toque (ejemplo: backend)

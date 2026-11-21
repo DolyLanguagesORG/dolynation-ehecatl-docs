@@ -15,6 +15,7 @@ convenciones, la arquitectura, el plan y el onboarding.
 | Repo | Contenido |
 | --- | --- |
 | [`dolynation-tonatiuh-front`](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front) | Frontend web (Next.js 16) |
+| [`dolynation-tetl-landing`](https://github.com/DolyLanguagesORG/dolynation-tetl-landing) | Landing pública (Astro, sitio estático) |
 | [`dolynation-atl-back`](https://github.com/DolyLanguagesORG/dolynation-atl-back) | API REST (NestJS 11 + Drizzle + PostgreSQL) |
 | [`dolynation-tlalli-infra`](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra) | Docker Compose + schema SQL (dueño de la BD) |
 | [`dolynation-ehecatl-docs`](https://github.com/DolyLanguagesORG/dolynation-ehecatl-docs) | Este repo: documentación |
