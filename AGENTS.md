@@ -37,4 +37,5 @@ Están en `.agents/skills/` y se cargan bajo demanda:
 
 - `dolynation-atl-back` — API (NestJS 11 + Drizzle + PostgreSQL)
 - `dolynation-tonatiuh-front` — frontend (Next.js 16)
+- `dolynation-tetl-landing` — landing pública (Astro, sitio estático)
 - `dolynation-tlalli-infra` — Docker Compose + schema SQL (dueño de la BD)

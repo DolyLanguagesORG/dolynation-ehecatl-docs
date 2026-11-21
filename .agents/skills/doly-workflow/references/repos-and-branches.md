@@ -6,12 +6,19 @@
 | --- | --- | --- |
 | `dolynation-atl-back` | API (NestJS 11 + Drizzle + PostgreSQL) | `develop` |
 | `dolynation-tonatiuh-front` | Frontend (Next.js 16) | `develop` |
+| `dolynation-tetl-landing` | Landing pública (Astro, sitio estático) | `develop` |
 | `dolynation-tlalli-infra` | Docker Compose + schema SQL (dueño de la BD) | `develop` |
 | `dolynation-ehecatl-docs` | Documentación | `develop` |
 | `doly-languages` | Monorepo original, archivado | — |
 
 El monorepo `doly-languages` **no se usa**: quedó archivado como histórico. Todo
-el trabajo nuevo ocurre en los cuatro repos de arriba.
+el trabajo nuevo ocurre en los cinco repos de arriba.
+
+> **La landing va por su cuenta.** Es un producto aparte (otro dominio, otro
+> compose, otro despliegue) con su **propia línea de releases** (`site_version`).
+> No entra en la cascada de la `rc` de la app: publicarla no reinicia ni el
+> backend ni el frontend. Ver
+> [`operations/FLUJO-DE-RELEASE.md`](../../../../operations/FLUJO-DE-RELEASE.md).
 
 ## Ramas
 

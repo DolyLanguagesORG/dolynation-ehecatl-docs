@@ -127,26 +127,31 @@ diseño se vea bien) lo verifica una persona con el checklist de salida.
 
 ## Entornos y puertos
 
-| Entorno | Directorio (server) | DB | Back | Front |
-| --- | --- | --: | --: | --: |
-| Desarrollo | `/srv/doly/dev` | 57010 | 57011 | 57012 |
-| Rehearsal | `/srv/doly/rehearsal` | 57040 | 57041 | 57042 |
-| Staging | `/srv/doly/staging` | 57020 | 57021 | 57022 |
-| Producción | `/srv/doly/prod` | 57030 | 57031 | 57032 |
+| Entorno | Directorio (server) | DB | Back | Front | Landing |
+| --- | --- | --: | --: | --: | --: |
+| Desarrollo | `/srv/doly/dev` | 57010 | 57011 | 57012 | 57013 |
+| Rehearsal | `/srv/doly/rehearsal` | 57040 | 57041 | 57042 | 57043 |
+| Staging | `/srv/doly/staging` | 57020 | 57021 | 57022 | 57023 |
+| Producción | `/srv/doly/prod` | 57030 | 57031 | 57032 | 57033 |
 
 Staging, producción y rehearsal comparten el mismo
 `docker-compose.env.yml` de `infra`; lo que cambia son los puertos y el
 nombre del proyecto. Todos escuchan **solo en `127.0.0.1`**: el único que
 llega a los contenedores es el proxy (nginx) de este servidor.
 
+La **landing** va aparte: tiene su propio compose
+(`docker-compose.site.yml`), su propio nombre de proyecto
+(`doly-site-<ambiente>`) y sus propios puertos. Desplegarla **no** reinicia
+ni la base, ni el backend, ni el frontend.
+
 ### Qué ambiente tiene dominio público
 
 | Ambiente | Host público | Notas |
 | --- | --- | --- |
-| Desarrollo | `devweb` + `devapi` | El front corre el **dev server** (`next dev`), así que necesita `NEXT_ALLOWED_DEV_ORIGINS` para que el websocket de HMR conecte |
+| Desarrollo | `devweb` + `devapi` + `devsite` | El front corre el **dev server** (`next dev`), así que necesita `NEXT_ALLOWED_DEV_ORIGINS` para que el websocket de HMR conecte. Los tres son **solo por VPN**: resuelven a la IP de túnel |
 | Rehearsal | **ninguno** | No sale a internet: se accede por puerto (`5704x`) desde el propio servidor. No hay `server_name` en el nginx |
-| Staging | `stagingweb` | El front corre **compilado** (`output: 'standalone'`): sin HMR, sin websocket |
-| Producción | pendiente de definir | El dominio está reservado (`yacaterkos.tech`) pero el nginx **todavía no tiene su `server_name`** |
+| Staging | `stagingweb` (app) + `staging` (landing) | El front corre **compilado** (`output: 'standalone'`): sin HMR, sin websocket |
+| Producción | `play` (app) + `yacaterkos.tech` / `www` (landing) | El dominio raíz y `www` son de la **landing**; la **aplicación** va en `play.` |
 
 ### Cambiar el dominio público
 
