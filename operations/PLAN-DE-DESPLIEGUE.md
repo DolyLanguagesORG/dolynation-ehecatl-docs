@@ -78,6 +78,12 @@ Para staging y producción se trabaja con **imágenes**, no con build en el serv
 - `tlalli-infra` **jala la imagen** y despliega el stack con
   `scripts/deploy-env.sh`, que lee `versions.yml` y despliega exactamente las
   versiones declaradas.
+- El **sitio** va aparte: `tetl-landing` publica su propia imagen y
+  `scripts/deploy-site.sh` la despliega con `docker-compose.site.yml`, leyendo
+  **`versions-site.yml`** (no `versions.yml`). Publicar el sitio **no**
+  reinicia ni la base, ni el backend, ni el frontend de la app. Al final del
+  despliegue se ejecuta el **smoke test del sitio** (`scripts/smoke-site.sh`):
+  si el contrato no se cumple, el deploy falla.
 
 > **El servidor nunca compila.** Si dos máquinas compilaran el mismo commit,
 > no serían el mismo binario. Una imagen es inmutable: se sabe exactamente qué
@@ -121,6 +127,17 @@ y no depende de que nadie se acuerde.
 responde, la versión es la del manifiesto, el login funciona, el frontend
 sirve y su proxy llega al backend) y **falla** si algo no cuadra. Un smoke
 test que no puede fallar no sirve de nada.
+
+El **sitio** tiene el suyo: `scripts/smoke-site.sh` comprueba 11 cosas del
+contrato del sitio (la página trae contenido y título, no es un error, el
+healthcheck responde, los assets se sirven y se cachean para siempre, el
+HTML **no** se cachea, las cabeceras de seguridad, la compresión). Va dentro
+de `deploy-site.sh`: un despliegue del sitio que no comprueba nada es un
+despliegue a ciegas.
+
+> El smoke del sitio ya encontró un bug real: las cabeceras de seguridad se
+> perdían en cada `location` de nginx (un `add_header` en un bloque hijo
+> *reemplaza* a los del padre).
 
 Lo que no se puede automatizar (que la lectura generada tenga sentido, que el
 diseño se vea bien) lo verifica una persona con el checklist de salida.

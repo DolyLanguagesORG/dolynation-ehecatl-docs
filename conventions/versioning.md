@@ -101,10 +101,12 @@ los tres los escribe el mismo PR.
 `dolynation-tlalli-infra/versions.yml` es la fuente de verdad de **qué versión
 de cada componente compone la aplicación publicada**.
 
+Hay **dos manifiestos**, porque son **dos productos**:
+
 ```yaml
+# versions.yml -> la APLICACIÓN
 project: dolynation
 app_version: 0.2.0        # la versión ÚNICA de la aplicación
-site_version: 0.1.0        # la versión de la landing (su propia línea)
 updated: '2026-11-06'
 repositories:
   dolynation-atl-back:
@@ -115,10 +117,6 @@ repositories:
     version: 0.2.1
     tag: v0.2.1
     commit: 161a96847dce3352bcc9beb097de0c5d3d986722
-  dolynation-tetl-landing:
-    version: 0.1.0
-    tag: v0.1.0
-    commit: a159c4c2d6e45c19bc8fa3183910a1c870d839fe
   dolynation-tlalli-infra:
     version: 0.2.1
     tag: v0.2.1
@@ -132,10 +130,22 @@ release:
   deadline: '2026-12-10'
 ```
 
-| Campo | Qué significa |
-| --- | --- |
-| `app_version` | La versión de la **aplicación** (el tren de release). Es la que ve el usuario final. |
-| `site_version` | La versión de la **landing**. Es un producto aparte, con su propia línea de releases. |
+```yaml
+# versions-site.yml -> el SITIO
+project: dolynation-site
+site_version: 0.1.0        # la versión del sitio (su propia línea)
+updated: '2026-11-06'
+repositories:
+  dolynation-tetl-landing:
+    version: 0.1.0
+    tag: v0.1.0
+    commit: a159c4c2d6e45c19bc8fa3183910a1c870d839fe
+```
+
+| Campo | Dónde | Qué significa |
+| --- | --- | --- |
+| `app_version` | `versions.yml` | La versión de la **aplicación** (el tren de release). Es la que ve el usuario final. |
+| `site_version` | `versions-site.yml` | La versión del **sitio** (la landing). Es un producto aparte, con su propia línea de releases. |
 | `repositories.<repo>.version` | La versión de **ese** repositorio. |
 | `repositories.<repo>.tag` | El tag exacto que se publicó. |
 | `repositories.<repo>.commit` | El commit exacto. Con esto se puede hacer rollback a un estado anterior. |
@@ -149,22 +159,25 @@ cambio (nunca un push directo: `develop` está protegido).
 > (`app_version`). Cada **componente** tiene la suya. La API expone las dos:
 > `GET /api/v1/version` devuelve `appVersion` y `version` por separado.
 
-> **La landing es un producto aparte.** La landing (`dolynation-tetl-landing`)
+> **El sitio es un producto aparte.** La landing (`dolynation-tetl-landing`)
 > vive en otro dominio (`yacaterkos.tech` / `www`, y `play.` es la app) y
-> tiene **su propia línea de releases**:
+> tiene **su propia línea de releases**, con **su propio manifiesto**
+> (`versions-site.yml`):
 >
 > - `app_version` = la versión de la **aplicación** (backend + frontend). Es la
->   más alta entre los dos, y **no se mueve** cuando sale una release de la
->   landing.
-> - `site_version` = la versión de la **landing**.
+>   más alta entre los dos, y **no se mueve** cuando sale una release del
+>   sitio.
+> - `site_version` = la versión del **sitio**.
 >
-> Por qué separadas: un retoque visual en la landing no puede obligar a
-> subir la versión de la app (ni al revés). Publicar la landing **no**
+> Por qué separados: un retoque visual en la landing no puede obligar a
+> subir la versión de la app (ni al revés). Publicar el sitio **no**
 > reinicia ni el backend ni el frontend: tiene su propio compose
 > (`docker-compose.site.yml`) y su propio despliegue.
 >
-> La landing **no entra en la cascada de la `rc`**: la `rc-<app_version>` es
-> el tren de la aplicación.
+> La app y el sitio **tampoco comparten candidata**: la de la app es
+> `rc-<app_version>` y la del sitio `site-rc-<site_version>`. Los dos
+> carriles tienen el mismo rigor (guard de una sola candidata, rehearsal,
+> staging, smoke y gate), pero uno no bloquea al otro.
 
 ## La `rc-<version>`: la candidata
 

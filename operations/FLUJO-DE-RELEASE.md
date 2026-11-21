@@ -91,11 +91,17 @@ un `fix`, sale `v0.3.2`; si hubo un `feat`, sale `v0.4.0`.
 3. Se dispara `sync-versions`: actualiza la fila de ese repositorio en
    `versions.yml` con versión, tag y commit, y abre un PR con ese cambio.
 
-### El manifiesto `versions.yml`
+### Los manifiestos: `versions.yml` y `versions-site.yml`
 
-Es el único punto donde se coordinan los repositorios. Cada repositorio
-versiona por su cuenta, y el manifiesto dice **exactamente qué versión está
-publicada en cada uno**:
+Son **dos**, porque son **dos productos**: la aplicación y el sitio.
+
+- `versions.yml` -> la **aplicación** (backend, frontend, infra, docs). Su
+  versión única es `app_version`.
+- `versions-site.yml` -> el **sitio** (la landing). Su versión única es
+  `site_version`.
+
+Cada repositorio versiona por su cuenta, y su manifiesto dice **exactamente
+qué versión está publicada en él**:
 
 ```yaml
 project: dolynation
@@ -132,9 +138,14 @@ versionan su propio software, pero no mandan en la versión de la app.
 | Rama | Qué es | Quién entra |
 | --- | --- | --- |
 | `develop` | donde se trabaja | cualquier PR de feature |
-| `rc-<app_version>` | la combinación de versiones candidata | se corta al liberar |
+| `rc-<app_version>` | la combinación de versiones candidata de la **app** | se corta al liberar |
+| `site-rc-<site_version>` | la candidata del **sitio** | se corta al liberar el sitio |
 | `main` | lo que está en producción | solo desde `develop` o una `rc` |
 | `hotfix/*` | una urgencia en producción | directo a `main` |
+
+La app y el sitio tienen **candidatas distintas** (`rc-` y `site-rc-`) y por
+eso **guards distintos**: una rc no bloquea a la otra. Los dos carriles
+tienen el mismo rigor.
 
 ### Ambientes
 
@@ -151,40 +162,59 @@ compila: baja imágenes de GHCR.
 
 ---
 
-## 3-bis. La landing: su propio ciclo
+## 3-bis. El sitio: su propio ciclo
 
 La **landing** (`dolynation-tetl-landing`) es un producto aparte: vive en
-`yacaterkos.tech` / `www` y la aplicación, en `play.`. Por eso **no** viaja
-en el tren de la `rc`.
+`yacaterkos.tech` / `www` y la aplicación, en `play.`. Por eso tiene **su
+propio ciclo de release**, con el mismo rigor que el de la app pero **en su
+propio carril**.
 
 ```
 develop ──PR + 5 checks + 1 aprobación──► merge (squash)
       │
       └──► release-please corta vX.Y.Z ──► tag + CHANGELOG + GitHub Release
                     │
-                    └──► sync-versions ──► versions.yml (fila propia + site_version)
-                                          │  (app_version NO se mueve)
-                                          └──► deploy-site.yml (A MANO, por ambiente)
-                                                └──► solo el contenedor de la landing
+                    └──► versions-site.yml  (fila propia + site_version)
+                          │  (app_version NO se mueve)
+                          ▼
+                    site-rc-<site_version>   ← la candidata DEL SITIO
+                          │
+        ┌─────────────────┴─────────────────┐
+        ▼                                   ▼
+   rehearsal-site                        staging-site
+   (doly-site-rehearsal)                (doly-site-staging)
+   smoke del sitio                       smoke del sitio
+        └─────────────────┬─────────────────┘
+                          ▼
+                    PR site-rc -> main  (2 aprobaciones + code owner
+                                         + gate de staging en verde)
+                          │
+                          ▼
+                    producción: a mano, con 2 revisores
 ```
 
 | Qué | Cómo |
 | --- | --- |
-| **Versionado** | El suyo: `site_version` en el manifiesto. La `app_version` es la de la app y no se mueve. |
+| **Versionado** | El suyo: `site_version` en `versions-site.yml`. La `app_version` es la de la app y no se mueve. |
+| **Manifiesto** | El suyo: `versions-site.yml`. Publicar el sitio **no toca** el manifiesto de la app. |
 | **Ambiente de desarrollo** | Merge a `develop` → la landing avisa a `tlalli-infra` (`repository_dispatch`) y el infra despliega. Va **dentro de la VPN**: `devsite.yacaterkos.tech` → IP de túnel. |
-| **Staging / producción** | **A mano**, con el workflow `deploy-site.yml` (ambiente + `COMPOSE_PROJECT_NAME` + puerto). |
-| **Qué se despliega** | **Solo la landing.** Su compose es aparte (`docker-compose.site.yml`): ni la base, ni el backend, ni el frontend se tocan. |
-| **Promoción a `main`** | La landing tiene su propia `main` (protegida igual que la de los demás: 2 aprobaciones + code owner + checks). El PR sale de `develop`. |
+| **Candidata** | `site-rc-<version>`: guard propio (una sola a la vez), build de la imagen, rehearsal, staging y **smoke test del sitio** (11 comprobaciones del contrato). |
+| **Promoción a `main`** | PR `site-rc-*` → `main`: 2 aprobaciones + code owner + los 5 checks + el gate de staging. |
+| **Producción** | **A mano**, con el workflow `deploy-site` (`environment: prod`, 2 revisores). |
+| **Qué se despliega** | **Solo el sitio.** Su compose es aparte (`docker-compose.site.yml`): ni la base, ni el backend, ni el frontend se tocan. |
 
-**Por qué no comparte la `rc`:** la `rc-<app_version>` es el tren de la
-**aplicación**. Si la landing viajara en ella, cada retoque visual obligaría
-a subir la versión de la app y a repetir rehearsal y staging. Con su propio
-ciclo, publicar la landing es una operación de minutos que no toca la app.
+**Por qué el prefijo `site-`:** la rc de la app se llama `rc-<version>` y
+la del sitio `site-rc-<version>`. Los workflows de la app escuchan `rc-*`,
+así que el prefijo evita que la candidata del sitio les dispare el
+despliegue de la aplicación. Y los guards de cada uno solo miran su carril:
+**una rc no bloquea a la otra**.
 
-**Lo que sí comparten:** el mismo `versions.yml` (fuente de verdad de qué
-corre), las mismas reglas de rama y los mismos checks.
+**El smoke test va dentro del despliegue**: si el sitio no cumple su
+contrato, el deploy falla, **no se despliega en staging y no se abre ningún
+PR**. Es el mismo criterio que usa la app (su `smoke-test.sh`).
 
----
+**Lo que sí comparten:** las mismas reglas de rama, los mismos checks, las
+mismas aprobaciones y el mismo gate de staging.
 
 ## 4. La `rc`: una sola a la vez
 
