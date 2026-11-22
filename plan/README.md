@@ -17,6 +17,9 @@ Planificación del producto y seguimiento del trabajo.
 - [BUGS.md](./BUGS.md) — **el índice de bugs conocidos**: qué bugs hay,
   dónde está la explicación de cada uno y qué está pendiente. Se regenera
   solo cada semana.
+- [PLAN-PWA-OFFLINE.md](./PLAN-PWA-OFFLINE.md) — **la PWA y el modo offline**
+  (la v2): qué es, la arquitectura, el proceso de las ramas y las fases. Se
+  trabaja en su propia rama, `feat/issue-131-pwa`.
 - [backlog.md](./backlog.md) — mejoras y pendientes fuera del cronograma.
 - [RUBRICA-UNIDAD-2.md](./RUBRICA-UNIDAD-2.md) — índice de evidencias de la
   Unidad 2: cada criterio de la rúbrica con el archivo que lo respalda.

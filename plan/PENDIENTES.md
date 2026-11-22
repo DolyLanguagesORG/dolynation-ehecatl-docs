@@ -115,7 +115,7 @@ No son ideas: son piezas que funcionan y a las que solo les falta lo último.
 | Issue | Repo | Qué es | Qué falta |
 | --- | --- | --- | --- |
 | `infra#259` | infra | **Los subdominios públicos y la publicación de la app en `play.`** | Decidir los nombres (`play`, `staging`, `www`). Después, DNS + certificado de origen + `server_name` del proxy + `FRONTEND_BASE_URL` + los redirect URIs del OAuth + los hostnames del captcha. **Todo a la vez**, o el login se rompe. El certificado lo emite Cloudflare **a mano** (su API de Origin CA necesita otra clave) |
-| `front#131` | frontend | **La PWA de verdad: la app funciona sin conexión y sincroniza al volver** | Es la v2 del producto: el modo offline de Duolingo (leer y responder la historia sin red; al volver, se sube lo que hiciste). Se trabaja en su **propia rama**, protegida, sin tocar `develop` |
+| `front#131` | frontend | **La PWA de verdad: la app funciona sin conexión y sincroniza al volver** | Es la v2 del producto: el modo offline de Duolingo (leer y responder la historia sin red; al volver, se sube lo que hiciste). Se trabaja en su **propia rama**, protegida, sin tocar `develop`. El plan completo está en [`PLAN-PWA-OFFLINE.md`](./PLAN-PWA-OFFLINE.md) |
 
 > **La landing ya tiene su ciclo propio** (manifiesto aparte, candidata
 > `site-rc-*`, smoke test del sitio y despliegue que no toca la app) y
