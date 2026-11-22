@@ -107,6 +107,23 @@ alcance (post-entrega)» (cierre el 30-ene-2027).
 > genere lecturas se come la cuota del proyecto entero, y el síntoma (un 503
 > raro) no dice por qué.
 
+### Lo que ya está construido y espera el dominio (o el contenido)
+
+Hay trabajo **hecho y verificado** que espera una decisión o un contenido.
+No son ideas: son piezas que funcionan y a las que solo les falta lo último.
+
+| Issue | Repo | Qué es | Qué falta |
+| --- | --- | --- | --- |
+| `infra#259` | infra | **Los subdominios públicos y la publicación de la app en `play.`** | Decidir los nombres (`play`, `staging`, `www`). Después, DNS + certificado de origen + `server_name` del proxy + `FRONTEND_BASE_URL` + los redirect URIs del OAuth + los hostnames del captcha. **Todo a la vez**, o el login se rompe. El certificado lo emite Cloudflare **a mano** (su API de Origin CA necesita otra clave) |
+| `front#131` | frontend | **La PWA de verdad: la app funciona sin conexión y sincroniza al volver** | Es la v2 del producto: el modo offline de Duolingo (leer y responder la historia sin red; al volver, se sube lo que hiciste). Se trabaja en su **propia rama**, protegida, sin tocar `develop` |
+
+> **La landing ya tiene su ciclo propio** (manifiesto aparte, candidata
+> `site-rc-*`, smoke test del sitio y despliegue que no toca la app) y
+> **funciona en desarrollo, dentro de la VPN**:
+> `https://devsite.yacaterkos.tech/`. **No se expone** hasta que haya
+> subdominios (`infra#259`), y **no se corta `site-rc-*`** hasta que el
+> contenido esté aprobado.
+
 ### Y lo que ya estaba en el backlog
 
 El [`backlog.md`](./backlog.md) recoge ideas sueltas que tampoco forman parte
@@ -121,7 +138,7 @@ tienen issue propia todavía: cuando una pase a trabajarse, se le crea.
 
 | Qué | Dónde | Con qué se filtra |
 | --- | --- | --- |
-| **Bugs** | **Issues** con la etiqueta `bug` y su severidad | Plantilla `bug.yml` (descripción, pasos, esperado, actual, logs, severidad, entorno) |
+| **Bugs** | **Issues** con la etiqueta `bug` y su severidad. El **índice** está en [`BUGS.md`](./BUGS.md) (se regenera solo cada lunes) | Plantilla `bug.yml` (descripción, pasos, esperado, actual, logs, severidad, entorno) |
 | **Trabajo por hacer** | **Issues** con `sprint-N` y `area:*`, en su milestone | El Project (Kanban) y los milestones |
 | **Decisiones que faltan** | **Issues** con `needs:decision` | [`decisions/PENDIENTES.md`](../decisions/PENDIENTES.md) los explica |
 | **Decisiones ya tomadas** | [`decisions/README.md`](../decisions/README.md) (ADR) | — |
@@ -133,6 +150,10 @@ tienen issue propia todavía: cuando una pase a trabajarse, se le crea.
 > decisión; un bug es trabajo que hay que hacer, con dueño, severidad y un PR
 > que lo cierra. Lo que sí va en la discusión es **el resumen**: "esta semana
 > se han encontrado estos bugs y estos son los que quedan".
+>
+> El **índice** de los bugs ([`BUGS.md`](./BUGS.md)) sí es un fichero: es
+> generado, con punteros a las issues, y **se regenera solo** (cada lunes el
+> workflow `bugs-index` abre un PR si algo cambió).
 >
 > La plantilla `bug.yml` y la etiqueta `bug` existen desde el principio del
 > proyecto, pero **nunca se habían usado** (0 issues). A partir de ahora, cada
@@ -151,3 +172,8 @@ tienen issue propia todavía: cuando una pase a trabajarse, se le crea.
   `doly-workflow`.
 - **Al cerrar un sprint**: se mueve lo pendiente al sprint siguiente (como
   se hizo con las 3 tareas del S3) y se actualiza la tabla de arriba.
+- **Lo que espera una decisión externa** (los subdominios, `infra#259`) no
+  entra en un sprint: se queda en «Fuera de alcance (post-entrega)» con
+  `scope:deferred` hasta que la decisión esté tomada. Lo mismo con la PWA
+  (`front#131`): es trabajo real, con su propia rama y su propio ciclo, pero
+  fuera del MVP del 10-dic.
