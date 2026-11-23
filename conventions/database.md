@@ -101,28 +101,36 @@ cambio de schema normal.
 
 ## Tablas
 
-Las 10 tablas del schema actual:
+Las **17 tablas** del schema vigente en `01-init.sql`:
 
 | Tabla | Propósito |
 | --- | --- |
-| `users` | Cuentas, hash Argon2id (`password`), racha, `locale` y soft delete |
-| `user_settings` | Preferencias por usuario: idiomas, cambio anual y categorías elegidas |
-| `admins` | Membresía de administrador (tabla aparte, no una columna en `users`) |
-| `auth_access_tokens` | Refresh tokens persistidos con hash |
-| `auth_email_tokens` | Tokens de un solo uso: confirmar correo y restablecer contraseña |
-| `readings` | Lecturas generadas, estado y columnas legacy de evaluación |
-| `reading_explanations` | Explicaciones de palabras y glosario por lectura |
-| `prompt_logs` | Auditoría de prompts y errores del proveedor |
-| `moderated_categories` | Categorías moderadas por el proveedor de IA. **Es el catálogo global**: `GET /settings/categories` sirve de aquí las categorías aprobadas (las más recientes primero), así que la lista crece con el uso real |
-| `category_daily_usage` | Cuota diaria de uso por categoría |
+| `roles` | Catálogo de roles RBAC (`student`, `admin`); reemplaza a la antigua tabla `admins` |
+| `users` | Cuentas, hash Argon2id (`password`, nullable en OAuth), `role_id`, `subscription_tier`, `stripe_customer_id`, `email_verified_at`, `locale`, racha y soft delete |
+| `user_oauth_accounts` | Identidades externas OAuth/OIDC vinculadas (Google y Microsoft Entra ID) |
+| `user_settings` | Preferencias por usuario: idiomas prioritarios, créditos de cambio anual y categorías elegidas/guardadas |
+| `access_requests` | Solicitudes manuales de plan o desbloqueo de idioma cuando `ACCESS_REQUESTS_ENABLED=true` |
+| `auth_access_tokens` | Refresh tokens persistidos con hash y expiración |
+| `auth_email_tokens` | Tokens de un solo uso para confirmación de cuenta y restablecimiento de contraseña |
+| `readings` | Lecturas generadas, dificultad, idioma, idempotencia offline (`evaluation_operation_id`) y estado |
+| `reading_explanations` | Explicaciones contextuales de palabras/frases y glosario guardado por usuario |
+| `prompt_logs` | Auditoría de prompts, proveedores IA y duración |
+| `moderated_categories` | Caché global de moderación de categorías y blueprint editorial compartido |
+| `category_daily_usage` | Cuota diaria por usuario de categorías distintas evaluadas |
+| `audit_logs` | Bitácora estructurada de auditoría (`before_state`, `after_state`, `request_id`) |
+| `error_logs` | Registro centralizado de fallos HTTP 4xx/5xx y proveedores externos |
+| `billing_subscriptions` | Espejo local de suscripciones recurrentes en Stripe y resumen no sensible de tarjeta |
+| `billing_payments` | Historial e idempotencia (`fulfilled_at`) de suscripciones, facturas y `language_unlock` |
+| `billing_webhook_events` | Deduplicación atómica de webhooks Stripe por `event_id` |
 
-La CI de infra (`schema-sql`) comprueba que las 10 existan tras aplicar
-`01-init.sql` sobre una base limpia, y el job `schema-runner` prueba el
-runner de punta a punta (aplicar, reaplicar, y negarse a borrar una base con
-datos).
+La CI de infra (`schema-sql`) comprueba que el schema aplique limpio y el job
+`schema-runner` prueba el runner de punta a punta (aplicar, reaplicar y negarse
+a borrar una base con datos).
 
-> `user_preferences` y `user_selected_categories` se sustituyeron por una sola
-> tabla, `user_settings`; y `users.role` por la tabla `admins`. El detalle
+> `user_preferences` y `user_selected_categories` se sustituyeron por `user_settings`,
+> `categories` relacional por `moderated_categories`, y la antigua tabla `admins`
+> por `roles` referenciada desde `users.role_id`. El detalle campo por campo vive
+> en [`architecture/data-model.md`](../architecture/data-model.md).
 > esta en [`architecture/data-model.md`](../architecture/data-model.md).
 
 Detalle de columnas, tipos y relaciones en

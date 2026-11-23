@@ -1,44 +1,43 @@
 # Bugs conocidos
 
 > Este fichero es un **indice**, no un sitio donde se abren bugs. Dice que
-> bugs conocemos y **donde esta la explicacion de cada uno**: la
-> explicacion vive donde vive de verdad (la issue, el PR, el commit) y no se
+> bugs conocemos, su identificador **`BUG-NNN`** y **donde esta la explicacion
+> de cada uno**: la explicacion vive en la issue real de GitHub y no se
 > duplica ni se queda vieja.
 >
 > **Se regenera solo**: `.github/workflows/bugs-index.yml` lo reescribe cada
-> lunes y abre un PR si algo cambio. Para reportar o corregir un bug, edita
-> la issue: no esta tabla.
+> lunes (o bajo demanda con `workflow_dispatch`) y abre un PR si algo cambio.
+> Para reportar un bug nuevo, abre la issue con la plantilla `bug.yml` en el
+> repositorio correspondiente y referencia el caso de [`QA-PRUEBAS.md`](./QA-PRUEBAS.md).
 
 ## Como se lee
 
 | Columna | Que significa |
 | --- | --- |
-| `#` | El issue, con su repo: `back#45` es `dolynation-atl-back#45`. |
-| Que es | El titulo del issue. |
-| Donde esta la explicacion | El enlace al issue, que es donde esta el detalle. |
-| Sprint | El milestone en el que vive (si tiene). |
-| Desde | Cuando se abrio. |
+| `ID` | Identificador unico y estable (`BUG-001`...) asignado por orden cronologico (o tomado de `[BUG-NNN]` en el titulo). |
+| `Issue` | Enlace corto a la issue en su repo: [`back#134`](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/134). |
+| `Severidad` | Impacto (`Crítica`, `Alta`, `Media`, `Baja`) leido del cuerpo de la plantilla. |
+| `Entorno` | Ambiente reportado (`dev`, `staging`, `prod`, `local`). |
+| `Que es` | Titulo de la issue. |
+| `Sprint` | Milestone asignado (si tiene). |
+| `Desde` | Fecha de apertura (`YYYY-MM-DD`). |
 
 ## Abiertos
 
-| # | Que es | Donde esta la explicacion | Sprint | Desde |
-| --- | --- | --- | --- | --- |
-| `back#9` | Servicio de caché para respuestas de lectura con parámetros equivalentes (RNF-04) | [enlace](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/9) | Sprint 4: Vocabulario, TTS, evaluación y progreso | 2026-09-28 |
-| `infra#9` | Auditoría de seguridad: dependencias, secretos y protección de ramas | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/9) | Sprint 5: Calidad, integración y release v1.0.0 | 2026-10-12 |
-| `back#21` | Manejo de errores, timeouts y modo degradado del proveedor IA (implementación) | [enlace](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/21) | Sprint 4: Vocabulario, TTS, evaluación y progreso | 2026-10-12 |
-| `back#45` | Protección contra prompt injection en generación y evaluación | [enlace](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/45) | Sprint 4: Vocabulario, TTS, evaluación y progreso | 2026-10-19 |
-| `infra#25` | Test de paridad entre el schema de Drizzle y el SQL de PostgreSQL | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/25) | Sprint 5: Calidad, integración y release v1.0.0 | 2026-10-19 |
-| `infra#26` | Endurecer docker-compose.prod.yml: red interna, healthchecks, proxy TLS y límites | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/26) | Sprint 4: Vocabulario, TTS, evaluación y progreso | 2026-10-19 |
+| ID | Issue | Severidad | Entorno | Que es | Sprint | Desde |
+| --- | --- | --- | --- | --- | --- | --- |
+| `BUG-007` | [`front#172`](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/172) | Alta | dev local / staging | [bug] No se muestran los precios de los paquetes Dolly Plus y Dolly Pro en la selección de plan | — | 2026-11-23 |
 
 ## Cerrados
 
-| # | Que era | Donde esta la explicacion | Sprint | Desde |
-| --- | --- | --- | --- | --- |
-| `infra#166` | [bug] El schema nunca se aplicaba a los ambientes existentes: 500 en /auth/register y /auth/login | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/166) | — | 2026-11-16 |
-| `infra#167` | [bug] Dos juegos de credenciales para la misma base: el backend no podia conectarse (503) | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/167) | — | 2026-11-16 |
-| `infra#168` | [bug] El smoke test comprobaba un contrato viejo: el deploy podia salir verde con el contrato roto | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/168) | — | 2026-11-16 |
-| `front#100` | [bug] El build de imagenes se colgaba 3 horas y dejaba el repositorio sin imagen publicada | [enlace](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/100) | — | 2026-11-16 |
-| `back#134` | [bug] El catalogo de categorias se servia vacio: el selector de la UI nunca tenia nada que ofrecer | [enlace](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/134) | — | 2026-11-16 |
+| ID | Issue | Severidad | Entorno | Que es | Sprint | Desde |
+| --- | --- | --- | --- | --- | --- | --- |
+| `BUG-001` | [`infra#166`](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/166) | — | — | [bug] El schema nunca se aplicaba a los ambientes existentes: 500 en /auth/register y /auth/login | Sprint 2: Fundamentos: autenticación, perfil y base del frontend | 2026-11-16 |
+| `BUG-002` | [`infra#167`](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/167) | — | — | [bug] Dos juegos de credenciales para la misma base: el backend no podia conectarse (503) | Sprint 2: Fundamentos: autenticación, perfil y base del frontend | 2026-11-16 |
+| `BUG-003` | [`infra#168`](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/168) | — | — | [bug] El smoke test comprobaba un contrato viejo: el deploy podia salir verde con el contrato roto | Sprint 2: Fundamentos: autenticación, perfil y base del frontend | 2026-11-16 |
+| `BUG-004` | [`front#100`](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/100) | — | — | [bug] El build de imagenes se colgaba 3 horas y dejaba el repositorio sin imagen publicada | Sprint 2: Fundamentos: autenticación, perfil y base del frontend | 2026-11-16 |
+| `BUG-005` | [`back#134`](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/134) | — | — | [bug] El catalogo de categorias se servia vacio: el selector de la UI nunca tenia nada que ofrecer | Sprint 2: Fundamentos: autenticación, perfil y base del frontend | 2026-11-16 |
+| `BUG-006` | [`back#168`](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/168) | — | — | Login con Google permite tomar cuentas creadas por otro y los correos distinguen mayúsculas | Sprint 4: Vocabulario, TTS, evaluación y progreso | 2026-11-22 |
 
 ## Hallazgos de auditoria sin issue propia
 
@@ -47,22 +46,22 @@ de la auditoria que los detecto, con su checklist.
 
 | # | Que es | Donde esta la explicacion | Sprint | Desde |
 | --- | --- | --- | --- | --- |
-| `back#45` | Protección contra prompt injection en generación y evaluación | [enlace](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/45) | Sprint 4: Vocabulario, TTS, evaluación y progreso | 2026-10-19 |
-| `back#44` | Endpoint de TTS: audio corto de palabra o frase seleccionada | [enlace](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/44) | Sprint 4: Vocabulario, TTS, evaluación y progreso | 2026-10-19 |
-| `infra#26` | Endurecer docker-compose.prod.yml: red interna, healthchecks, proxy TLS y límites | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/26) | Sprint 4: Vocabulario, TTS, evaluación y progreso | 2026-10-19 |
-| `infra#25` | Test de paridad entre el schema de Drizzle y el SQL de PostgreSQL | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/25) | Sprint 5: Calidad, integración y release v1.0.0 | 2026-10-19 |
-| `infra#21` | Migración S3: evaluaciones y vocabulario contextual | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/21) | Sprint 4: Vocabulario, TTS, evaluación y progreso | 2026-10-19 |
 | `infra#20` | Migración S2: preferencias, categorías, idioma y caché de lecturas | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/20) | Sprint 2: Fundamentos: autenticación, perfil y base del frontend | 2026-10-19 |
+| `infra#21` | Migración S3: evaluaciones y vocabulario contextual | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/21) | Sprint 4: Vocabulario, TTS, evaluación y progreso | 2026-10-19 |
+| `back#44` | Endpoint de TTS: audio corto de palabra o frase seleccionada | [enlace](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/44) | Sprint 4: Vocabulario, TTS, evaluación y progreso | 2026-10-19 |
+| `back#45` | Protección contra prompt injection en generación y evaluación | [enlace](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/45) | Sprint 4: Vocabulario, TTS, evaluación y progreso | 2026-10-19 |
+| `infra#25` | Test de paridad entre el schema de Drizzle y el SQL de PostgreSQL | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/25) | Sprint 5: Calidad, integración y release v1.0.0 | 2026-10-19 |
+| `infra#26` | Endurecer docker-compose.prod.yml: red interna, healthchecks, proxy TLS y límites | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/26) | Sprint 4: Vocabulario, TTS, evaluación y progreso | 2026-10-19 |
 
-## Lo que todavia no tiene sitio
+## Observabilidad de errores en runtime
 
-Los errores que pasan en runtime y nadie reporta: viven en `error_logs` y
-`audit_logs` de la base de datos, y **no hay ningun sitio donde mirarlos**.
-No es un bug conocido (nadie lo ha descrito), pero es un agujero: si un
-error pasa en produccion, se descubre al mirarlo.
-
-Cuando se defina, este apartado es el sitio: una entrada por cada error
-recurrente, con su explicacion y el issue que lo corrige.
+Los errores que ocurren en tiempo de ejecucion (HTTP 4xx/5xx y fallos de
+proveedores de IA, SMTP o Stripe) se registran en las tablas `error_logs` y
+`audit_logs` y pueden inspeccionarse desde el panel de administracion (`/admin`)
+y los endpoints `/api/v1/admin/logs/errors`, `/api/v1/admin/logs/audit` y
+`/api/v1/admin/logs/trace/:requestId`. Cuando uno revele un defecto
+reproducible, abre su issue con la plantilla `bug.yml` para que reciba un
+`BUG-NNN` en este indice.
 
 ## El modulo de pagos
 

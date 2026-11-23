@@ -6,70 +6,76 @@ servidor hasta que vuelve la respuesta.
 ## Vista de módulos
 
 ```
-                  ┌──────────────────────────────────┐
-                  │          Bootstrap (main.ts)      │
-                  │  helmet, ValidationPipe, Scalar  │
-                  └─────────────────┬────────────────┘
-                                    │
-                  ┌─────────────────▼────────────────┐
-                  │           AppModule              │
-                  │  ConfigModule + LoggerModule     │
-                  │  + DatabaseModule (Global)       │
-                  │  + CommonModule (Global)         │
-                  └─────────────────┬────────────────┘
-                                    │
-        ┌───────────┬───────────┬───┴────────┬────────────┬───────────┐
-        ▼           ▼           ▼            ▼            ▼           ▼
-   ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐
-   │  auth   │ │  users  │ │readings │ │   ia    │ │ health  │ │settings │
-   │ module  │ │ module  │ │ module  │ │ module  │ │ module  │ │history  │
-   │         │ │         │ │         │ │         │ │         │ │admin    │
-   └────┬────┘ └────┬────┘ └────┬────┘ └────┬────┘ └────┬────┘ └─────────┘
-        │           │           │           │           │
-        └───────────┴───────────┴─────┬─────┴───────────┘
-                                     │
-                       ┌─────────────▼──────────────┐
-                       │  Drizzle ORM (PostgreSQL)  │
-                       │  + AI providers            │
-                       │  (MiniMax-M3)               │
-                       └────────────────────────────┘
+                  ┌─────────────────────────────────────────┐
+                  │           Bootstrap (main.ts)           │
+                  │  helmet, CORS, rawBody, ValidationPipe  │
+                  └────────────────────┬────────────────────┘
+                                       │
+                  ┌────────────────────▼────────────────────┐
+                  │                AppModule                │
+                  │  ConfigModule (Zod) · Schedule · Logger │
+                  │  DatabaseModule · CommonModule (Global) │
+                  └────────────────────┬────────────────────┘
+                                       │
+   ┌───────────────┬───────────┬───────┴───┬───────────────┬──────────────┐
+   ▼               ▼           ▼           ▼               ▼              ▼
+┌──────┐     ┌───────────┐ ┌────────┐ ┌─────────┐   ┌────────────┐  ┌──────────┐
+│ auth │     │ readings  │ │billing │ │security │   │  settings  │  │  admin   │
+│oauth │     │evaluation │ │subscr. │ │mail     │   │  history   │  │logs/audit│
+└──┬───┘     └─────┬─────┘ └───┬────┘ └────┬────┘   └──────┬─────┘  └────┬─────┘
+   │               │           │           │               │             │
+   └───────────────┴───────────┴───────────┴───────────────┴─────────────┘
+                                       │
+                ┌──────────────────────▼──────────────────────┐
+                │            PostgreSQL (Drizzle)             │
+                │  Google/MiniMax IA · OAuth · Stripe · Brevo │
+                └─────────────────────────────────────────────┘
 ```
 
-`CommonModule` registra tres providers globales (en
-[`src/common/common.module.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/common.module.ts)):
+`CommonModule` registra filtros, interceptores y cuatro guards globales en
+[`src/common/common.module.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/common.module.ts):
 
-- `APP_FILTER` → `AllExceptionsFilter` (envelope de errores)
-- `APP_INTERCEPTOR` → `LoggingInterceptor` (log de cada request exitoso)
-- `APP_GUARD` → `JwtAuthGuard` (auth opt-in vía `@Public()`)
+- `APP_FILTER` → `AllExceptionsFilter` (envelope de errores + `error_logs`)
+- `APP_INTERCEPTOR` → `LoggingInterceptor` (log HTTP estructurado)
+- `APP_GUARD` → `JwtAuthGuard` (auth opt-out vía `@Public()`)
+- `APP_GUARD` → `SubscriptionGuard` (requiere plan salvo `@Public()` o `@AllowWithoutSubscription()`)
+- `APP_GUARD` → `IpRateLimitGuard` (rate limit vía `@RateLimitByIp(...)`)
+- `APP_GUARD` → `CaptchaGuard` (Cloudflare Turnstile vía `@RequireCaptcha(...)`)
 
 ## Estructura de directorios del backend
 
 ```
 src/
-├── main.ts                          # Bootstrap (helmet, pipes, Scalar)
+├── main.ts                          # Bootstrap (helmet, CORS, rawBody, Scalar)
 ├── app.module.ts                    # Composition root
 ├── config/                          # env.config.ts, env.validation.ts (Zod)
 ├── common/                          # Concerns transversales
-│   ├── decorators/                  # @Public(), @CurrentUser()
+│   ├── decorators/                  # @Public(), @AllowWithoutSubscription(), @CurrentUser(), @AdminOnly()
 │   ├── errors/                      # AllExceptionsFilter, ErrorCode, AppHttpException
-│   ├── guards/                      # JwtAuthGuard
+│   ├── guards/                      # JwtAuthGuard, SubscriptionGuard
 │   ├── interceptors/                # LoggingInterceptor
 │   └── types/                       # ApiResponse, ApiSuccessEnvelopeDto, envelope decorators
 ├── database/                        # @Global con Drizzle
 │   └── drizzle/                     # schema.ts, relations.ts, types.ts
-└── modules/
-    ├── auth/                        # register, login, refresh, /me, logout
-    ├── users/                       # /api/v1/user/streak
-    ├── readings/                    # /readings (generar, evaluar, explicar, TTS)
-    │   ├── prompt-generation/       # Subdomain: catalog, prompt-builder
-    │   ├── prompt-logs/             # Subdomain: audit de prompts
-    │   └── (planificado) cache/     # S2: caché por prompt_hash
-    ├── settings/                    # (S2) /settings/language, /settings/categories
-    ├── history/                     # (S4) /history, /history/scores
-    ├── admin/                       # (S4) /admin/categories, /admin/users
-    ├── ia/                          # /ia/chat (passthrough al provider activo)
-    │   └── providers/               # MiniMax-M3.provider, ai-provider.factory, interfaces
-    └── health/                      # /health/live, /health/ready (Terminus)
+└── modules/                         # 18 módulos de negocio e integración
+    ├── access-requests/             # Solicitudes manuales de plan o desbloqueo de idioma
+    ├── admin/                       # Panel admin, usuarios, solicitudes y consultas de logs (+ AdminGuard)
+    ├── auth/                        # register, login, refresh, logout, verify-email + oauth/ (Google y Microsoft)
+    ├── billing/                     # Stripe Checkout/Portal, PaymentSheet, webhooks e historial
+    ├── content/                     # Catálogos y recursos compartidos
+    ├── evaluation/                  # Evaluación PNL de comprensión lectora
+    ├── health/                      # /health/live, /health/ready (Terminus)
+    ├── history/                     # Historial de lecturas y puntajes
+    ├── ia/                          # Adaptadores Gemini / MiniMax y selección de proveedor
+    ├── logs/                        # AuditLogService, ErrorLogService y RequestContextMiddleware
+    ├── mail/                        # Brevo SMTP y plantillas multi-idioma
+    ├── moderation/                  # Moderación multi-capa de categorías (regex + IA + caché)
+    ├── readings/                    # Lecturas, explicaciones de vocabulario, glosario y prompt-logs
+    ├── security/                    # CaptchaGuard (Turnstile) y IpRateLimitGuard
+    ├── settings/                    # Idiomas, categorías y cambio anual / créditos
+    ├── subscriptions/               # Reglas y cuotas por plan (Dolly, Dolly Plus, Dolly Pro)
+    ├── users/                       # Perfil, racha diaria y preferencias de usuario
+    └── version/                     # Metadatos de versión y build (`GET /api/v1/version`)
 ```
 
 ## Ciclo de vida de un request (happy path)
@@ -121,22 +127,17 @@ src/
 - **Envelopes via decorador** (`ApiOkResponseOf`) — un solo lugar para
   cambiar la forma de todas las respuestas en Scalar.
 
-## Módulos actuales y planificados
+## Estado por módulos (`v0.15.0`)
 
-| Módulo | Estado | Issue |
+| Grupo de módulos | Estado | Alcance |
 | --- | --- | --- |
-| `auth`, `users`, `readings`, `ia`, `health` | Implementado | — |
-| `settings` (preferencias e idioma) | Planificado S2 | `back#8` |
-| caché de lecturas | Planificado S2 | `back#9` |
-| evaluación de resumen y vocabulario/TTS | Planificado S3 (dentro de `readings`) | `back#11`, `back#13` |
-| `history` | Planificado S4 | `back#16` |
-| `admin` | Planificado S4 | `back#17` |
+| `auth` (incluye `oauth/`), `users`, `settings`, `security`, `mail` | Implementado | Registro, verificación SMTP, JWT + refresh BFF, Google y Microsoft Entra ID OAuth, Turnstile y rate limit |
+| `readings`, `evaluation`, `history`, `moderation`, `ia`, `content` | Implementado | Generación y evaluación con Gemini/MiniMax, moderación por capas, glosario (`reading_explanations`), historial y racha |
+| `billing`, `subscriptions`, `access-requests` | Implementado | Planes `dolly`/`dolly_plus`/`dolly_pro`, Stripe Checkout/Portal + webhooks e idempotencia, modo manual |
+| `admin`, `logs`, `health`, `version` | Implementado | Panel administrativo, `audit_logs`, `error_logs`, traza por `requestId` y sondas Terminus |
+| TTS de palabra/frase y caché por `prompt_hash` | Pendiente | [`back#44`](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/44), [`back#9`](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/9) |
 
 ## Próximos pasos arquitecturales (ideas)
 
-- Extraer `ia/` en un módulo de infraestructura para que
-  `readings/` no importe providers directamente.
-- Mover la lógica de auth a un módulo compartido si se añade un segundo
-  servicio que necesite JWT.
-- Introducir un `cache.module.ts` cuando el catálogo de prompts esté
-  lo suficientemente estable como para cachear.
+- Extraer puertos de dominio entre `readings/` e `ia/` si aumenta el número de proveedores externos.
+- Evaluar un `cache.module.ts` compartido para `prompt_hash` (`back#9`) y locks distribuidos (`back#150` `M-4`) si el backend escala a múltiples réplicas.

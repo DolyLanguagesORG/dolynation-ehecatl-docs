@@ -1,4 +1,4 @@
-![DolyNation](assets/logo-dolynation.png)
+![DolyNation](../assets/logos/logo-dolynation-reducido.png)
 
 **Ingeniería en Desarrollo y Gestión de Software — 9° A TN**
 

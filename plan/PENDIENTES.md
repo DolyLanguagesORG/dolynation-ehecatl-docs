@@ -88,34 +88,32 @@ evaluación completo) y `back#19` (desbloquea `back#20`).
 
 ---
 
-## 2. Fuera de la entrega (pero visibles)
+## 2. Fuera de la entrega y elementos recién integrados
 
-Estas ideas **no están en el anteproyecto** ni en los 5 sprints. No es un
-olvido: son decisiones de producto que no se han tomado. Se mantienen
-abiertas, con la etiqueta `scope:deferred` y en el milestone «Fuera de
-alcance (post-entrega)» (cierre el 30-ene-2027).
+### Completado recientemente (en fase de QA `v0.15.0`)
+
+Los siguientes bloques salieron del estado pendiente y ya están integrados para
+validación en [`QA-PRUEBAS.md`](./QA-PRUEBAS.md):
+
+| Issue / bloque | Qué quedó listo | Estado actual |
+| --- | --- | --- |
+| `back#143` / `infra#196` | Módulo de pagos y suscripciones con **Stripe** (UI Elements, Checkout, Portal y webhooks) | En QA (`staging`, Test Mode; Live tras lanzamiento) |
+| `back#144` | Protección anti-bot con **Cloudflare Turnstile** + rate limit por IP y `CORS_ALLOWED_ORIGINS` | Desplegado en `dev`; pendiente de QA en `staging` |
+| `infra#259` | Unificación de subdominios (`dev`/`devplay`/`devapi`, `staging`/`stagingplay`, `dolynation.app`/`play`) + Origin Certificate | Instalado en `vaneserver` con Cloudflare Full (strict) |
+| `back#185` | Inicio de sesión y registro con **Microsoft Entra ID** (`common`) + Google OAuth | Activo en `dev`; próximo deploy lo lleva a `staging` |
+| Brevo SMTP | Remitente `no-reply@dolynation.app` y credenciales por entorno | Activo en `dev`; listo en `staging` y `prod` |
+
+### Fuera de la entrega (post-entrega)
+
+Estas ideas **no están en el anteproyecto** ni en los 5 sprints. Se mantienen
+abiertas con la etiqueta `scope:deferred` y en el milestone «Fuera de alcance
+(post-entrega)» (cierre el 30-ene-2027).
 
 | Issue | Repo | Qué es | Lo que hay que decidir |
 | --- | --- | --- | --- |
-| `back#143` | backend | **Módulo de pagos con Stripe** | Proveedor y países, si el estado se sincroniza por webhook, y qué pasa si el cobro llega pero el webhook no |
-| `back#144` | backend | **reCAPTCHA** (o equivalente) anti-bot en el registro | Proveedor, si la clave va en el frontend y cómo la valida el backend, y si aplica también a los endpoints de coste |
 | `front#114` | frontend | **Tutorial y ayudas dentro de la app** | Dónde vive, si son textos estáticos (4 idiomas) o dinámicos según el estado del usuario, y si se mide |
 | `front#115` | frontend | **Módulo de amistades** | Si es un módulo completo (contactos, invitaciones, feed) o solo "compartir una lectura con un enlace"; modelo de privacidad y si hace falta moderación |
-
-> `back#144` (el captcha) tiene un motivo extra para entrar pronto: el tier
-> gratis de Google da **20 lecturas al día**. Un bot que se registre y
-> genere lecturas se come la cuota del proyecto entero, y el síntoma (un 503
-> raro) no dice por qué.
-
-### Lo que ya está construido y espera el dominio (o el contenido)
-
-Hay trabajo **hecho y verificado** que espera una decisión o un contenido.
-No son ideas: son piezas que funcionan y a las que solo les falta lo último.
-
-| Issue | Repo | Qué es | Qué falta |
-| --- | --- | --- | --- |
-| `infra#259` | infra | **Los subdominios públicos y la publicación de la app en `play.`** | Decidir los nombres (`play`, `staging`, `www`). Después, DNS + certificado de origen + `server_name` del proxy + `FRONTEND_BASE_URL` + los redirect URIs del OAuth + los hostnames del captcha. **Todo a la vez**, o el login se rompe. El certificado lo emite Cloudflare **a mano** (su API de Origin CA necesita otra clave) |
-| `front#131` | frontend | **La PWA de verdad: la app funciona sin conexión y sincroniza al volver** | Es la v2 del producto: el modo offline de Duolingo (leer y responder la historia sin red; al volver, se sube lo que hiciste). Se trabaja en su **propia rama**, protegida, sin tocar `develop`. El plan completo está en [`PLAN-PWA-OFFLINE.md`](./PLAN-PWA-OFFLINE.md) |
+| `front#131` | frontend | **PWA y modo offline (`PLAN-PWA-OFFLINE.md`)** | Lectura y respuesta sin conexión sincronizada al volver, trabajada en su propia rama [`PLAN-PWA-OFFLINE.md`](./PLAN-PWA-OFFLINE.md) |
 
 > **La landing ya tiene su ciclo propio** (manifiesto aparte, candidata
 > `site-rc-*`, smoke test del sitio y despliegue que no toca la app) y
@@ -138,7 +136,8 @@ tienen issue propia todavía: cuando una pase a trabajarse, se le crea.
 
 | Qué | Dónde | Con qué se filtra |
 | --- | --- | --- |
-| **Bugs** | **Issues** con la etiqueta `bug` y su severidad. El **índice** está en [`BUGS.md`](./BUGS.md) (se regenera solo cada lunes) | Plantilla `bug.yml` (descripción, pasos, esperado, actual, logs, severidad, entorno) |
+| **Pruebas QA (`v0.15.0`)** | [`QA-PRUEBAS.md`](./QA-PRUEBAS.md) — casos `TC-001`–`TC-020` para `dev` (VPN) y `staging` | Caso citado en cada issue `bug` |
+| **Bugs** | **Issues** con la etiqueta `bug` y su severidad. El **índice** con IDs **`BUG-001`...** está en [`BUGS.md`](./BUGS.md) | Plantilla `bug.yml` (descripción, pasos, esperado, actual, logs, severidad, entorno) |
 | **Trabajo por hacer** | **Issues** con `sprint-N` y `area:*`, en su milestone | El Project (Kanban) y los milestones |
 | **Decisiones que faltan** | **Issues** con `needs:decision` | [`decisions/PENDIENTES.md`](../decisions/PENDIENTES.md) los explica |
 | **Decisiones ya tomadas** | [`decisions/README.md`](../decisions/README.md) (ADR) | — |

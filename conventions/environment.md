@@ -301,6 +301,25 @@ arranca** y muestra el error exacto.
 - **Imagen inmutable del frontend:** el frontend (`tonatiuh-front`) nunca compila los Client IDs en `NEXT_PUBLIC_*`; consulta en runtime `GET /api/v1/auth/oauth/providers` y ejecuta el flujo PKCE a través de sus Route Handlers BFF (`/api/auth/oauth/[provider]` y `/callback`).
 - **Bloqueo de cuentas `admin`:** el acceso y la auto-vinculación vía OAuth (Google o Microsoft) están bloqueados para cuentas con rol `admin` (`AUTH_OAUTH_ADMIN_FORBIDDEN`); los administradores siguen autenticándose exclusivamente con correo y contraseña.
 
+## Protección anti-bot (Cloudflare Turnstile), rate limit y CORS
+
+| Variable | Default | Propósito |
+| --- | --- | --- |
+| `CAPTCHA_PROVIDER` | `disabled` | `disabled` en pruebas locales/CI; `turnstile` exige `CAPTCHA_SITE_KEY` y `CAPTCHA_SECRET_KEY`. |
+| `CAPTCHA_SITE_KEY` | — | Clave pública de Turnstile expuesta en `GET /api/v1/security/captcha/config`. |
+| `CAPTCHA_SECRET_KEY` | — | Clave secreta de Turnstile validada solo en el backend (`secrets`). |
+| `CAPTCHA_APPEARANCE` | `interaction-only` | Modo de visualización (`interaction-only`, `execute` o `always`). |
+| `CAPTCHA_ALLOWED_HOSTNAMES` | — | Lista separada por comas de hostnames válidos del reto (ej. `devplay.dolynation.app,localhost,127.0.0.1`). |
+| `CAPTCHA_VERIFY_URL` | `https://challenges.cloudflare.com/turnstile/v0/siteverify` | Endpoint oficial de verificación server-side. |
+| `CAPTCHA_TIMEOUT_MS` | `5000` | Timeout de verificación hacia Cloudflare en milisegundos. |
+| `CAPTCHA_FAIL_OPEN` | `false` | `false` rechaza si Cloudflare falla o no responde; evita saltos silenciosos en producción. |
+| `IP_RATE_LIMIT_ENABLED` | vacío | Vacío activa el rate limit en `development`/`production` y lo desactiva en `test`. |
+| `CORS_ALLOWED_ORIGINS` | — | Lista separada por comas de orígenes web autorizados; vacío aplica `origin: true`. |
+
+> **Pruebas locales sin dominio real:** pueden usarse las Testing Keys oficiales
+> de Cloudflare (`1x00000000000000000000AA` / `1x0000000000000000000000000000000AA`)
+> o `CAPTCHA_PROVIDER=disabled`.
+
 ## Cómo arrancar en local
 
 ```bash
