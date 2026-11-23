@@ -34,11 +34,12 @@
 
 | # | Que era | Donde esta la explicacion | Sprint | Desde |
 | --- | --- | --- | --- | --- |
-| `infra#166` | [bug] El schema nunca se aplicaba a los ambientes existentes: 500 en /auth/register y /auth/login | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/166) | — | 2026-11-16 |
-| `infra#167` | [bug] Dos juegos de credenciales para la misma base: el backend no podia conectarse (503) | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/167) | — | 2026-11-16 |
-| `infra#168` | [bug] El smoke test comprobaba un contrato viejo: el deploy podia salir verde con el contrato roto | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/168) | — | 2026-11-16 |
-| `front#100` | [bug] El build de imagenes se colgaba 3 horas y dejaba el repositorio sin imagen publicada | [enlace](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/100) | — | 2026-11-16 |
-| `back#134` | [bug] El catalogo de categorias se servia vacio: el selector de la UI nunca tenia nada que ofrecer | [enlace](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/134) | — | 2026-11-16 |
+| `infra#166` | [bug] El schema nunca se aplicaba a los ambientes existentes: 500 en /auth/register y /auth/login | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/166) | Sprint 2: Fundamentos: autenticación, perfil y base del frontend | 2026-11-16 |
+| `infra#167` | [bug] Dos juegos de credenciales para la misma base: el backend no podia conectarse (503) | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/167) | Sprint 2: Fundamentos: autenticación, perfil y base del frontend | 2026-11-16 |
+| `infra#168` | [bug] El smoke test comprobaba un contrato viejo: el deploy podia salir verde con el contrato roto | [enlace](https://github.com/DolyLanguagesORG/dolynation-tlalli-infra/issues/168) | Sprint 2: Fundamentos: autenticación, perfil y base del frontend | 2026-11-16 |
+| `front#100` | [bug] El build de imagenes se colgaba 3 horas y dejaba el repositorio sin imagen publicada | [enlace](https://github.com/DolyLanguagesORG/dolynation-tonatiuh-front/issues/100) | Sprint 2: Fundamentos: autenticación, perfil y base del frontend | 2026-11-16 |
+| `back#134` | [bug] El catalogo de categorias se servia vacio: el selector de la UI nunca tenia nada que ofrecer | [enlace](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/134) | Sprint 2: Fundamentos: autenticación, perfil y base del frontend | 2026-11-16 |
+| `back#168` | Login con Google permite tomar cuentas creadas por otro y los correos distinguen mayúsculas | [enlace](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/168) | Sprint 4: Vocabulario, TTS, evaluación y progreso | 2026-11-22 |
 
 ## Hallazgos de auditoria sin issue propia
 
