@@ -28,6 +28,10 @@ Política de configuración por variables de entorno. La fuente de verdad es
 | `GOOGLE_OAUTH_CLIENT_ID` | No       | string | -                     | Client ID público de Google OAuth 2.0 / OIDC      |
 | `GOOGLE_OAUTH_CLIENT_SECRET` | No   | string | -                     | Client Secret privado de Google OAuth 2.0         |
 | `GOOGLE_OAUTH_REDIRECT_URI` | No    | url    | `${FRONTEND_BASE_URL}/api/auth/oauth/google/callback` | URI de callback autorizada (opcional si `FRONTEND_BASE_URL` coincide) |
+| `MICROSOFT_OAUTH_CLIENT_ID` | No    | string | -                     | Application (client) ID de Microsoft Entra ID v2.0 |
+| `MICROSOFT_OAUTH_CLIENT_SECRET` | No | string | -                    | Client Secret (Value) de Microsoft Entra ID (solo backend) |
+| `MICROSOFT_OAUTH_TENANT` | No       | string | `common`              | Política de tenant Entra ID: `common`, `organizations`, `consumers` o Tenant UUID |
+| `MICROSOFT_OAUTH_REDIRECT_URI` | No | url    | `${FRONTEND_BASE_URL}/api/auth/oauth/microsoft/callback` | Redirect URI registrada en Entra ID (opcional si `FRONTEND_BASE_URL` coincide) |
 | `AI_DEFAULT_PROVIDER`   | No        | enum   | `minimax`             | `minimax` \| `google` (los dos registrados en la factoría) |
 | `MINIMAX_API_KEY`       | Cond.*    | string | -                     | API key de MiniMax (*si provider es minimax)        |
 | `MINIMAX_MODEL`         | No        | string | `MiniMax-M2.7`        | Modelo principal (con fallback a `MiniMax-M3`)    |
@@ -274,23 +278,28 @@ arranca** y muestra el error exacto.
 - **Pruebas locales con webhooks reales:** usar `stripe listen --forward-to http://localhost:3333/api/v1/billing/webhook` (sin abrir puertos ni exponer DNS público).
 - **`staging`:** Nginx enruta `location = /api/v1/billing/webhook` directo al backend (sin pasar por el BFF de Next.js), validando la firma criptográfica `stripe-signature` con `rawBody: true` en lugar de depender de listas de IPs detrás de Cloudflare.
 
-## Autenticación externa OAuth 2.0 / OIDC (Google)
+## Autenticación externa OAuth 2.0 / OIDC (Google y Microsoft Entra ID)
 
 | Variable | Tipo en GitHub | Default | Propósito |
 | --- | --- | --- | --- |
 | `GOOGLE_OAUTH_CLIENT_ID` | `vars` | — | Client ID de Google OAuth 2.0 (Web Application). Si falta junto con el secret, Google Sign-In permanece oculto y deshabilitado. |
 | `GOOGLE_OAUTH_CLIENT_SECRET` | `secrets` | — | Client Secret de Google OAuth 2.0 (solo vive en el backend). |
 | `GOOGLE_OAUTH_REDIRECT_URI` | `vars` | `${FRONTEND_BASE_URL}/api/auth/oauth/google/callback` | URI exacta registrada en Google Cloud Console. Si se omite, el backend la deriva automáticamente de `FRONTEND_BASE_URL`. |
+| `MICROSOFT_OAUTH_CLIENT_ID` | `vars` | — | Application (client) ID de Azure App Registration (Microsoft Entra ID v2.0). |
+| `MICROSOFT_OAUTH_CLIENT_SECRET` | `secrets` | — | Client Secret (**Value**, no Secret ID) de Microsoft Entra ID (solo backend). Considerar rotación antes de su vencimiento (máximo 24 meses). |
+| `MICROSOFT_OAUTH_TENANT` | `vars` | `common` | Política de tenant OIDC v2.0: `common` (cualquier cuenta Microsoft escolar, laboral o personal, recomendado para apertura), `organizations` (solo escuelas/empresas), `consumers` (solo cuentas personales) o UUID específico. Cambiarlo no requiere modificar código. |
+| `MICROSOFT_OAUTH_REDIRECT_URI` | `vars` | `${FRONTEND_BASE_URL}/api/auth/oauth/microsoft/callback` | Redirect URI exacta de plataforma **Web** registrada en Entra ID. |
 
 ### Estrategia por ambiente, VPN y seguridad
 
-- **Dos juegos de credenciales en Google Cloud (presupuesto $0):**
-  - **No-productivo (`local`, `desarrollo`, `staging`):** comparten un OAuth Client en modo *Testing* con múltiples *Authorized redirect URIs* (`http://localhost:3000/api/auth/oauth/google/callback`, `https://devplay.dolynation.app/api/auth/oauth/google/callback`, `https://stagingplay.dolynation.app/api/auth/oauth/google/callback`).
-  - **Producción (`prod`):** usa un OAuth Client independiente para `https://play.dolynation.app/api/auth/oauth/google/callback`. `rehearsal` deja las variables vacías para no depender de dominio público en sus smoke tests.
-- **Compatibilidad con `desarrollo` tras VPN WireGuard + mTLS:** a diferencia de los webhooks entrantes de Stripe, Google OAuth funciona en `desarrollo` porque la redirección de callback pasa por el navegador del usuario (conectado por VPN) y el intercambio `code → token` + JWKS es tráfico saliente desde el backend.
-- **Imagen inmutable del frontend:** el frontend (`tonatiuh-front`) nunca compila el Client ID en `NEXT_PUBLIC_*`; consulta en runtime `GET /api/v1/auth/oauth/providers` y ejecuta el flujo PKCE a través de sus Route Handlers BFF (`/api/auth/oauth/[provider]` y `/callback`).
-- **Bloqueo de cuentas `admin`:** el acceso y la auto-vinculación vía OAuth están bloqueados para cuentas con rol `admin` (`AUTH_OAUTH_ADMIN_FORBIDDEN`); los administradores siguen autenticándose exclusivamente con correo y contraseña.
-- **Extensible a Microsoft Entra ID:** la tabla `user_oauth_accounts` y los adaptadores del backend permiten incorporar otros proveedores OIDC sin cambios de esquema.
+- **Credenciales por ambiente y proveedor:**
+  - **Entornos separados (`local`, `desarrollo`, `staging`, `prod`):** cada entorno cuenta con su propio registro por proveedor (Google OAuth Client y Azure App Registration *Multitenant + personal accounts*) con las Redirect URIs autorizadas correspondientes (`http://localhost:3000/api/auth/oauth/<provider>/callback` en local, `https://devplay.dolynation.app/api/auth/oauth/<provider>/callback` en desarrollo, `https://stagingplay.dolynation.app/api/auth/oauth/<provider>/callback` en staging y `https://play.dolynation.app/api/auth/oauth/<provider>/callback` en producción). `rehearsal` no expone dominio propio; deja Microsoft vacío y replica únicamente Google si sus smoke tests lo requieren.
+- **Microsoft Entra ID multi-tenant (`common`) y validación de claims:**
+  - En `id_token` v2.0 emitido por `/common`, `iss` contiene el `tid` específico del usuario (`https://login.microsoftonline.com/<tid>/v2.0`), nunca `/common` literal; el verificador JWKS del backend valida que `tid` sea un UUID válido, coincida con `iss` y cumpla la política de `MICROSOFT_OAUTH_TENANT`.
+  - Para cuentas escolares/organizacionales, Microsoft suele enviar el correo en `email` o en `preferred_username` sin `email_verified`; el adaptador normaliza ambos en minúsculas y rechaza tokens con `email_verified: false`, `xms_edov: 0`/`false` o UPN invitados sintéticos `#ext#`.
+- **Compatibilidad con `desarrollo` tras VPN WireGuard + mTLS:** a diferencia de los webhooks entrantes de Stripe, Google y Microsoft OAuth funcionan en `desarrollo` porque la redirección de callback pasa por el navegador del usuario (conectado por VPN) y el intercambio `code → token` + JWKS es tráfico saliente desde el backend.
+- **Imagen inmutable del frontend:** el frontend (`tonatiuh-front`) nunca compila los Client IDs en `NEXT_PUBLIC_*`; consulta en runtime `GET /api/v1/auth/oauth/providers` y ejecuta el flujo PKCE a través de sus Route Handlers BFF (`/api/auth/oauth/[provider]` y `/callback`).
+- **Bloqueo de cuentas `admin`:** el acceso y la auto-vinculación vía OAuth (Google o Microsoft) están bloqueados para cuentas con rol `admin` (`AUTH_OAUTH_ADMIN_FORBIDDEN`); los administradores siguen autenticándose exclusivamente con correo y contraseña.
 
 ## Cómo arrancar en local
 
