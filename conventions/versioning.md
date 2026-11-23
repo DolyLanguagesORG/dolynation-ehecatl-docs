@@ -160,7 +160,7 @@ cambio (nunca un push directo: `develop` está protegido).
 > `GET /api/v1/version` devuelve `appVersion` y `version` por separado.
 
 > **El sitio es un producto aparte.** La landing (`dolynation-tetl-landing`)
-> vive en otro dominio (`yacaterkos.tech` / `www`, y `play.` es la app) y
+> vive en otro dominio (`dolynation.app` / `www`, y `play.` es la app) y
 > tiene **su propia línea de releases**, con **su propio manifiesto**
 > (`versions-site.yml`):
 >
@@ -337,7 +337,7 @@ node -p "require('./package.json').version"   # en back y front
 git show v0.2.1 --no-patch
 
 # Lo que está corriendo en el servidor
-curl -s https://devapi.yacaterkos.tech/api/v1/health/live
+curl -s https://devapi.dolynation.app/api/v1/health/live
 ```
 
 La respuesta del healthcheck trae la `version` y el `commit` del build en

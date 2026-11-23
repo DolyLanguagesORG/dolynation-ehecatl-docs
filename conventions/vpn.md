@@ -109,8 +109,9 @@ Direcciones dentro de la VPN:
 
 | Servicio | Direccion |
 | --- | --- |
-| API | `https://devapi.yacaterkos.tech` |
-| Web | `https://devweb.yacaterkos.tech` |
+| API | `https://devapi.dolynation.app` |
+| Web | `https://devweb.dolynation.app` |
+| Landing | `https://devsite.dolynation.app` |
 | Objetos (S3) | `https://minios.doly.internal:50090` |
 
 ### El DNS va dentro del tunel
@@ -121,8 +122,9 @@ servicio:
 
 | Nombre | Resuelve a (dentro de la VPN) |
 | --- | --- |
-| `devapi.yacaterkos.tech` | `10.90.0.2` |
-| `devweb.yacaterkos.tech` | `10.90.0.3` |
+| `devapi.dolynation.app` | `10.90.0.2` |
+| `devweb.dolynation.app` | `10.90.0.3` |
+| `devsite.dolynation.app` | `10.90.0.5` |
 | `minios.doly.internal` | `10.90.0.4` |
 
 El resto de nombres se resuelven como siempre (el hub los reenvia).
@@ -137,8 +139,8 @@ las tres familias.
 Para comprobarlo, desde un equipo con la VPN levantada:
 
 ```bash
-dig +short devapi.yacaterkos.tech
-# debe devolver 10.90.0.2, nunca una IP de Cloudflare
+dig +short devapi.dolynation.app
+# debe devolver 10.90.0.2, nunca una IP publica
 ```
 
 ## Servicios de terceros y la VPN
@@ -246,7 +248,7 @@ Y, desde un equipo con la VPN levantada, que el nombre **no** resuelve a
 la IP publica:
 
 ```bash
-dig +short devapi.yacaterkos.tech   # 10.90.0.2
+dig +short devapi.dolynation.app   # 10.90.0.2
 ```
 
 ## Documentos relacionados

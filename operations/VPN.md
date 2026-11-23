@@ -206,16 +206,17 @@ es la Security List.
 ## Probar la VPN desde un equipo
 
 1. Importar **solo el `.conf` de WireGuard** de la persona (`wg0.conf` o
-   `wg-dev.conf`). `devapi.yacaterkos.tech` y `devweb.yacaterkos.tech`
-   usan certificado publico de Let's Encrypt y `MTLS_VERIFY=off`, asi que
-   **no** hace falta instalar `ca.crt` ni importar `.p12` en el navegador
-   (eso solo aplica si se entra directo a `minios.doly.internal:50090`).
+   `wg-dev.conf`). `devapi.dolynation.app`, `devweb.dolynation.app` y
+   `devsite.dolynation.app` usan certificado publico de Let's Encrypt y
+   `MTLS_VERIFY=off`, asi que **no** hace falta instalar `ca.crt` ni importar
+   `.p12` en el navegador (eso solo aplica si se entra directo a
+   `minios.doly.internal:50090`).
 2. Levantar la identidad. Hay dos formas en Linux (hacen lo mismo) y la
    app oficial en otros sistemas:
 
    **En Windows, macOS, Android e iOS** (app oficial de WireGuard): al
    importar el `.conf` la aplicacion aplica `DNS = 10.90.0.1` sola y
-   basta con activar el tunel para abrir `https://devweb.yacaterkos.tech`.
+   basta con activar el tunel para abrir `https://devweb.dolynation.app`.
 
    **Con NetworkManager en Linux** (el menu de red del escritorio). La
    conexion se importa una vez y luego se conecta desde el icono de red
@@ -229,7 +230,7 @@ es la Security List.
 
    Si el sistema usa `systemd-resolved`, NetworkManager tiene que ser el
    que le pase el DNS de la VPN al resolved. Si al conectar el nombre
-   `devapi.yacaterkos.tech` no resuelve a `10.90.0.2`, crear
+   `devapi.dolynation.app` no resuelve a `10.90.0.2`, crear
    `/etc/NetworkManager/conf.d/00-dns.conf`:
 
    ```ini
@@ -267,14 +268,15 @@ es la Security List.
    publica):
 
    ```bash
-   dig +short devapi.yacaterkos.tech
+   dig +short devapi.dolynation.app
    # 10.90.0.2   <- correcto
    # 104.21.x.x <- incorrecto: el trafico se saldria sin pasar por el tunel
    ```
 
-5. Abrir `https://devweb.yacaterkos.tech` o `https://devapi.yacaterkos.tech/api/v1/health/live`
-   en el navegador: debe responder con candado TLS valido de Let's Encrypt
-   sin pedir certificado de cliente (HTTP `200` en `/health/live`).
+5. Abrir `https://devweb.dolynation.app`, `https://devsite.dolynation.app` o
+   `https://devapi.dolynation.app/api/v1/health/live` en el navegador: debe
+   responder con candado TLS valido de Let's Encrypt sin pedir certificado de
+   cliente (HTTP `200` en `/health/live`).
    *(Solo `minios.doly.internal:50090` sigue exigiendo `.p12` y `ca.crt`.)*
 
 Si el paso 4 devuelve una IP publica, el config no lleva `DNS = 10.90.0.1`
@@ -282,7 +284,7 @@ o el resolutor del hub no esta levantado:
 
 ```bash
 sudo systemctl status doly-dns
-sudo dig @10.90.0.1 +short devapi.yacaterkos.tech
+sudo dig @10.90.0.1 +short devapi.dolynation.app
 ```
 
 ## Migrar el bot de GitHub Actions al puerto 59253
@@ -322,10 +324,10 @@ se queda sin desplegar por un fallo de red.
 
 ## TLS de Let's Encrypt (DNS-01) y renovacion automatica
 
-`devapi.yacaterkos.tech` y `devweb.yacaterkos.tech` usan un certificado
-unico (`doly-vpn-dev`) emitido por Let's Encrypt mediante reto DNS-01 con
-Cloudflare (cero puertos publicos abiertos) y credenciales restringidas
-en `/etc/doly-vpn/cloudflare.ini` (`600`, root).
+`devapi.dolynation.app`, `devweb.dolynation.app` y `devsite.dolynation.app`
+usan un certificado unico (`doly-vpn-dev`) emitido por Let's Encrypt mediante
+reto DNS-01 con Cloudflare (cero puertos publicos abiertos) y credenciales
+restringidas en `/etc/doly-vpn/cloudflare.ini` (`600`, root).
 
 - `certbot.timer` renueva automaticamente antes de que caduque.
 - Al renovar, el hook `/etc/letsencrypt/renewal-hooks/deploy/doly-vpn-reload.sh`
