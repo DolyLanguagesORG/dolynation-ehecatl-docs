@@ -120,7 +120,7 @@ No son ideas: son piezas que funcionan y a las que solo les falta lo último.
 > **La landing ya tiene su ciclo propio** (manifiesto aparte, candidata
 > `site-rc-*`, smoke test del sitio y despliegue que no toca la app) y
 > **funciona en desarrollo, dentro de la VPN**:
-> `https://devsite.yacaterkos.tech/`. **No se expone** hasta que haya
+> `https://devsite.dolynation.app/`. **No se expone** hasta que haya
 > subdominios (`infra#259`), y **no se corta `site-rc-*`** hasta que el
 > contenido esté aprobado.
 

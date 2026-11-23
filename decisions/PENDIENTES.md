@@ -52,9 +52,8 @@ decisión **tomada**; este archivo registra las que **están abiertas**.
   verde en los tres ambientes. **Producción no se ha desplegado nunca.**
 
   Antes de hacerlo faltan dos cosas:
-  - el `server_name` de `yacaterkos.tech` en `nginx/dolynation.conf` (el
-    dominio está reservado pero el nginx no lo sirve);
-  - y la decisión de si se despliega con ese dominio o con otro.
+  - instalar el Origin Certificate y configurar `dolynation.app` / `play.dolynation.app` en `nginx/dolynation.conf`;
+  - completar las credenciales productivas externas (OAuth, Turnstile, Stripe, SMTP).
 
 - **Qué se necesita:** autorización y el `server_name` definitivo.
 

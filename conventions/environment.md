@@ -149,7 +149,7 @@ El frontend (`dolynation-tonatiuh-front`) tiene sus propias variables, todas de
 | Variable | Repo | Ambiente | Qué es |
 | --- | --- | --- | --- |
 | `BACKEND_INTERNAL_URL` | tonatiuh-front | los 4 | URL **interna** del backend. En los 4 ambientes es `http://backend:3333/api/v1` (por la red de compose), **nunca** un dominio público |
-| `NEXT_ALLOWED_DEV_ORIGINS` | tonatiuh-front | `desarrollo` | Hosts desde los que se permite el dev server de Next. Admite comodines: `**.yacaterkos.tech` matchea cualquier subdominio (no el apex) |
+| `NEXT_ALLOWED_DEV_ORIGINS` | tonatiuh-front | `desarrollo` | Hosts desde los que se permite el dev server de Next. Admite comodines: `**.dolynation.app` matchea cualquier subdominio (no el apex) |
 
 ### Por qué `NEXT_ALLOWED_DEV_ORIGINS` existe
 
@@ -163,7 +163,7 @@ interpreta como una respuesta inválida y devuelve **520**, que el navegador
 reporta como:
 
 ```
-WebSocket connection to 'wss://devweb.yacaterkos.tech/_next/hmr' failed
+WebSocket connection to 'wss://devweb.dolynation.app/_next/hmr' failed
 ```
 
 Sin esta variable, **el HMR no funciona** en desarrollo (el sitio carga, pero
@@ -285,8 +285,8 @@ arranca** y muestra el error exacto.
 ### Estrategia por ambiente, VPN y seguridad
 
 - **Dos juegos de credenciales en Google Cloud (presupuesto $0):**
-  - **No-productivo (`local`, `desarrollo`, `staging`):** comparten un OAuth Client en modo *Testing* con múltiples *Authorized redirect URIs* (`http://localhost:3000/api/auth/oauth/google/callback`, `https://devweb.yacaterkos.tech/api/auth/oauth/google/callback`, `https://stagingweb.yacaterkos.tech/api/auth/oauth/google/callback`).
-  - **Producción (`prod`):** usa un OAuth Client independiente para `https://yacaterkos.tech/api/auth/oauth/google/callback`. `rehearsal` deja las variables vacías para no depender de dominio público en sus smoke tests.
+  - **No-productivo (`local`, `desarrollo`, `staging`):** comparten un OAuth Client en modo *Testing* con múltiples *Authorized redirect URIs* (`http://localhost:3000/api/auth/oauth/google/callback`, `https://devweb.dolynation.app/api/auth/oauth/google/callback`, `https://stagingweb.dolynation.app/api/auth/oauth/google/callback`).
+  - **Producción (`prod`):** usa un OAuth Client independiente para `https://play.dolynation.app/api/auth/oauth/google/callback`. `rehearsal` deja las variables vacías para no depender de dominio público en sus smoke tests.
 - **Compatibilidad con `desarrollo` tras VPN WireGuard + mTLS:** a diferencia de los webhooks entrantes de Stripe, Google OAuth funciona en `desarrollo` porque la redirección de callback pasa por el navegador del usuario (conectado por VPN) y el intercambio `code → token` + JWKS es tráfico saliente desde el backend.
 - **Imagen inmutable del frontend:** el frontend (`tonatiuh-front`) nunca compila el Client ID en `NEXT_PUBLIC_*`; consulta en runtime `GET /api/v1/auth/oauth/providers` y ejecuta el flujo PKCE a través de sus Route Handlers BFF (`/api/auth/oauth/[provider]` y `/callback`).
 - **Bloqueo de cuentas `admin`:** el acceso y la auto-vinculación vía OAuth están bloqueados para cuentas con rol `admin` (`AUTH_OAUTH_ADMIN_FORBIDDEN`); los administradores siguen autenticándose exclusivamente con correo y contraseña.
