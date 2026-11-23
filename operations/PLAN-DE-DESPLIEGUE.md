@@ -32,7 +32,7 @@ implementación todavía no está hecha.
 | Red de Docker | `doly-dev-net` (definida en `docker-compose.dev.yml`) |
 | Puertos | `57010` (DB), `57011` (backend), `57012` (frontend), **solo en `127.0.0.1`** |
 | Proxy | nginx en `80` (redirige) y `443` (Cloudflare) |
-| DNS | `devweb.dolynation.app` → frontend, `devapi.dolynation.app` → API, `devsite.dolynation.app` → landing (VPN) |
+| DNS | `devplay.dolynation.app` → frontend, `devapi.dolynation.app` → API, `dev.dolynation.app` → landing (VPN) |
 
 > El `compose` de desarrollo vive **solo** en `dolynation-tlalli-infra` y
 > levanta los tres contenedores a la vez. No hay un compose por repositorio:
@@ -116,9 +116,9 @@ y no depende de que nadie se acuerde.
 
 | Ambiente | Directorio | Puertos | Sale a internet |
 | --- | --- | --- | --- |
-| Desarrollo | `/srv/doly/dev` | 57010-57012 | sí (`devweb`, `devapi`) |
+| Desarrollo | `/srv/doly/dev` | 57010-57012 | sí (`devplay`, `devapi`, `dev`) |
 | Rehearsal | `/srv/doly/rehearsal` | 57040-57042 | no |
-| Staging | `/srv/doly/staging` | 57020-57022 | sí (`stagingweb`) |
+| Staging | `/srv/doly/staging` | 57020-57022 | sí (`stagingplay`, `staging`) |
 | Producción | `/srv/doly/prod` | 57030-57032 | sí (`play.dolynation.app`, `dolynation.app`, `www`) |
 
 ### Verificación del despliegue
@@ -165,9 +165,9 @@ ni la base, ni el backend, ni el frontend.
 
 | Ambiente | Host público | Notas |
 | --- | --- | --- |
-| Desarrollo | `devweb` + `devapi` + `devsite` | El front corre el **dev server** (`next dev`), así que necesita `NEXT_ALLOWED_DEV_ORIGINS` para que el websocket de HMR conecte. Los tres son **solo por VPN**: resuelven a la IP de túnel |
+| Desarrollo | `devplay` + `devapi` + `dev` | El front corre el **dev server** (`next dev`), así que necesita `NEXT_ALLOWED_DEV_ORIGINS` para que el websocket de HMR conecte. Los tres son **solo por VPN**: resuelven a la IP de túnel |
 | Rehearsal | **ninguno** | No sale a internet: se accede por puerto (`5704x`) desde el propio servidor. No hay `server_name` en el nginx |
-| Staging | `stagingweb.dolynation.app` (app) + `staging.dolynation.app` (landing) | El front corre **compilado** (`output: 'standalone'`): sin HMR, sin websocket |
+| Staging | `stagingplay.dolynation.app` (app) + `staging.dolynation.app` (landing) | El front corre **compilado** (`output: 'standalone'`): sin HMR, sin websocket |
 | Producción | `play.dolynation.app` (app) + `dolynation.app` / `www.dolynation.app` (landing) | El dominio raíz y `www` son de la **landing**; la **aplicación** va en `play.` |
 
 ### Cambiar el dominio público

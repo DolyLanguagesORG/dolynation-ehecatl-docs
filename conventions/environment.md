@@ -163,7 +163,7 @@ interpreta como una respuesta inválida y devuelve **520**, que el navegador
 reporta como:
 
 ```
-WebSocket connection to 'wss://devweb.dolynation.app/_next/hmr' failed
+WebSocket connection to 'wss://devplay.dolynation.app/_next/hmr' failed
 ```
 
 Sin esta variable, **el HMR no funciona** en desarrollo (el sitio carga, pero
@@ -180,7 +180,7 @@ código:
 
 | # | Dónde | Qué cambia | ¿Requiere código? |
 | --- | --- | --- | --- |
-| 1 | `tlalli-infra/nginx/dolynation.conf` → `server_name` | el ruteo de `devweb` / `devapi` / `stagingweb` | **Sí** |
+| 1 | `tlalli-infra/nginx/dolynation.conf` → `server_name` | el ruteo de `devplay` / `devapi` / `stagingplay` | **Sí** |
 | 2 | `NEXT_ALLOWED_DEV_ORIGINS` (variable del front, env `desarrollo`) | el HMR de desarrollo | **No** |
 | 3 | `FRONTEND_BASE_URL` (variable del backend, por ambiente) | los enlaces de los correos transaccionales | **No** |
 
@@ -285,7 +285,7 @@ arranca** y muestra el error exacto.
 ### Estrategia por ambiente, VPN y seguridad
 
 - **Dos juegos de credenciales en Google Cloud (presupuesto $0):**
-  - **No-productivo (`local`, `desarrollo`, `staging`):** comparten un OAuth Client en modo *Testing* con múltiples *Authorized redirect URIs* (`http://localhost:3000/api/auth/oauth/google/callback`, `https://devweb.dolynation.app/api/auth/oauth/google/callback`, `https://stagingweb.dolynation.app/api/auth/oauth/google/callback`).
+  - **No-productivo (`local`, `desarrollo`, `staging`):** comparten un OAuth Client en modo *Testing* con múltiples *Authorized redirect URIs* (`http://localhost:3000/api/auth/oauth/google/callback`, `https://devplay.dolynation.app/api/auth/oauth/google/callback`, `https://stagingplay.dolynation.app/api/auth/oauth/google/callback`).
   - **Producción (`prod`):** usa un OAuth Client independiente para `https://play.dolynation.app/api/auth/oauth/google/callback`. `rehearsal` deja las variables vacías para no depender de dominio público en sus smoke tests.
 - **Compatibilidad con `desarrollo` tras VPN WireGuard + mTLS:** a diferencia de los webhooks entrantes de Stripe, Google OAuth funciona en `desarrollo` porque la redirección de callback pasa por el navegador del usuario (conectado por VPN) y el intercambio `code → token` + JWKS es tráfico saliente desde el backend.
 - **Imagen inmutable del frontend:** el frontend (`tonatiuh-front`) nunca compila el Client ID en `NEXT_PUBLIC_*`; consulta en runtime `GET /api/v1/auth/oauth/providers` y ejecuta el flujo PKCE a través de sus Route Handlers BFF (`/api/auth/oauth/[provider]` y `/callback`).

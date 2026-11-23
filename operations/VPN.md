@@ -206,8 +206,8 @@ es la Security List.
 ## Probar la VPN desde un equipo
 
 1. Importar **solo el `.conf` de WireGuard** de la persona (`wg0.conf` o
-   `wg-dev.conf`). `devapi.dolynation.app`, `devweb.dolynation.app` y
-   `devsite.dolynation.app` usan certificado publico de Let's Encrypt y
+   `wg-dev.conf`). `devapi.dolynation.app`, `devplay.dolynation.app` y
+   `dev.dolynation.app` usan certificado publico de Let's Encrypt y
    `MTLS_VERIFY=off`, asi que **no** hace falta instalar `ca.crt` ni importar
    `.p12` en el navegador (eso solo aplica si se entra directo a
    `minios.doly.internal:50090`).
@@ -216,7 +216,7 @@ es la Security List.
 
    **En Windows, macOS, Android e iOS** (app oficial de WireGuard): al
    importar el `.conf` la aplicacion aplica `DNS = 10.90.0.1` sola y
-   basta con activar el tunel para abrir `https://devweb.dolynation.app`.
+   basta con activar el tunel para abrir `https://devplay.dolynation.app`.
 
    **Con NetworkManager en Linux** (el menu de red del escritorio). La
    conexion se importa una vez y luego se conecta desde el icono de red
@@ -273,7 +273,7 @@ es la Security List.
    # 104.21.x.x <- incorrecto: el trafico se saldria sin pasar por el tunel
    ```
 
-5. Abrir `https://devweb.dolynation.app`, `https://devsite.dolynation.app` o
+5. Abrir `https://devplay.dolynation.app`, `https://dev.dolynation.app` o
    `https://devapi.dolynation.app/api/v1/health/live` en el navegador: debe
    responder con candado TLS valido de Let's Encrypt sin pedir certificado de
    cliente (HTTP `200` en `/health/live`).
@@ -324,7 +324,7 @@ se queda sin desplegar por un fallo de red.
 
 ## TLS de Let's Encrypt (DNS-01) y renovacion automatica
 
-`devapi.dolynation.app`, `devweb.dolynation.app` y `devsite.dolynation.app`
+`devapi.dolynation.app`, `devplay.dolynation.app` y `dev.dolynation.app`
 usan un certificado unico (`doly-vpn-dev`) emitido por Let's Encrypt mediante
 reto DNS-01 con Cloudflare (cero puertos publicos abiertos) y credenciales
 restringidas en `/etc/doly-vpn/cloudflare.ini` (`600`, root).
