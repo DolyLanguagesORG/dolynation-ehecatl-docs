@@ -8,8 +8,13 @@ body:
   - type: markdown
     attributes:
       value: |
-        Gracias por reportar un bug. Por favor incluye suficiente
-        contexto para reproducir el problema.
+        Gracias por reportar un bug. Por favor incluye suficiente contexto para
+        reproducir el problema y cita el caso de prueba (`TC-NNN`) de
+        `plan/QA-PRUEBAS.md` si surgió durante QA.
+
+        El índice central (`plan/BUGS.md`) asigna un identificador estable
+        `BUG-NNN` automáticamente en orden cronológico (o respeta `[BUG-NNN]` si
+        lo incluyes en el título).
 
   - type: textarea
     id: description
@@ -71,8 +76,8 @@ body:
     id: env
     attributes:
       label: Entorno
-      description: Dónde ocurre (dev local, CI, prod).
-      placeholder: "dev local / CI / prod"
+      description: Dónde ocurre (`dev (VPN)`, `staging`, `prod` o `local`).
+      placeholder: "dev (VPN) / staging / prod / local"
 
   - type: input
     id: commit

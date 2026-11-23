@@ -18,22 +18,26 @@ de la librería es suficiente para nuestro nivel de tráfico.
 - **Access token TTL**: `15m` (default, configurable vía `JWT_ACCESS_TTL`).
 - **Refresh token TTL**: `30d` (configurable vía `JWT_REFRESH_TTL`).
 - **Storage en cliente**: access token en memoria/contexto; refresh en almacenamiento seguro del cliente. No usar `localStorage` para tokens.
-- **Refresh tokens persistidos** en `auth_access_tokens` con hash, **nunca en
-  claro** (*estado objetivo*: hoy el refresh es stateless y nada se escribe en
-  esa tabla; lo implementa `back#4`, ver la tabla de brechas de más abajo).
+- **Refresh tokens persistidos** en `auth_access_tokens` con hash SHA-256, **nunca en claro**, rotados en cookie `HttpOnly` desde el BFF de Next.js.
+- **OAuth 2.0 / OIDC (Google y Microsoft Entra ID):** flujo PKCE `S256` manejado en las rutas BFF del frontend (`/api/auth/oauth/[provider]`) y verificación JWKS en el backend. Las cuentas con rol `admin` tienen bloqueado el acceso y la auto-vinculación vía OAuth (`AUTH_OAUTH_ADMIN_FORBIDDEN`) y se autentican únicamente con correo y contraseña.
 
 ### Decoradores
 
 - `@Public()` — marca una ruta como pública, saltando el `JwtAuthGuard`.
   En [`src/common/decorators/public.decorator.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/decorators/public.decorator.ts).
+- `@AllowWithoutSubscription()` — permite acceso autenticado aunque la cuenta aún no elija plan (onboarding, perfil y facturación).
 - `@CurrentUser()` — inyecta el `User` autenticado en el controller. En
   [`src/common/decorators/current-user.decorator.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/decorators/current-user.decorator.ts).
+- `@RequireCaptcha()` y `@RateLimitByIp()` — aplican verificación Cloudflare Turnstile y límite por IP en rutas públicas sensibles.
 
 ### Guards
 
-- `JwtAuthGuard` global en [`src/common/guards/jwt-auth.guard.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/guards/jwt-auth.guard.ts).
-- El guard es **opt-out** (todas las rutas requieren auth salvo las que
-  tengan `@Public()`).
+`CommonModule` registra cuatro guards globales en orden estricto (`JwtAuthGuard` → `SubscriptionGuard` → `IpRateLimitGuard` → `CaptchaGuard`), complementados por `AdminGuard` en rutas `/admin/*`.
+
+## Protección anti-bot y límite por IP
+
+- **Cloudflare Turnstile** (`CaptchaGuard` en `src/modules/security/`): se ejecuta después de `JwtAuthGuard` para evitar quemar tokens ante respuestas `401`. Valida `CAPTCHA_ALLOWED_HOSTNAMES` (en producción/staging/dev) y exige token cuando `CAPTCHA_PROVIDER=turnstile`.
+- **Rate limiting por IP** (`IpRateLimitGuard`): limita ráfagas por IP real en endpoints sensibles (`login`, `register`, `forgot-password`, `access_request`), configurable con `IP_RATE_LIMIT_ENABLED`.
 
 ## Validación de input
 
@@ -61,24 +65,19 @@ CSP, justifícalo en el PR.
 
 ### CORS
 
-```ts
-app.enableCors({
-  origin: true,
-  credentials: true,
-});
-```
-
-En producción, restringir a orígenes específicos vía variable de entorno
-(brecha actual, ver [brechas conocidas](#brechas-conocidas)).
+`CORS_ALLOWED_ORIGINS` (lista separada por comas) restringe los orígenes
+permitidos en `desarrollo`, `staging` y `prod` con `credentials: true`. Si la
+variable queda vacía en desarrollo local, hace fallback a `origin: true`.
 
 ## Logging y observabilidad
 
-- `nestjs-pino` para logs estructurados JSON.
-- En dev: `pino-pretty` para human-readable.
-- Cada request pasa por `LoggingInterceptor` en
-  [`src/common/interceptors/logging.interceptor.ts`](https://github.com/DolyLanguagesORG/dolynation-atl-back/blob/develop/src/common/interceptors/logging.interceptor.ts).
+- `nestjs-pino` para logs estructurados JSON (en dev con `pino-pretty`) y
+  `LoggingInterceptor` en `src/common/interceptors/logging.interceptor.ts`.
+- **Bitácoras persistidas en PostgreSQL:** `audit_logs` y `error_logs`,
+  consultables desde el panel `/admin` (`/api/v1/admin/logs/audit`,
+  `/api/v1/admin/logs/errors` y `/api/v1/admin/logs/trace/:requestId`).
 
-**No loggear** passwords, tokens, o datos personales (PII) en claro.
+**No loggear** passwords, tokens, secretos ni datos personales (PII) en claro.
 
 ## Manejo de errores
 
@@ -97,12 +96,9 @@ Ver [api-contracts.md](./api-contracts.md) para el detalle.
 
 ## Brechas conocidas
 
-| Brecha                                       | Estado          |
-| -------------------------------------------- | --------------- |
-| Rate limiting (express-rate-limit ausente)   | Pendiente       |
-| CORS con `origin: true` (permite cualquiera)  | Pendiente       |
-| Refresh token rotation no implementada       | Pendiente       |
-| Audit log de acciones sensibles              | Pendiente       |
-| HTTPS forzado en prod (depende del proxy)    | Depende del infra |
-
-Estas brechas están documentadas para que cualquier dev pueda priorizarlas.
+| Brecha | Estado | Referencia |
+| --- | --- | --- |
+| Límite de tamaño de cuerpo y de peticiones por IP en `POST /api/v1/billing/webhook` | Pendiente | [`back#150` (`M-9`)](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/150) |
+| Escaneo de `check-no-real-keys.sh` ampliado a `.github/workflows/` y `.env.example` | Pendiente | [`back#150` (`B-5`)](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/150) |
+| Bloqueos en memoria (`withUserLock`) si algún día se escala a >1 réplica | Pendiente (1 réplica hoy) | [`back#150` (`M-4`)](https://github.com/DolyLanguagesORG/dolynation-atl-back/issues/150) |
+| Migración de Stripe Test Mode a Stripe Live antes de abrir cobros reales | Pendiente de salida a vivo | [`decisions/PENDIENTES.md`](../decisions/PENDIENTES.md#pend-002--se-autoriza-el-primer-despliegue-a-producción) |

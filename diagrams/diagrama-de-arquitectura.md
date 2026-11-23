@@ -1,84 +1,96 @@
 # Diagrama de arquitectura
 
-Estructura del sistema: los cuatro repositorios, los módulos del backend, el
-frontend y los servicios externos.
+Estructura del sistema (`v0.15.0`): los cinco repositorios activos, los módulos
+del backend, los BFF de Next.js, la landing estática y los servicios externos.
 
 ```mermaid
 flowchart TB
     subgraph USUARIOS["Usuarios"]
-        U["👤 Estudiante"]
+        U["Estudiante"]
+        ADM["Administrador"]
+    end
+
+    subgraph LANDING["dolynation-tetl-landing · Astro"]
+        SITE["Landing pública estática (dev / staging / prod)"]
     end
 
     subgraph FRONT["dolynation-tonatiuh-front · Next.js 16"]
-        FE_ROUTES["App Router<br/>páginas y componentes"]
-        FE_I18N["i18n en/fr/es/it"]
-        FE_STATE["Estado de sesión<br/>tokens en memoria"]
-        FE_API["Cliente HTTP<br/>src/lib/http-client.ts"]
-        FE_PROXY["Proxy de API<br/>/api/v1/*<br/>route.ts"]
+        FE_ROUTES["App Router e i18n (es, en, fr, it)"]
+        FE_AUTH_BFF["BFF OAuth PKCE (/api/auth/oauth/*) y Refresh Cookie HttpOnly"]
+        FE_PROXY["Proxy BFF (/api/v1/*) hacia BACKEND_INTERNAL_URL"]
+        FE_STRIPE["UI Stripe Elements + Turnstile"]
     end
 
     subgraph BACK["dolynation-atl-back · NestJS 11"]
-        subgraph MODULES["Módulos de negocio"]
-            M_AUTH["auth<br/>register · login · refresh · logout · me"]
-            M_USERS["users<br/>perfil · preferencias · racha"]
-            M_READ["readings<br/>generar · evaluar · vocabulario"]
-            M_IA["ia<br/>proveedor de IA · TTS"]
-            M_HEALTH["health<br/>live · ready"]
+        subgraph MODULES["18 módulos de negocio e integración"]
+            M_AUTH["auth + oauth (Google / Microsoft)"]
+            M_STUDY["readings, evaluation, history, content, moderation"]
+            M_PAY["billing, subscriptions, access-requests"]
+            M_CORE["users, settings, ia, mail"]
+            M_GOV["security (Turnstile / IP), admin, logs, health, version"]
         end
-        subgraph COMMON["common"]
-            C_ENV["Env (Zod)"]
-            C_GUARD["JwtAuthGuard · AdminGuard"]
-            C_ENVELOPE["Envelope apiOk/apiFail"]
-            C_ERRORS["Catálogo ErrorCode"]
-            C_VERSION["version.ts"]
+        subgraph COMMON["CommonModule y Drizzle"]
+            C_GUARDS["JwtAuthGuard, SubscriptionGuard, IpRateLimitGuard, CaptchaGuard"]
+            DB_ACCESS["Drizzle ORM (src/database/drizzle)"]
         end
-        DB_ACCESS["Drizzle ORM<br/>src/database/drizzle"]
     end
 
     subgraph INFRA["dolynation-tlalli-infra"]
-        COMPOSE["Docker Compose<br/>dev · test · prod"]
-        SCHEMA["Schema PostgreSQL 15<br/>01-init.sql"]
-        CI["CI/CD<br/>Actions · rulesets · deploy"]
+        PROXY["Nginx + Cloudflare Full (strict) + WireGuard dev"]
+        SCHEMA["Schema PostgreSQL 15 (01-init.sql, 17 tablas)"]
     end
 
     subgraph DOCS["dolynation-ehecatl-docs"]
-        ANT["Anteproyecto (Unidad 1)"]
-        U2["Unidad 2<br/>workflow · versionado · diagramas"]
+        U2["Arquitectura, convenciones, QA y BUGS"]
     end
 
     subgraph EXT["Servicios externos"]
-        LLM["MiniMax-M3<br/>generación y evaluación"]
-        TTS["MiniMax TTS<br/>audio de palabra/frase"]
+        AI["Google Gemini / MiniMax / OpenAI Moderation"]
+        IDP["Google OAuth y Microsoft Entra ID v2.0"]
+        CF["Cloudflare Turnstile"]
+        STRIPE["Stripe (Checkout, Portal y Webhooks)"]
+        BREVO["Brevo SMTP (no-reply@dolynation.app)"]
     end
 
-    DB[("PostgreSQL 15<br/>users · readings · evaluations<br/>prompt_logs · categorías")]
+    DB[("PostgreSQL 15 (17 tablas)")]
 
-    U --> FE_ROUTES
-    FE_ROUTES --> FE_I18N
-    FE_ROUTES --> FE_STATE
-    FE_STATE --> FE_API
-    FE_API -->|"REST /api/v1 (mismo origen)"| FE_PROXY
-    FE_PROXY -->|"REST /api/v1 + JWT<br/>BACKEND_INTERNAL_URL"| M_AUTH
-    FE_PROXY --> M_USERS
-    FE_PROXY --> M_READ
-    FE_PROXY --> M_HEALTH
-    C_GUARD -.->|"protege"| FE_API
+    U -->|"dev / dolynation.app"| PROXY
+    ADM -->|"Panel /admin"| PROXY
+    PROXY --> SITE
+    PROXY --> FE_ROUTES
+    PROXY -->|"location = /api/v1/billing/webhook"| M_PAY
+    FE_ROUTES --> FE_STRIPE
+    FE_ROUTES --> FE_AUTH_BFF
+    FE_ROUTES --> FE_PROXY
+    FE_AUTH_BFF --> M_AUTH
+    FE_PROXY --> M_AUTH
+    FE_PROXY --> M_STUDY
+    FE_PROXY --> M_PAY
+    FE_PROXY --> M_CORE
+    FE_PROXY --> M_GOV
+    C_GUARDS -.->|"protege"| M_STUDY
+    C_GUARDS -.->|"protege"| M_PAY
+    C_GUARDS -.->|"protege"| M_CORE
     M_AUTH --> DB_ACCESS
-    M_USERS --> DB_ACCESS
-    M_READ --> DB_ACCESS
-    M_HEALTH --> DB_ACCESS
+    M_STUDY --> DB_ACCESS
+    M_PAY --> DB_ACCESS
+    M_CORE --> DB_ACCESS
+    M_GOV --> DB_ACCESS
     DB_ACCESS --> DB
-    M_READ -->|"adaptador AIProvider"| LLM
-    M_READ -->|"adaptador TtsProvider"| TTS
-    COMPOSE -.->|"despliega"| BACK
-    COMPOSE -.->|"define"| SCHEMA
+    M_STUDY --> AI
+    M_CORE --> AI
+    M_AUTH --> IDP
+    FE_AUTH_BFF -.->|"authorize redirect"| IDP
+    M_GOV --> CF
+    M_PAY --> STRIPE
+    STRIPE -->|"POST /api/v1/billing/webhook"| PROXY
+    M_CORE --> BREVO
     SCHEMA -.->|"fuente de verdad"| DB
-    CI -.->|"valida y publica"| BACK
-    CI -.->|"build y deploy"| FRONT
-    DOCS -.->|"contrato y reglas"| BACK
-    DOCS -.->|"contrato y reglas"| FRONT
+    DOCS -.->|"contratos y QA"| BACK
+    DOCS -.->|"contratos y QA"| FRONT
     DOCS -.->|"entornos"| INFRA
 
+    classDef landing fill:#e0f7fa,stroke:#00838f,color:#111111
     classDef front fill:#e8f2ff,stroke:#2864a5,color:#111111
     classDef back fill:#f3e8ff,stroke:#7b3fa0,color:#111111
     classDef infra fill:#fff4e0,stroke:#c77700,color:#111111
@@ -86,18 +98,18 @@ flowchart TB
     classDef ext fill:#fdecec,stroke:#c0392b,color:#111111
     classDef data fill:#f5f5f5,stroke:#555555,color:#111111
 
-    class FE_ROUTES,FE_I18N,FE_STATE,FE_API,FE_PROXY front
-    class M_AUTH,M_USERS,M_READ,M_IA,M_HEALTH,C_ENV,C_GUARD,C_ENVELOPE,C_ERRORS,C_VERSION,DB_ACCESS back
-    class COMPOSE,SCHEMA,CI infra
-    class ANT,U2 docs
-    class LLM,TTS ext
+    class SITE landing
+    class FE_ROUTES,FE_AUTH_BFF,FE_PROXY,FE_STRIPE front
+    class M_AUTH,M_STUDY,M_PAY,M_CORE,M_GOV,C_GUARDS,DB_ACCESS back
+    class PROXY,SCHEMA infra
+    class U2 docs
+    class AI,IDP,CF,STRIPE,BREVO ext
     class DB data
 ```
 
-**Estado:** el backend tiene implementados `auth`, `users`, `readings`, `ia` y
-`health`; el frontend está en construcción (`front#2` en el Sprint 2) y la
-infraestructura ya tiene los tres entornos definidos.
-
-> **Nota.** El diagrama muestra la arquitectura **objetivo**. Lo que ya está
-> construido y en qué sprint llega cada parte está en
-> [`../plan/cronograma.md`](../plan/cronograma.md).
+**Estado (`v0.15.0`):** los módulos de autenticación (correo + Google +
+Microsoft Entra ID), seguridad (Turnstile + rate limit + CORS), correo (Brevo),
+lecturas, glosario, evaluación, pagos con Stripe, moderación, administración y
+auditoría están implementados y en fase de pruebas ([`plan/QA-PRUEBAS.md`](../plan/QA-PRUEBAS.md)).
+La landing estática (`dolynation-tetl-landing`) corre ya en `dev` (`dev.dolynation.app`)
+con despliegue independiente a `staging` y `prod`.

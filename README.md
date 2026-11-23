@@ -85,7 +85,7 @@ archivo, sin plugins y sin exportar imágenes.
 | --- | --- |
 | **[Arquitectura](./diagrams/diagrama-de-arquitectura.md)** | Los cuatro repositorios, los módulos del backend, el frontend, la base de datos y los servicios externos |
 | **[Actores y casos de uso](./diagrams/diagrama-de-actores.md)** | Actores humanos, casos de uso del estudiante y servicios externos |
-| **[Entidad-relación (DER)](./diagrams/diagrama-de-ER%28Entidad-Relacion%29.md)** | Las 9 tablas, sus claves y sus relaciones |
+| **[Entidad-relación (DER)](./diagrams/diagrama-de-ER%28Entidad-Relacion%29.md)** | Las 17 tablas vigentes, sus claves y sus relaciones |
 | **[Secuencia — flujo principal](./diagrams/diagrama-de-secuencia.md)** | Generación de la lectura, diccionario con TTS y evaluación PNL |
 | **[Secuencia — autenticación](./diagrams/diagrama-de-secuencia-de-securidad.md)** | Login, JWT, rotación del refresh token y qué es flujo objetivo |
 
@@ -108,8 +108,10 @@ archivo, sin plugins y sin exportar imágenes.
 | **[Conformidad con la rúbrica](./plan/RUBRICA-UNIDAD-2.md)** | Índice de evidencias de la Unidad 2, criterio por criterio |
 | **[Plan y seguimiento](./plan/PLAN-Y-SEGUIMIENTO.md)** | El orden de trabajo, las dependencias y cómo justificar atrasos |
 | **[Decisiones](./decisions/README.md)** | Los ADR con contexto, alternativas y consecuencias, y las decisiones pendientes |
+| **[Matriz QA (`v0.15.0`)](./plan/QA-PRUEBAS.md)** | Casos de prueba `TC-001`–`TC-020` para validar `dev` (VPN) y `staging` |
+| **[Bugs conocidos (`BUG-001`)](./plan/BUGS.md)** | Índice centralizado de bugs (`BUG-NNN`), severidad, entorno y enlaces a issues |
 | **[Backlog](./plan/backlog.md)** | Mejoras sueltas que no forman parte de los 5 sprints |
-| **[Assets](./assets/README.md)** | Logo, capturas y material de presentación |
+| **[Assets](./assets/README.md)** | Logos oficiales de DolyNation, capturas y material de presentación |
 
 ## Documentación adicional
 
@@ -119,10 +121,11 @@ archivo, sin plugins y sin exportar imágenes.
 
 ## Estado del proyecto
 
-- Backend: activo.
-- Frontend web: en construcción.
+- Backend: activo (`v0.15.0`).
+- Frontend web: activo (`v0.15.0`).
+- Landing pública (`dolynation-tetl-landing`): activa en `dev` (`dev.dolynation.app`).
 - Mobile: pausado (fuera del alcance de `v1.0.0`).
-- Release vigente: `v0.1.0`; la entrega de cierre está prevista para `v1.0.0`.
+- Release vigente: `v0.15.0`; la entrega de cierre está prevista para `v1.0.0`.
 - La planificación vive en GitHub: [Project con Kanban y Timeline](https://github.com/orgs/DolyLanguagesORG/projects/1).
 
 ## Licencia

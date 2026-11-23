@@ -47,16 +47,19 @@ decisión **tomada**; este archivo registra las que **están abiertas**.
 
 ## PEND-002 — ¿Se autoriza el primer despliegue a producción?
 
-- **Contexto:** el tren de release está montado y probado de punta a punta
-  (`develop` → `rc-*` → rehearsal → staging → `main`), con smoke test en
-  verde en los tres ambientes. **Producción no se ha desplegado nunca.**
+- **Contexto:** el tren de release está montado (`develop` → `rc-*` →
+  rehearsal → staging → `main`), el certificado wildcard `*.dolynation.app` de
+  Cloudflare Origin CA ya quedó instalado en `vaneserver`, las rutas
+  `dolynation.app` / `play.dolynation.app` ya están en Nginx y las credenciales
+  de `prod` (Google OAuth, Microsoft Entra ID, Turnstile, Brevo SMTP y Stripe
+  Test Mode) ya están cargadas en GitHub Environments. **Producción sigue sin
+  desplegarse hasta completar QA.**
 
-  Antes de hacerlo faltan dos cosas:
-  - instalar el Origin Certificate y configurar `dolynation.app` / `play.dolynation.app` en `nginx/dolynation.conf`;
-  - completar las credenciales productivas externas (OAuth, Turnstile, Stripe, SMTP).
+- **Qué se necesita:** cerrar la matriz de pruebas en `dev` y `staging`
+  ([`plan/QA-PRUEBAS.md`](../plan/QA-PRUEBAS.md)) y dar autorización explícita
+  para ejecutar el primer deploy a producción (`infra#15`). La activación de
+  Stripe Live Mode puede quedar posterior al arranque inicial si se valida primero
+  en Test Mode.
 
-- **Qué se necesita:** autorización y el `server_name` definitivo.
-
-- **Nota:** hasta entonces, el `environment` `prod` tiene sus secretos y
-  variables, pero no se ejecuta. El primer deploy real es el paso que falta
-  para cerrar la entrega del 10-dic.
+- **Nota:** mientras tanto, el `environment` `prod` conserva sus secretos y
+  variables listos, sin ejecutarse hasta recibir aprobación.

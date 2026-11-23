@@ -6,7 +6,7 @@ mapea las tablas para type-safety.
 
 ## Estado actual vs. planificado
 
-Las **16 tablas** vigentes se definen en
+Las **17 tablas** vigentes se definen en
 `database/postgres/01-init.sql` (repositorio `dolynation-tlalli-infra`) y se
 aplican en cada despliegue mediante `scripts/apply-schema.sh`. El backend usa
 Drizzle ORM únicamente para type-safety; los cambios de DDL siempre nacen en
@@ -16,6 +16,7 @@ Drizzle ORM únicamente para type-safety; los cambios de DDL siempre nacen en
 | --- | --- | --- | --- |
 | `roles` | **Existe** (`student`, `admin`; reemplaza a la antigua tabla `admins`) | `01-init.sql` | — |
 | `users` | **Existe** (incluye `role_id`, `subscription_tier`, `stripe_customer_id`, `email_verified_at`, `locale`) | `01-init.sql` | `infra#196` |
+| `user_oauth_accounts` | **Existe** (identidades Google y Microsoft Entra ID vinculadas por `provider` + `provider_user_id`) | `01-init.sql` | `back#185` |
 | `user_settings` | **Existe** (`preferred_language`, `selected_languages`, `last_language_change_at`, `language_change_credits`, `preferred_categories`, `saved_categories`) | `01-init.sql` | `infra#22` |
 | `access_requests` | **Existe** (solicitudes manuales cuando `ACCESS_REQUESTS_ENABLED=true`) | `01-init.sql` | — |
 | `auth_access_tokens` | **Existe** (refresh tokens opacos rotados en cookie `HttpOnly` desde el BFF de Next.js) | `01-init.sql` | — |
@@ -48,7 +49,7 @@ Los cambios de schema se hacen **en `dolynation-tlalli-infra`**, nunca en el bac
 | `id` | `SERIAL` | PK |
 | `full_name` | `VARCHAR(255)` | Nullable |
 | `email` | `VARCHAR(254)` | `NOT NULL`, `UNIQUE` |
-| `password` | `VARCHAR(255)` | **Hash Argon2id**, nunca texto plano |
+| `password` | `VARCHAR(255)` | **Hash Argon2id**, nullable en cuentas creadas por OAuth |
 | `role_id` | `INTEGER` | FK `roles.id` (`student` \| `admin`) |
 | `subscription_tier` | `VARCHAR(30)` | `dolly` \| `dolly_plus` \| `dolly_pro` (nullable en cuentas nuevas) |
 | `stripe_customer_id` | `VARCHAR(64)` | Nullable; índice único parcial `uq_users_stripe_customer_id` |
@@ -59,6 +60,19 @@ Los cambios de schema se hacen **en `dolynation-tlalli-infra`**, nunca en el bac
 | `created_at` | `TIMESTAMP` | `NOT NULL` |
 | `updated_at` | `TIMESTAMP` | Nullable |
 | `deleted_at` | `TIMESTAMP` | Soft delete |
+
+## `user_oauth_accounts`
+
+Identidades externas OAuth 2.0 / OIDC vinculadas (Google y Microsoft Entra ID):
+
+| Columna | Tipo | Notas |
+| --- | --- | --- |
+| `id` | `SERIAL` | PK |
+| `user_id` | `INTEGER` | `NOT NULL`, FK `users.id` (`ON DELETE CASCADE`) |
+| `provider` | `VARCHAR(30)` | `'google'` \| `'microsoft'` |
+| `provider_user_id` | `VARCHAR(255)` | `sub` estable del proveedor (único junto a `provider`) |
+| `provider_email` | `VARCHAR(254)` | Nullable; correo reportado por el IdP |
+| `created_at` / `updated_at` | `TIMESTAMP` | `NOT NULL`, default `CURRENT_TIMESTAMP` |
 
 ## `auth_access_tokens`
 
@@ -108,7 +122,10 @@ Tokens de refresco persistidos. Se usa esta tabla existente en lugar de crear
 `idx_readings_user_status` (parcial), `idx_readings_category_id` y
 `(user_id, prompt_hash)` (S2).
 
-## `categories` (S2)
+## `categories` (diseño inicial S2 — sustituido)
+
+> **Nota:** esta tabla relacional no se creó; quedó sustituida por
+> `moderated_categories` y `user_settings.preferred_categories` / `saved_categories`.
 
 | Columna | Tipo | Notas |
 | --- | --- | --- |
@@ -123,7 +140,11 @@ Tokens de refresco persistidos. Se usa esta tabla existente en lugar de crear
 Seed inicial: `technology`, `history`, `education`, `programming`, `culture`,
 `pop_culture`.
 
-## `user_preferences` (S2)
+## `user_preferences` y `user_selected_categories` (diseño inicial S2 — sustituidos)
+
+> **Nota:** ambas tablas fueron unificadas y reemplazadas por `user_settings` en `01-init.sql`.
+
+### `user_preferences` (referencia histórica)
 
 | Columna | Tipo | Notas |
 | --- | --- | --- |
@@ -133,7 +154,7 @@ Seed inicial: `technology`, `history`, `education`, `programming`, `culture`,
 | `default_length` | `VARCHAR(20)` | Default `medium` |
 | `updated_at` | `TIMESTAMP` | `NOT NULL` |
 
-## `user_selected_categories` (S2)
+### `user_selected_categories` (referencia histórica)
 
 | Columna | Tipo | Notas |
 | --- | --- | --- |
