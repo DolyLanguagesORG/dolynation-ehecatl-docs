@@ -12,8 +12,8 @@ comparte material con nadie, y revocar un peer no toca a los demas.
 
 | Peer | Familia | IP de tunel | Que es |
 | --- | --- | --- | --- |
-| `devapi` | servicios | `10.90.0.2` | API del ambiente de desarrollo |
-| `devweb` | servicios | `10.90.0.3` | Web del ambiente de desarrollo |
+| `devapi` | servicios | `10.90.0.2` | API del ambiente de desarrollo (`devapi.dolynation.app`) |
+| `devweb` | servicios | `10.90.0.3` | Web del ambiente de desarrollo (`devplay.dolynation.app`) |
 | `minios` | servicios | `10.90.0.4` | Almacenamiento de objetos (S3) |
 | `jxadevp-dev` | devs | `10.91.0.6` | Jesus Alberto: desarrollo |
 | `jxadevp-admin` | admin | `10.92.0.2` | Jesus Alberto: administracion |
@@ -110,8 +110,8 @@ Direcciones dentro de la VPN:
 | Servicio | Direccion |
 | --- | --- |
 | API | `https://devapi.dolynation.app` |
-| Web | `https://devweb.dolynation.app` |
-| Landing | `https://devsite.dolynation.app` |
+| Web | `https://devplay.dolynation.app` |
+| Landing | `https://dev.dolynation.app` |
 | Objetos (S3) | `https://minios.doly.internal:50090` |
 
 ### El DNS va dentro del tunel
@@ -123,8 +123,8 @@ servicio:
 | Nombre | Resuelve a (dentro de la VPN) |
 | --- | --- |
 | `devapi.dolynation.app` | `10.90.0.2` |
-| `devweb.dolynation.app` | `10.90.0.3` |
-| `devsite.dolynation.app` | `10.90.0.5` |
+| `devplay.dolynation.app` | `10.90.0.3` |
+| `dev.dolynation.app` | `10.90.0.5` |
 | `minios.doly.internal` | `10.90.0.4` |
 
 El resto de nombres se resuelven como siempre (el hub los reenvia).

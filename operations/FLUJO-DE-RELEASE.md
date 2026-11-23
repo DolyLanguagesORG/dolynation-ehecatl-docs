@@ -197,7 +197,7 @@ develop ──PR + 5 checks + 1 aprobación──► merge (squash)
 | --- | --- |
 | **Versionado** | El suyo: `site_version` en `versions-site.yml`. La `app_version` es la de la app y no se mueve. |
 | **Manifiesto** | El suyo: `versions-site.yml`. Publicar el sitio **no toca** el manifiesto de la app. |
-| **Ambiente de desarrollo** | Merge a `develop` → la landing avisa a `tlalli-infra` (`repository_dispatch`) y el infra despliega. Va **dentro de la VPN**: `devsite.dolynation.app` → IP de túnel. |
+| **Ambiente de desarrollo** | Merge a `develop` → la landing avisa a `tlalli-infra` (`repository_dispatch`) y el infra despliega. Va **dentro de la VPN**: `dev.dolynation.app` → IP de túnel. |
 | **Candidata** | `site-rc-<version>`: guard propio (una sola a la vez), build de la imagen, rehearsal, staging y **smoke test del sitio** (11 comprobaciones del contrato). |
 | **Promoción a `main`** | PR `site-rc-*` → `main`: 2 aprobaciones + code owner + los 5 checks + el gate de staging. |
 | **Producción** | **A mano**, con el workflow `deploy-site` (`environment: prod`, 2 revisores). |
