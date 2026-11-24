@@ -37,7 +37,7 @@ No requiere token de sesión. Devuelve `BillingConfigResponseDto`:
         "tier": "dolly_plus",
         "isFree": false,
         "checkoutRequired": true,
-        "amountCents": 14900,
+        "amountCents": 9900,
         "currency": "mxn",
         "interval": "month"
       },
@@ -45,7 +45,7 @@ No requiere token de sesión. Devuelve `BillingConfigResponseDto`:
         "tier": "dolly_pro",
         "isFree": false,
         "checkoutRequired": true,
-        "amountCents": 24900,
+        "amountCents": 19900,
         "currency": "mxn",
         "interval": "month"
       }
