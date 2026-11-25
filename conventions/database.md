@@ -112,7 +112,7 @@ Las **17 tablas** del schema vigente en `01-init.sql`:
 | `access_requests` | Solicitudes manuales de plan o desbloqueo de idioma cuando `ACCESS_REQUESTS_ENABLED=true` |
 | `auth_access_tokens` | Refresh tokens persistidos con hash y expiración |
 | `auth_email_tokens` | Tokens de un solo uso para confirmación de cuenta y restablecimiento de contraseña |
-| `readings` | Lecturas generadas, dificultad, idioma, idempotencia offline (`evaluation_operation_id`) y estado |
+| `readings` | Lecturas generadas, dificultad, idioma, caché de parámetros (`prompt_hash`), idempotencia offline (`evaluation_operation_id`) y estado |
 | `reading_explanations` | Explicaciones contextuales de palabras/frases y glosario guardado por usuario |
 | `prompt_logs` | Auditoría de prompts, proveedores IA y duración |
 | `moderated_categories` | Caché global de moderación de categorías y blueprint editorial compartido |
