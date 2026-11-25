@@ -8,7 +8,7 @@ decisión **tomada**; este archivo registra las que **están abiertas**.
 
 | ID | Decisión | Issue | Estado | Quién decide |
 | --- | --- | --- | --- | --- |
-| PEND-001 | ¿Catálogo de categorías predefinido, o solo las dinámicas? | `infra#20` | **Abierta** (16-nov-2026) | equipo |
+| PEND-001 | ¿Catálogo de categorías predefinido, o solo las dinámicas? | `infra#20` | **Resuelta** (25-nov-2026) | equipo |
 | PEND-002 | ¿Se autoriza el primer despliegue a producción? | `infra#15` | **Abierta** (16-nov-2026) | scrum master |
 
 ---
@@ -44,6 +44,13 @@ decisión **tomada**; este archivo registra las que **están abiertas**.
 - **Recomendación del equipo técnico:** la **2**. Da la experiencia de
   "categorías de partida" sin el coste de una tabla y su CRUD, y deja la
   puerta abierta a la 3.
+
+- **Resolución (25-nov-2026):** Se mantiene el diseño de **categorías dinámicas
+  sin tabla fija `categories`**, respaldado por la caché permanente en
+  PostgreSQL (`moderated_categories`) que persiste los veredictos aprobados y
+  rechazados de las capas de IA para evitar saturarlas. Con esto queda cerrada
+  `infra#20` incorporando `readings.prompt_hash` e índice parcial en
+  `database/postgres/01-init.sql`.
 
 ## PEND-002 — ¿Se autoriza el primer despliegue a producción?
 
