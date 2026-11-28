@@ -216,15 +216,22 @@ Reglas:
 El ciclo completo, con comandos y criterios, esta en
 [`operations/FLUJO-DE-RELEASE.md`](../operations/FLUJO-DE-RELEASE.md).
 
-## Prerelease y release oficial
+## Versiones de desarrollo, candidatas (`rc`) y release estable
 
-Con `"prerelease": true` en la configuración de release-please:
+Con `"prerelease": false` en la configuración de `release-please` de los cinco
+repositorios:
 
-- Toda versión **0.x** se publica como **Pre-release** en GitHub.
-- La **`v1.0.0`** se publica como **release oficial** (sin la marca).
+- Toda versión **0.x** se publica como versión **normal de desarrollo** (SemVer
+  `0.x`, sin la etiqueta naranja *Pre-release* en GitHub y sin sufijos en
+  `package.json`).
+- Las candidatas de validación pasan por las ramas efímeras `rc-<app_version>`
+  en rehearsal y staging.
+- La primera versión estable **`v1.0.0`** se fija explícitamente con el trailer
+  `RELEASE AS: 1.0.0` cuando el equipo aprueba el cierre en `main`.
 
-Es el mecanismo de *beta/prerelease → release estable* sin ensuciar el número
-con sufijos.
+> Históricamente se usó `"prerelease": true` durante los primeros sprints; se
+> cambió a `"prerelease": false` (`docs#109`) para evitar marcar los hitos de
+> desarrollo `0.x` como si fueran prereleases definitivos de producción.
 
 ### Fijar una versión exacta
 

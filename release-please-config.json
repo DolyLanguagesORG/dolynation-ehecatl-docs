@@ -3,7 +3,7 @@
   "packages": {
     ".": {
       "release-type": "simple",
-      "prerelease": true,
+      "prerelease": false,
       "package-name": "dolynation-ehecatl-docs",
       "changelog-path": "CHANGELOG.md",
       "include-component-in-tag": false,
