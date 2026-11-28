@@ -83,7 +83,9 @@ un `fix`, sale `v0.3.2`; si hubo un `feat`, sale `v0.4.0`.
 
 ### Qué pasa al mergearlo
 
-1. Se publica el **tag** `v0.3.2` y la GitHub Release.
+1. Se publica el **tag** `v0.3.2` y se guarda la GitHub Release como **Draft**
+   (para promocionarla manualmente a *Pre-release* en staging o a *Release
+   (`Latest`)* cuando quede estable en producción).
 2. Se dispara `build-images` con ese tag: la imagen se construye **por
    architecturas** (`amd64` y `arm64`) y se publica en GHCR con dos
    etiquetas: el **SHA** del commit (inmutable, la que se despliega) y la
@@ -172,7 +174,7 @@ propio carril**.
 ```
 develop ──PR + 5 checks + 1 aprobación──► merge (squash)
       │
-      └──► release-please corta vX.Y.Z ──► tag + CHANGELOG + GitHub Release
+      └──► release-please corta vX.Y.Z ──► tag + CHANGELOG + GitHub Release (Draft)
                     │
                     └──► versions-site.yml  (fila propia + site_version)
                           │  (app_version NO se mueve)
@@ -382,7 +384,7 @@ stack. Como la imagen es inmutable, el rollback es exacto: no depende de que
 | --- | --- | --- |
 | Número de versión | sí | release-please, según los commits |
 | PR de release | sí | release-please |
-| Tag y GitHub Release | sí | release-please, al mergear el PR |
+| Tag y GitHub Release (Draft) | sí | release-please, al mergear el PR (promoción manual a *Pre-release* / `Latest`) |
 | Imagen en GHCR | sí | `build-images` (push a develop, rc o tag) |
 | Manifiesto `versions.yml` | sí | `sync-versions` |
 | **Schema de la base** | sí | `scripts/apply-schema.sh` (antes de levantar el backend; se detiene si la base tiene datos) |
