@@ -7,7 +7,8 @@ El proyecto usa [Semantic Versioning](https://semver.org/lang/es/) (`vX.Y.Z`) y
 El mecanismo es [release-please](https://github.com/googleapis/release-please):
 cada repositorio mantiene **un pull request de release acumulativo** contra
 `develop`. Al mergear ese PR, la versión sube sola, el changelog se escribe
-solo, y se crean el **tag anotado** y la **GitHub Release**.
+solo, y se crean el **tag anotado** y la **GitHub Release como borrador (`Draft`)**,
+visible únicamente para colaboradores mientras el código siga en desarrollo.
 
 ## Quién es el dueño del versionado
 
@@ -49,7 +50,7 @@ PRs de trabajo  ->  develop
         "chore(release): vX.Y.Z"
                        |  (merge)
                        v
-   version + changelog + tag vX.Y.Z + GitHub Release
+   version + changelog + tag vX.Y.Z + GitHub Release (Draft)
 ```
 
 Mientras el PR de release está abierto, **acumula** todos los cambios que
@@ -216,15 +217,30 @@ Reglas:
 El ciclo completo, con comandos y criterios, esta en
 [`operations/FLUJO-DE-RELEASE.md`](../operations/FLUJO-DE-RELEASE.md).
 
-## Prerelease y release oficial
+## Versiones de desarrollo (`Draft`), `Pre-release` y release estable (`Latest`)
 
-Con `"prerelease": true` en la configuración de release-please:
+Con `"draft": true`, `"force-tag-creation": true` y `"prerelease": true` en
+`release-please-config.json` de los cinco repositorios:
 
-- Toda versión **0.x** se publica como **Pre-release** en GitHub.
-- La **`v1.0.0`** se publica como **release oficial** (sin la marca).
+1. **Desarrollo (`develop`):** cada release crea de inmediato el **Git tag anotado**
+   `vX.Y.Z` (para GHCR y `versions.yml` / `versions-site.yml`), pero guarda la
+   **GitHub Release como `Draft` (borrador)**. Así el equipo la ve en GitHub sin
+   publicar versiones inestables ni falsas *Pre-release* en `develop`.
+   - Borrar borradores antiguos que nunca llegaron a staging **no** elimina su
+     Git tag ni rompe `CHANGELOG.md` o GHCR.
+2. **Staging (`rc-*` / `site-rc-*`) o pruebas iniciales en producción:** si se
+   desea exponer la versión validada en staging o en soft launch, se publica
+   ese `Draft` marcándolo como **`Pre-release`** (mientras sea `0.x` ya viene
+   pre-marcado). Una *Pre-release* nunca mueve la etiqueta `Latest`.
+3. **Producción (`main`) estable (`v1.0.0+`):** una vez validada la estabilidad en
+   producción, se publica el `Draft` (o se retira la marca *Pre-release*) como
+   **`Release` oficial (`Latest`)**. Al fijar `v1.0.0` con `RELEASE AS: 1.0.0`,
+   el borrador nace ya sin la marca *Pre-release*.
 
-Es el mecanismo de *beta/prerelease → release estable* sin ensuciar el número
-con sufijos.
+> Históricamente en `0.x` las releases de `develop` salían públicas con marca
+> *Pre-release*; se adoptó el flujo `Draft` (`docs#109`) para que `develop`
+> conserve sus tags internos sin anunciar releases públicas hasta staging o
+> producción.
 
 ### Fijar una versión exacta
 
@@ -270,7 +286,7 @@ La cadena completa, sin intervención:
 ```
 merge a develop
    -> PR de release -> (checks verdes) -> se mergea solo
-   -> tag + GitHub Release
+   -> tag + GitHub Release (Draft)
    -> aviso al manifiesto -> PR del manifiesto -> (checks verdes) -> se mergea solo
    -> versions.yml al día
 ```
